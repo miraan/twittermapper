@@ -1,2 +1,3 @@
 # OxTwi
-The group project repository
+The group project repository.
+First commint by SpeedyCoder.
