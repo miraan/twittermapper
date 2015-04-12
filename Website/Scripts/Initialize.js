@@ -1,3 +1,4 @@
+var map;
 function initialize() {
   var mapOptions = {
     center: new google.maps.LatLng(51.503454,-0.119562),
@@ -7,12 +8,11 @@ function initialize() {
   
   
   
-  var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+  map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
  
   // Automatically center the map fitting all markers on the screen
 
-  console.log("Map initialized.");
-  
+  console.log("Map initialized.");  
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
