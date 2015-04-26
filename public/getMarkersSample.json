@@ -3,24 +3,24 @@
 		"id": 1,
 		"item": "iPhone",
 		"imageUrl": "http://cdn0.vox-cdn.com/uploads/chorus_asset/file/798874/DSCF1913.0.jpg",
-		"lat": 55.3617609,
-		"lng": -3.4433238,
+		"latitude": 55.3617609,
+		"longitude": -3.4433238,
 		"scale": 10
 	},
 	{
-		"id": 1,
+		"id": 2,
 		"item": "Nexus 5",
 		"imageUrl": "http://upload.wikimedia.org/wikipedia/commons/e/ed/Nexus_5_(1).jpg",
-		"lat": 51.909151,
-		"lng": -1.224958,
+		"latitude": 51.909151,
+		"longitude": -1.224958,
 		"scale": 6
 	},
 	{
-		"id": 1,
+		"id": 3,
 		"item": "Nokia Lumia",
 		"imageUrl": "http://i.webapps.microsoft.com/r/image/view/-/3688966/extraHighRes/1/-/Nokia-Lumia-800-Marketplace.jpg",
-		"lat": 52.054035,
-		"lng": 1.176698,
+		"latitude": 52.054035,
+		"longitude": 1.176698,
 		"scale": 3
 	}
 ]
