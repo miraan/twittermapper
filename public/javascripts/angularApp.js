@@ -1,4 +1,4 @@
-var app = angular.module('oxTwi', ['ui.router','uiGmapgoogle-maps']);
+var app = angular.module('oxTwi', ['ui.router','ngMap']);
 
 function MapPoint(id, latLng, importance, title){ 
     this.id = id;
@@ -58,11 +58,9 @@ app.controller('MapCtrl', [
     $scope.markers = markers.markers;
 
     $scope.map = {
-      center: {
-        latitude: 55.3617609,
-        longitude: -3.4433238
-      },
-      zoom: 5,
+      latitude: 51.752285,
+      longitude: -1.247093,
+      zoom: 8,
       bounds: {}
     };
 
@@ -70,6 +68,17 @@ app.controller('MapCtrl', [
       scrollwheel: false
     };
 
+    $scope.$on('mapInitialized', function(evt, map) {
+      new RichMarker({
+        map: map,   // !! $scope.map
+        position: new google.maps.LatLng(51.752285,-1.247093),
+        flat: true,
+        anchor: RichMarkerPosition.MIDDLE,
+        content: '<div class= "marker-arrow-size1"></div>'+
+                 '<img class= "circle-marker marker-size1" src="http://www.meganfox.com/wp-content/uploads/2014/01/3.jpg"/>'+
+                  '<div class= "marker-bottom-size1"></div>'
+      });  
+    });
   }
 ]);
 
