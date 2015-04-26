@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>OxTwi</title>
+    <meta charset="utf-8"> 
+    <!-- To assure that the page scale correctly.-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="APIs/bootstrap-3.3.4-dist/css/bootstrap.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <!-- Latest compiled and minified JavaScript for Bootstrap-->
+    <script src="APIs/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
+    <!--My style-->
+    <link rel="stylesheet" type="text/css" href="stylesheets/Maps.css">
+    <link rel="stylesheet" type="text/css" href="stylesheets/CustomBootstrap.css">
+    <!--Google maps API.-->
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkTNanNXkad_od5dl2cRuW3Yqsvad0nBc">
+    </script>
+    <!--Google charts API.-->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    
+    <!--Angular API.-->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.10/angular.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
+    <script src="APIs/lodash/dist/lodash.compat.js"></script>
+    <script src="APIs/angular-google-maps/dist/angular-google-maps.js"></script>
+
+    <script type="text/javascript" src="javascripts/angularApp.js"></script>
+  </head>
+  <body ng-app="oxTwi">
+    <ui-view></ui-view>
+  </body>
+</html>
+
