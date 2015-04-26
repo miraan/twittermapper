@@ -31,6 +31,29 @@
     <script type="text/javascript" src="javascripts/angularApp.js"></script>
   </head>
   <body ng-app="oxTwi">
+    <!-- Navigation bar-->
+    <nav class="navbar navbar-custom">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">OxTwi</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav" ng-controller= "MenuCtrl">
+            <li class="{{menu.map.state}}" ng-click="setActive(menu.map)"><a href="#/map">Maps</a></li>
+            <li class="{{menu.graphs.state}}" ng-click="setActive(menu.graphs)"><a href="#/graphs/0">Graphs</a></li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
     <ui-view></ui-view>
   </body>
 </html>

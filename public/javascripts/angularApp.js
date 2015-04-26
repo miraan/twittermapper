@@ -22,14 +22,11 @@ function($stateProvider, $urlRouterProvider) {
           return markers.getAll();
         }]
       }
+    }).state('graphs', {
+      url: '/graphs/{id}',
+      templateUrl: 'Views/graphs.html',
+      controller: 'GraphsCtrl'
     });
-/*
-  $stateProvider
-    .state('graphs', {
-    url: '/graphs/{id}',
-    templateUrl: '/graphs.html',
-    controller: 'GraphsCtrl'
-  });*/
 
   $urlRouterProvider.otherwise('map');
 }]);
@@ -49,18 +46,46 @@ app.factory('markers', ['$http', function($http) {
 
 }]);
 
+app.controller('MenuCtrl', [
+  '$scope',
+  function($scope, markers){
+    $scope.menu = {
+      map: {
+        state: 'active',
+      },
+      graphs: {
+        state: '',
+      }
+    };
+
+    $scope.active = $scope.menu.map;
+    $scope.setActive = function(active){
+      $scope.active.state = "";
+      active.state = 'active';
+      $scope.active = active;
+    };
+  }
+]);
+
 app.controller('MapCtrl', [
   '$scope',
   'markers',
   function($scope, markers){
-    $scope.showChart = false;
+    $scope.infoVisible = false;
+    $scope.infoText = "Sample text.";
+    $scope.showInfo = function (index){
+      console.log('Clicked on the marker.'+index);
+      $scope.infoText = "Clicked on the marker "+index;
+      $scope.infoVisible = true;
+      $scope.$apply();
+    };
 
     $scope.markers = markers.markers;
 
     $scope.map = {
       latitude: 51.752285,
       longitude: -1.247093,
-      zoom: 8,
+      zoom: 5,
       bounds: {}
     };
 
@@ -69,18 +94,48 @@ app.controller('MapCtrl', [
     };
 
     $scope.$on('mapInitialized', function(evt, map) {
-      new RichMarker({
-        map: map,   // !! $scope.map
-        position: new google.maps.LatLng(51.752285,-1.247093),
-        flat: true,
-        anchor: RichMarkerPosition.MIDDLE,
-        content: '<div class= "marker-arrow-size1"></div>'+
-                 '<img class= "circle-marker marker-size1" src="http://www.meganfox.com/wp-content/uploads/2014/01/3.jpg"/>'+
-                  '<div class= "marker-bottom-size1"></div>'
-      });  
+      for (var i=0; i<$scope.markers.length; i++) {
+        var content = '<div class= "marker-arrow-size'+$scope.markers[i].scale+'"></div>'+
+                      '<img class= "circle-marker marker-size'+$scope.markers[i].scale+'" src="'+$scope.markers[i].imageUrl+'"/>'
+        var marker = new RichMarker({
+          map: map,   // !! $scope.map
+          position: new google.maps.LatLng($scope.markers[i].latitude,$scope.markers[i].longitude),
+          flat: true,
+          anchor: RichMarkerPosition.MIDDLE,
+          content: content
+        });
+        google.maps.event.addListener(marker, 'click', function() {
+          $scope.showInfo(i);
+        });
+      };
     });
   }
 ]);
+
+
+app.controller('GraphsCtrl', [
+  '$scope',
+  '$stateParams',
+  function($scope,$stateParams){
+    
+  }
+]);
+
+$(function() {
+    $('body').on('mousedown', 'div.info', function() {
+        $(this).addClass('draggable').parents().on('mousemove', function(e) {
+            $('.draggable').offset({
+                top: e.pageY - $('.draggable').outerHeight() / 2,
+                left: e.pageX - $('.draggable').outerWidth() / 2
+            }).on('mouseup', function() {
+                $(this).removeClass('draggable');
+            });
+        });
+        e.preventDefault();
+    }).on('mouseup', function() {
+        $('.draggable').removeClass('draggable');
+    });
+});
 
 // google.maps.event.addDomListener(window, 'load', initialize);
 
