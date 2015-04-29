@@ -112,6 +112,7 @@ app.controller('MapCtrl', [
     };
 
     $scope.$on('mapInitialized', function(evt, map) {
+      map.set('streetViewControl', false);
       for (var i=0; i<$scope.markers.length; i++) {
         var content = '<div class= "marker-arrow-size'+$scope.markers[i].scale+'"></div>'+
                       '<img class= "circle-marker marker-size'+$scope.markers[i].scale+'" src="'+$scope.markers[i].imageUrl+'"/>'
