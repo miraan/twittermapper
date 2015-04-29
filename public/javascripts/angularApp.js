@@ -1,12 +1,5 @@
 var app = angular.module('oxTwi', ['ui.router','ngMap']);
 
-function MapPoint(id, latLng, importance, title){ 
-    this.id = id;
-    this.latLng = latLng;
-    this.importance = importance;
-    this.title = title;
-}
-
 app.config([
 '$stateProvider',
 '$urlRouterProvider',
@@ -90,10 +83,13 @@ app.controller('MapCtrl', [
   'markers',
   function($scope, markers){
     $scope.infoVisible = false;
-    $scope.infoText = "Sample text.";
+    $scope.infoTitle = "";
+    $scope.infoText = "Initial text.";
+
     $scope.showInfo = function (index){
-      console.log('Clicked on the marker.'+index);
-      $scope.infoText = "Clicked on the marker "+index;
+      $scope.infoTitle = $scope.markers[index].item;
+      $scope.infoText = "Clicked on the marker with id:"+$scope.markers[index].id;
+
       $scope.infoVisible = true;
       $scope.$apply();
     };
@@ -121,13 +117,14 @@ app.controller('MapCtrl', [
                       '<img class= "circle-marker marker-size'+$scope.markers[i].scale+'" src="'+$scope.markers[i].imageUrl+'"/>'
         var marker = new RichMarker({
           map: map,   // !! $scope.map
+          index: i,    //change for id
           position: new google.maps.LatLng($scope.markers[i].latitude,$scope.markers[i].longitude),
           flat: true,
           anchor: RichMarkerPosition.MIDDLE,
           content: content
         });
         google.maps.event.addListener(marker, 'click', function() {
-          $scope.showInfo(i);
+          $scope.showInfo(this.index);
         });
       };
     });
