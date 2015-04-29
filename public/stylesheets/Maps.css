@@ -21,20 +21,43 @@ html, body {
 }
 
 .info {
-  cursor:move;
-  width:70px;
-  height:70px;
-  background-color:white;
-  border:1px solid #041e42;
-  margin:2px;
-  float:right;
+  position: relative;
+  top: -200px;
+  overflow: hidden;
+  width: 300px;
+}
+/*
+.info {
+  width: 300px;
+  background-color: white;
+  border: 1px solid #041e42;
+  margin: 2px;
   position: relative;
   top: -200px;
 }
 
-.draggable {
-  	background-color: #F1F2E4;
+.info .header {
+	background-color: #041e42;
+	border-bottom: 1px solid #041e42;
+	color: white;
+	vertical-align: top;
 }
+.info .header > h3 {
+	color: white;
+}
+
+.info .header .left {
+	border: 0px;
+	float: left;
+}
+
+.info .header .right {
+	border: 0px;
+	float: right;
+}
+
+.info .body {
+}*/
 
 .circle-marker {
     border-radius: 50%;

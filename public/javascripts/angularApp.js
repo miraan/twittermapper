@@ -46,6 +46,24 @@ app.factory('markers', ['$http', function($http) {
 
 }]);
 
+app.directive('draggable', function(){   
+  return {
+    restrict: 'A',
+    link : function(scope,elem,attr){
+      $(elem).draggable();
+    }
+  }  
+});
+
+app.directive('resizable', function(){   
+  return {
+    restrict: 'A',
+    link : function(scope,elem,attr){
+      $(elem).resizable();
+    }
+  }  
+});
+
 app.controller('MenuCtrl', [
   '$scope',
   function($scope, markers){
@@ -78,6 +96,10 @@ app.controller('MapCtrl', [
       $scope.infoText = "Clicked on the marker "+index;
       $scope.infoVisible = true;
       $scope.$apply();
+    };
+    $scope.hideInfo = function (){
+      $scope.infoText = "";
+      $scope.infoVisible = false;
     };
 
     $scope.markers = markers.markers;
@@ -120,22 +142,6 @@ app.controller('GraphsCtrl', [
     
   }
 ]);
-
-$(function() {
-    $('body').on('mousedown', 'div.info', function() {
-        $(this).addClass('draggable').parents().on('mousemove', function(e) {
-            $('.draggable').offset({
-                top: e.pageY - $('.draggable').outerHeight() / 2,
-                left: e.pageX - $('.draggable').outerWidth() / 2
-            }).on('mouseup', function() {
-                $(this).removeClass('draggable');
-            });
-        });
-        e.preventDefault();
-    }).on('mouseup', function() {
-        $('.draggable').removeClass('draggable');
-    });
-});
 
 // google.maps.event.addDomListener(window, 'load', initialize);
 
