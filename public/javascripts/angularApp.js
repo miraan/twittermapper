@@ -1,4 +1,10 @@
-var app = angular.module('oxTwi', ['ui.router','ngMap']);
+google.load('visualization', '1', {packages:['corechart']});
+ 
+google.setOnLoadCallback(function () {
+  angular.bootstrap(document.body, ['oxTwi']);
+});
+
+var app = angular.module('oxTwi', ['ui.router','ngMap','ui.bootstrap']);
 
 app.config([
 '$stateProvider',
@@ -18,7 +24,12 @@ function($stateProvider, $urlRouterProvider) {
     }).state('graphs', {
       url: '/graphs/{id}',
       templateUrl: 'Views/graphs.html',
-      controller: 'GraphsCtrl'
+      controller: 'GraphsCtrl',
+      resolve: {
+        markerPromise: ['graphData', function(graphData) {
+          return graphData.getAll();
+        }]
+      }
     });
 
   $urlRouterProvider.otherwise('map');
@@ -39,7 +50,7 @@ app.factory('markers', ['$http', function($http) {
 
 }]);
 
-app.directive('draggable', function(){   
+app.directive('draggable', function(){
   return {
     restrict: 'A',
     link : function(scope,elem,attr){
@@ -59,7 +70,7 @@ app.directive('resizable', function(){
 
 app.controller('MenuCtrl', [
   '$scope',
-  function($scope, markers){
+  function($scope){
     $scope.menu = {
       map: {
         state: 'active',
@@ -99,6 +110,7 @@ app.controller('MapCtrl', [
     };
 
     $scope.markers = markers.markers;
+    console.log($scope.markers);
 
     $scope.map = {
       latitude: 51.752285,
@@ -132,12 +144,74 @@ app.controller('MapCtrl', [
   }
 ]);
 
+//Graphs
+app.factory('graphData', ['$http', function($http) {
+  console.log("Called factory.");
+  var o = {
+    graphData: []
+  };
+
+  o.getAll = function() {
+    return $http.get('/getGraphData.json').success(function(data){
+      console.log("Success.");
+      angular.copy(data, o.graphData);
+    });
+  };
+
+  return o;
+
+}]);
+
+app.directive('timeline', function() {
+  return {
+    restrict: 'A',
+    link: function($scope, elm, attrs) {
+      $scope.$watch('timeline.line', function() {
+        var timeline = '';
+ 
+        if ($scope.timeline.line == '1') {
+          timeline = new google.visualization.LineChart(elm[0]);
+        } else {
+          timeline = new google.visualization.BarChart(elm[0]);
+        }
+ 
+        timeline.draw($scope.timeline.data, $scope.timeline.options);
+      },true);
+    }
+  };
+});
 
 app.controller('GraphsCtrl', [
   '$scope',
-  '$stateParams',
-  function($scope,$stateParams){
+  'graphData',
+  function($scope,graphData){
+    $scope.graphData = graphData.graphData;
+    console.log($scope.graphData);
+
+    var header = $scope.graphData[0];
+    var timelineData = [];
+    for (var i = 0; i < header.demand.length; i++) {
+      timelineData.push([header.demand[i]]);
+    };
+    console.log(timelineData);
+    for (var i = 1; i < $scope.graphData.length; i++) {
+      for (var j = 0; j < header.demand.length; j++) {
+        timelineData[j].push($scope.graphData[i].demand[j]);
+      };
+    };
     
+
+    var options = {
+      curveType: 'function',
+      legend: { position: 'bottom' }
+    };
+    var timeline = {
+      line: 1
+    };
+ 
+    timeline.data = google.visualization.arrayToDataTable(timelineData);
+    timeline.options = options;
+    $scope.timeline = timeline;
   }
 ]);
 
@@ -170,14 +244,11 @@ function drawChart() {
     data.addColumn('string', 'Topping');
     data.addColumn('number', 'Slices');
     data.addRows([
-      ['Mushrooms', 3],
-      ['Onions', 1],
-      ['Olives', 1],
-      ['Zucchini', 1],
-      ['Pepperoni', 2]
+      ['Male', 35],
+      ['Female', 28]
     ]);
 
-  options = {'title':'How Much Pizza I Ate Last Night',
+  options = {'title':'Male female ratio',
              'width': 0,
             'height': 0};  
 
@@ -187,6 +258,6 @@ function drawChart() {
 }
 
 
-$(window).resize(reDrawChart);
-*/
+$(window).resize(reDrawChart);*/
+
 

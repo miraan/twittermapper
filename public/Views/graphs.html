@@ -1,1 +1,17 @@
-<img src="http://www.meganfox.com/wp-content/uploads/2014/01/3.jpg"/>
+<div class="container">
+	<div class="row">
+		<div class="panel panel-custom">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Timeline</h3>
+		  </div>
+		  <div class="panel-body panel-noPadding">
+		    <div  class="chart-div" timeline></div>
+		    <div class="btn-group">
+		        <label class="btn btn-custom" ng-model="timeline.line" btn-radio="1">Popularity</label>
+		        <label class="btn btn-custom" ng-model="timeline.line" btn-radio="2">Sentiment</label>
+		    </div><!--/btn-group-->
+	        {{timeline.line}}
+		  </div><!--/panel-body-->
+		</div><!--/panel-->
+	</div><!--/row-->
+</div><!--/container-->
