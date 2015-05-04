@@ -1,4 +1,4 @@
-google.load('visualization', '1', {packages:['corechart']});
+google.load('visualization', '1', {packages:['corechart','geochart']});
  
 google.setOnLoadCallback(function () {
   angular.bootstrap(document.body, ['oxTwi']);

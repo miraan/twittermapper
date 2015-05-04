@@ -1,37 +1,50 @@
-[
-  {
-    "id": 0,
-    "item": "dummyHeader",
-    "demand": [
-                "Day", 
-                "1/5/2015", 
-                "2/5/2015", 
-                "3/5/2015", 
-                "4/5/2015"
-              ]
-  },
-  {
-    "id": 11,
-    "item": "iPhone",
-    "demand": [
-                "iPhone", 
-                700, 
-                1030, 
-                2000, 
-                1500
-              ]
-  },
-  {
-    "id": 12,
-    "item": "Nexus 5",
-    "demand": [
-                "Nexus 5", 
-                500, 
-                700, 
-                1500, 
-                1000
-              ]
-  }
-
-  
-]
+{
+  "id": 11,
+  "item": "iPhone",
+  "demand": [
+          ["Day", "iPhone"], 
+          ["1/5/2015", 700], 
+          ["1/5/2015", 1030], 
+          ["1/5/2015", 2000], 
+          ["1/5/2015", 1500]
+        ],
+  "sentiment": [
+          ["Day", "iPhone"], 
+          ["1/5/2015", 0.8], 
+          ["1/5/2015", 0.9], 
+          ["1/5/2015", 0], 
+          ["1/5/2015", -0.5]
+        ],
+  "geoDemand":[
+          ["Country", "Popularity"],
+          ["Germany", 200],
+          ["United States", 300],
+          ["Brazil", 400],
+          ["Canada", 500],
+          ["France", 600],
+          ["RU", 700]
+        ],
+  "geoSentiment":[
+          ["Country", "Sentiment"],
+          ["Germany", 0.3],
+          ["United States", 0.8],
+          ["Brazil", 0.1],
+          ["Canada", 0.4],
+          ["France", -0.2],
+          ["RU", -0.1]
+        ],
+  "wordCloud": [
+          {
+            "text": "iPhone",
+            "size": 100
+          },
+          {
+            "text": "like",
+            "size": 50
+          },
+          {
+            "text": "hate",
+            "size": 30
+          } 
+        ]
+}
