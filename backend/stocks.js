@@ -2,6 +2,7 @@
 
 var yahooFinance = require('yahoo-finance')
 
+// See more @ https://github.com/pilwon/node-yahoo-finance
 
 /*
 var apple = yahooFinance.historical({
