@@ -152,7 +152,7 @@ var doSearch = function(searchText, options, callback) {
 
 // callback takes params error, tweets
 var getRandomSample = function(size, searchText, options, callback) {
-	var limit = 1000;
+	options.limit = 1000;
 	doSearch(searchText, options, function(error, tweets) {
 		if (error) {
 			callback(error, null);
