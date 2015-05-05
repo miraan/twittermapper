@@ -1,106 +1,44 @@
 var async = require('async');
 var mongoose = require('mongoose');
-require('./models/Bounds');
-require('./models/Point');
+var deepPopulate = require('mongoose-deep-populate');
 require('./models/Tweet');
-require('./models/TwitterUser');
 
-var Bounds = mongoose.model('Bounds');
-var Point = mongoose.model('Point');
 var Tweet = mongoose.model('Tweet');
-var TwitterUser = mongoose.model('TwitterUser');
 
+// callback has params error, tweet
 var saveTweet = function(tweetJson, callback) {
 	var point;
-	var bounds;
+	var southWestPoint;
+	var northWestPoint;
+	var northEastPoint;
+	var southEastPoint;
 	var twitterUser;
 	var tweet;
 
-	var savePointObject = function(callback) {
+	var makePoint = function() {
 		if (!tweetJson.geo) {
-			callback(null);
 			return;
 		}
 
-		point = new Point({
-			latitude: tweetJson.geo.coordinates[0],
-			longitude: tweetJson.geo.coordinates[1]
-		});
+		point = [
+			tweetJson.geo.coordinates[0],
+			tweetJson.geo.coordinates[1]
+		];
+	};
 
-		point.save(function(error, point) {
-			if (error) {
-				callback(error);
-				return;
-
-			}
-			
-			callback(null);
-		});
-	}
-
-	var saveBoundsObject = function(callback) {
+	var makeBoundsPoints = function() {
 		if (!tweetJson.place || !tweetJson.place.bounding_box) {
-			callback(null);
 			return;
 		}
 
-		var southWestPoint = new Point({
-			latitude: tweetJson.place.bounding_box.coordinates[0][0][1],
-			longitude: tweetJson.place.bounding_box.coordinates[0][0][0]
-		});
+		southWestPoint = [tweetJson.place.bounding_box.coordinates[0][0][1], tweetJson.place.bounding_box.coordinates[0][0][0]];
+		northWestPoint = [tweetJson.place.bounding_box.coordinates[0][1][1], tweetJson.place.bounding_box.coordinates[0][1][0]];
+		northEastPoint = [tweetJson.place.bounding_box.coordinates[0][2][1], tweetJson.place.bounding_box.coordinates[0][2][0]];
+		southEastPoint = [tweetJson.place.bounding_box.coordinates[0][3][1], tweetJson.place.bounding_box.coordinates[0][3][0]];
+	};
 
-		var northWestPoint = new Point({
-			latitude: tweetJson.place.bounding_box.coordinates[0][1][1],
-			longitude: tweetJson.place.bounding_box.coordinates[0][1][0]
-		});
-
-		var northEastPoint = new Point({
-			latitude: tweetJson.place.bounding_box.coordinates[0][2][1],
-			longitude: tweetJson.place.bounding_box.coordinates[0][2][0]
-		});
-
-		var southEastPoint = new Point({
-			latitude: tweetJson.place.bounding_box.coordinates[0][3][1],
-			longitude: tweetJson.place.bounding_box.coordinates[0][3][0]
-		});
-
-		var points = [southWestPoint, northWestPoint, northEastPoint, southEastPoint];
-
-		async.each(points, function(currentPoint, asyncCallback) {
-			currentPoint.save(function(error, currentPoint) {
-				if (error) {
-					asyncCallback(error);
-					return;
-				}
-				
-				asyncCallback();
-			});
-
-		}, function(error) {
-			if (error) {
-				callback(error);
-				return;
-			}
-
-			bounds = new Bounds({
-				points: [southWestPoint, northWestPoint, northEastPoint, southEastPoint]
-			});
-
-			bounds.save(function(error, bounds) {
-				if (error) {
-					callback(error);
-					return;
-
-				}
-
-				callback(null);
-			});
-
-		});
-	}
-
-	var saveTwitterUserObject = function(callback) {
-		twitterUser = new TwitterUser({
+	var makeTwitterUser = function() {
+		twitterUser = {
 			id: tweetJson.user.id,
 			name: tweetJson.user.name,
 			screen_name: tweetJson.user.screen_name,
@@ -119,20 +57,10 @@ var saveTweet = function(tweetJson, callback) {
 			time_zone: tweetJson.user.time_zone,
 			geo_enabled: tweetJson.user.geo_enabled,
 			lang: tweetJson.user.lang
-		});
+		};
+	};
 
-		twitterUser.save(function(error, twitterUser) {
-			if (error) {
-				callback(error);
-				return;
-
-			}
-			
-			callback(null);
-		});
-	}
-
-	var saveTweetObject = function(callback) {
+	var makeTweet = function() {
 		tweet = new Tweet({
 			id: tweetJson.id,
 			created_at: new Date(tweetJson.created_at),
@@ -140,47 +68,60 @@ var saveTweet = function(tweetJson, callback) {
 			source: tweetJson.source,
 			truncated: tweetJson.truncated,
 			user: twitterUser,
-			point: point,
-			bounds: bounds,
+			geo: point,
+			bounds: [],
 			retweet_count: tweetJson.retweet_count,
 			favourite_count: tweetJson.favorite_count,
 			favorited: tweetJson.favorited,
 			retweeted: tweetJson.retweeted,
 			possible_sensitive: tweetJson.possible_sensitive,
 			lang: tweetJson.lang,
-			searchText: tweetJson.searchText
+			product: tweetJson.product,
+			indicatesDemand: tweetJson.indicatesDemand
 		});
 
-		tweet.save(function(error, tweet) {
-			if (error) {
-				callback(error);
-				return;
+		tweet.bounds[0] = southWestPoint;
+		tweet.bounds[1] = northWestPoint;
+		tweet.bounds[2] = northEastPoint;
+		tweet.bounds[3] = southEastPoint;
+	};
 
-			}
-			
-			callback(null);
-		});
-	}
+	makePoint();
+	makeBoundsPoints();
+	makeTwitterUser();
+	makeTweet();
 
-	async.series([
-		savePointObject,
-		saveBoundsObject,
-		saveTwitterUserObject,
-		saveTweetObject
-		],
+	tweet.save(function(error, savedTweet) {
+		if (error) {
+			callback(error, null);
+			return;
+		}
 
-		function(error) {
-			if (error) {
-				callback(error, null);
-				return;
-			}
-
-			callback(null, tweet);
-		});
+		callback(null, savedTweet);
+	});
 }
 
-var getTweets = function(callback) {
-	Tweet.find().populate('user point bounds').exec(function(error, tweets) {
+// callback takes params error, tweets
+var getTweets = function(options, callback) {
+	var query = Tweet.find();
+
+	if (options.product) {
+		query = query.where('product').equals(options.product);
+	}
+	if (options.demand) {
+		query = query.where('indicatesDemand').equals(options.demand);
+	}
+	if (options.geo) {
+		query = query.exists('geo');
+	}
+	if (options.sort) {
+		query = query.sort(options.sort);
+	}
+	if (options.dateLowerBound) {
+		query = query.where('created_at').gte(options.dateLowerBound);
+	}
+
+	query.exec(function(error, tweets) {
 		if (error) {
 			callback(error, null);
 			return;
@@ -192,7 +133,7 @@ var getTweets = function(callback) {
 }
 
 var wipeDatabase = function(callback) {
-	var models = [Bounds, Point, Tweet, TwitterUser];
+	var models = [Tweet];
 
 	var dropModel = function(model, dropModelCallback) {
 		console.log("Dropping ", model.modelName);
@@ -225,16 +166,6 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function(callback) {
 	console.log("Connected to MongoDB");
-
-	// wipeDatabase(function(error) {
-	// 	if (error) {
-	// 		console.log("Error wiping database");
-	// 		return;
-	// 	}
-
-	// 	console.log("Wiped database successfully");
-	// });
-	
 });
 
 module.exports.saveTweet = saveTweet;
