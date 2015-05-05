@@ -1,7 +1,7 @@
 .navbar-custom {
-  background-color: #041e42;
+  background-color: #002147;
   border: 0px;
-  border-color: #041e42;
+  border-color: #002147;
   border-radius: 0px;
   margin-bottom: 1px
 }
@@ -50,13 +50,13 @@
 }
 .navbar-custom .navbar-collapse,
 .navbar-custom .navbar-form {
-  border-color: #041e42;
+  border-color: #002147;
 }
 .navbar-custom .navbar-nav > .open > a,
 .navbar-custom .navbar-nav > .open > a:hover,
 .navbar-custom .navbar-nav > .open > a:focus {
   color: #555;
-  background-color: #041e42;
+  background-color: #002147;
 }
 @media (max-width: 767px) {
   .navbar-custom
@@ -79,7 +79,7 @@
   .navbar-custom
   .navbar-nav .open .dropdown-menu > .active > a:focus {
     color: #555;
-    background-color: #041e42;
+    background-color: #002147;
   }
   .navbar-custom
   .navbar-nav .open .dropdown-menu > .disabled > a,
@@ -112,15 +112,15 @@ fieldset[disabled] .navbar-custom .btn-link:focus {
 }
 
 .panel-custom {
-  border-color: #041e42;
+  border-color: #002147;
   border-radius: 0px;
   min-height: 100px;
   min-width: 200px;
 }
 .panel-custom > .panel-heading {
   color: #fff;
-  background-color: #041e42;
-  border-color: #041e42;
+  background-color: #002147;
+  border-color: #002147;
   border-radius: 0px;
   padding: 0px;
   height: 33px;
@@ -131,14 +131,14 @@ fieldset[disabled] .navbar-custom .btn-link:focus {
   vertical-align: text-bottom;
 }
 .panel-custom > .panel-heading + .panel-collapse > .panel-body {
-  border-top-color: #041e42;
+  border-top-color: #002147;
 }
 .panel-custom > .panel-heading .badge {
   color: #6699cc;
   background-color: #fff;
 }
 .panel-custom > .panel-footer + .panel-collapse > .panel-body {
-  border-bottom-color: #041e42;
+  border-bottom-color: #002147;
 }
 
 .panel-noPadding > .panel-body{
@@ -147,12 +147,12 @@ fieldset[disabled] .navbar-custom .btn-link:focus {
 
 .btn-close {
   color: #fff;
-  background-color: #041e42;
-  border-color: #041e42;
+  background-color: #002147;
+  border-color: #002147;
   border-radius: 0px;
   border: 0px;
-  border-left: 1px solid #041e42;
-  border-bottom: 1px solid #041e42;
+  border-left: 1px solid #002147;
+  border-bottom: 1px solid #002147;
   text-decoration: bold;
   float: right;
   vertical-align: top;
@@ -199,10 +199,10 @@ fieldset[disabled] .btn-close.active {
 
 .btn-custom {
   color: #fff;
-  background-color: #041e42;
-  border-color: #041e42;
+  background-color: #002147;
+  border-color: #002147;
   border-radius: 0px;
-  border: 1px solid #041e42;
+  border: 1px solid #002147;
   text-decoration: bold;
   float: right;
   vertical-align: top;

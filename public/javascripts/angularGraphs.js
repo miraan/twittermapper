@@ -98,7 +98,9 @@ app.directive('wordcloud', function() {
 app.controller('GraphsCtrl', [
   '$scope',
   'graphData',
-  function($scope,graphData){
+  'products',
+  function($scope,graphData, products){
+    $scope.products = products;
     $scope.graphData = graphData.graphData;
 /*
     var header = $scope.graphData[0];

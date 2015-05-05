@@ -16,6 +16,7 @@
 
     <!--My style-->
     <link rel="stylesheet" type="text/css" href="stylesheets/Maps.css">
+    <link rel="stylesheet" type="text/css" href="stylesheets/Graphs.css">
     <link rel="stylesheet" type="text/css" href="stylesheets/CustomBootstrap.css">
     <!--Google maps API.-->
     <script type="text/javascript"
@@ -65,6 +66,31 @@
       </div><!-- /.container-fluid -->
     </nav>
     <ui-view></ui-view>
+    <div ng-controller= "MenuCtrl">
+      <div ng-hide="brighten">
+        <div class="darkness">
+        </div>
+        <div class="selection">
+          <button type="button" class="topicBtn" ng-repeat="topic in products.topics" ng-click="selecTopic($index)">{{topic}}</button>
+        </div>
+      </div>
+
+      <div class="seleption" ng-show="brighten" ng-mouseleave="hideAll()">
+        <button type="button" class="topicBtn" ng-mouseenter="showOptions()" ng-show="optionsHidden">{{products.currentTopic}}</button>
+        <div ng-hide="optionsHidden">
+          <div ng-hide="optionsViewIsT">
+            <button type="button" class="topicBtn" ng-click="toggleTopiClasses()">{{products.currentTopicClass}}</button>
+            <div ng-repeat="topicOption in products.currentTopicOptions">
+              <button type="button" class="seleoptiBtn" ng-if="$index != products.currentOptionIndex" ng-click="selectOption($index)" >{{topicOption}}</button>
+              <button type="button" class="selecedOptiBtn" ng-if="$index == products.currentOptionIndex">{{topicOption}}</button>
+            </div>
+          </div>
+          <div ng-show="optionsViewIsT">
+            <button type="button" class="topicBtn" ng-repeat="topic in products.topics" ng-click="selecTopic($index)">{{topic}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
 

@@ -53,8 +53,9 @@ html, body {
 .seleption {
   background: yellow;
   position: fixed;
-  top: 69px;
-  left: 88px;
+  top: 0px;
+  left: 50%;
+  margin-left: -140px;
   width: 280px;
   height: 50px;
 }
@@ -89,23 +90,6 @@ html, body {
   border-style: solid;
   border: 0px;
   width: 100%;
-}
-
-.body-div {
-  height: 100%;
-  width: 100%;
-  overflow: auto;
-  padding: 20px;
-}
-
-.chart-div {
-	width: 500px;
-  height: 500px;
-}
-
-.cloud {
-	width: 100%;
-	height: 500px;
 }
 
 .map { 

@@ -68,9 +68,66 @@ app.directive('resizable', function(){
   }  
 });
 
+app.factory('products', ['$http', function($http) {
+  var object = {
+    showDemand: true,
+    showSentiment: false,
+    currentTopic: "",
+    currentTopicOptions: [],
+    currentOptionIndex: 0,
+    currentTopicClass: "",
+    topics: [
+      "Apps and Games",
+      "Books",
+      "Cars and Motorbikes",
+      "Computers and Accessories",
+      "Watches"
+    ],
+    topicsOptions: [
+      ["Entire Market","Temple Run","Cut the Rope","iFitness","Tripr"], // Apps and Games
+      [], // Books
+      [], // Cars and Motorbikes
+      [], // Computers and Accessories
+      ["iWatch", "Casio watch"]  // Watches
+    ],
+  };
+  return object;
+}]);
+
 app.controller('MenuCtrl', [
   '$scope',
-  function($scope){
+  'products',
+  function($scope, products){
+    $scope.products = products;
+
+    $scope.selecTopic = function(topicI){ // I is for index
+      $scope.products.currentOptionIndex = 0;
+      $scope.brighten = true;
+      $scope.products.currentTopicClass = $scope.products.topics[topicI];
+      $scope.products.currentTopic = $scope.products.topics[topicI];
+      $scope.products.currentTopicOptions = $scope.products.topicsOptions[topicI];
+      $scope.hideAll();
+    };
+    $scope.selectOption = function(optionI){
+      $scope.products.currentOptionIndex = optionI;
+      if (optionI == 0) { $scope.products.currentTopic = $scope.products.currentTopicClass; }
+      else { $scope.products.currentTopic = $scope.products.currentTopicOptions[optionI]; }
+      $scope.hideAll();
+    };
+    $scope.hideAll = function(){
+      $scope.optionsHidden = true;
+      $scope.optionsViewIsT = false;
+    };
+    $scope.showOptions = function(){
+      $scope.optionsHidden = false;
+    };
+    $scope.toggleTopiClasses = function(){
+      $scope.optionsViewIsT = !$scope.optionsViewIsT;
+    };
+    $scope.isTopiClass = function(t){
+      return t != $scope.products.currentTopiClass;
+    };
+
     $scope.menu = {
       map: {
         state: 'active',
@@ -94,21 +151,6 @@ app.controller('MapCtrl', [
   '$http',
   'markers',
   function($scope, $http, markers){
-    $scope.topics = [
-      "Apps and Games",
-      "Books",
-      "Cars and Motorbikes",
-      "Computers and Accessories",
-      "Watches"
-    ];
-    $scope.topicsOptions = [
-      ["Entire Market","Temple Run","Cut the Rope","iFitness","Tripr"], // Apps and Games
-      [], // Books
-      [], // Cars and Motorbikes
-      [], // Computers and Accessories
-      []  // Watches
-    ]
-
 
     $scope.infoVisible = false;
     $scope.infoTitle = "";
@@ -131,35 +173,6 @@ app.controller('MapCtrl', [
       $scope.infoText = "";
       $scope.infoVisible = false;
     };
-
-    $scope.selecTopic = function(topicI){ // I is for index
-      $scope.optIndex = 0;
-      $scope.brighten = true;
-      $scope.topiClass = $scope.topics[topicI];
-      $scope.topic = $scope.topics[topicI];
-      $scope.topicOptions = $scope.topicsOptions[topicI];
-      $scope.hideAll();
-    };
-    $scope.selectOption = function(optionI){
-      $scope.optIndex = optionI;
-      if (optionI == 0) { $scope.topic = $scope.topiClass; }
-      else { $scope.topic = $scope.topicOptions[optionI]; }
-      $scope.hideAll();
-    };
-    $scope.hideAll = function(){
-      $scope.optionsHidden = true;
-      $scope.optionsViewIsT = false;
-    };
-    $scope.showOptions = function(){
-      $scope.optionsHidden = false;
-    };
-    $scope.toggleTopiClasses = function(){
-      $scope.optionsViewIsT = !$scope.optionsViewIsT;
-    };
-    $scope.isTopiClass = function(t){
-      return t != $scope.topiClass;
-    }
-
 
     $scope.markers = markers.markers;
     //console.log($scope.markers);
@@ -216,7 +229,7 @@ app.controller('MapCtrl', [
       }
 
       drawCircles($scope.circles);
-      drawBubbles($scope.markers);
+      //drawBubbles($scope.markers);
     });
   }
 ]);
