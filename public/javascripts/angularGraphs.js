@@ -19,14 +19,16 @@ app.directive('timeline', function() {
     link: function($scope, elm, attrs) {
       $scope.$watch('timeline.line', function() {
         var timeline = '';
- 
+
+        timeline = new google.visualization.LineChart(elm[0]);
+ /*
         if ($scope.timeline.line == '1') {
           $scope.timeline.data = google.visualization.arrayToDataTable($scope.graphData.demand);
           timeline = new google.visualization.LineChart(elm[0]);
         } else {
           $scope.timeline.data = google.visualization.arrayToDataTable($scope.graphData.sentiment);
           timeline = new google.visualization.LineChart(elm[0]);
-        }
+        }*/
  
         timeline.draw($scope.timeline.data, $scope.timeline.options);
       },true);
@@ -117,11 +119,23 @@ app.controller('GraphsCtrl', [
       legend: { position: 'bottom' }
     };
     var timeline = {
+      data: [],
       line: 1
     };
  
     //timeline.data = google.visualization.arrayToDataTable(timelineData);
     timeline.options = timelineOptions;
+
+    var data = new google.visualization.DataTable();
+    data.addColumn('date', 'Date');
+    data.addColumn('number', 'iPhone');
+
+    for (var i = 0; i < $scope.graphData.demand.length; i++) {
+      data.addRow([new Date($scope.graphData.demand[i][0]), $scope.graphData.demand[i][1]]);
+    };
+    timeline.data = data;
+
+
     $scope.timeline = timeline;
 
     var geochartOptions = {
