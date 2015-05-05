@@ -184,7 +184,11 @@ app.controller('MapCtrl', [
       bounds: {}
     };
 
+    var circles = [];
+    var theMap = null;
+
     $scope.$on('mapInitialized', function(evt, map) {
+      theMap = map;
       map.set('streetViewControl', false);
 
       function drawCircles(circs) {
@@ -200,13 +204,13 @@ app.controller('MapCtrl', [
                             ' style="background:'+redOrGreen(circs[i].scale)+';'+
                                    ' opacity:'+opacity(circs[i].scale)+';">'+
                         '</div>';
-          var circle = new RichMarker({
+          circles.push( new RichMarker({
             map: map,
             position: new google.maps.LatLng(circs[i].latitude,circs[i].longitude),
             anchor: RichMarkerPosition.MIDDLE,
             flat: true,
             content: content
-          });
+          }));
         };
       }
 
