@@ -1,4 +1,4 @@
-google.load('visualization', '1', {packages:['corechart']});
+google.load('visualization', '1', {packages:['corechart','geochart']});
  
 google.setOnLoadCallback(function () {
   angular.bootstrap(document.body, ['oxTwi']);
@@ -10,7 +10,6 @@ app.config([
 '$stateProvider',
 '$urlRouterProvider',
 function($stateProvider, $urlRouterProvider) {
-
   $stateProvider
     .state('map', {
       url: '/map',
@@ -21,7 +20,8 @@ function($stateProvider, $urlRouterProvider) {
           return markers.getAll();
         }]
       }
-    }).state('graphs', {
+    })
+    .state('graphs', {
       url: '/graphs/{id}',
       templateUrl: 'Views/graphs.html',
       controller: 'GraphsCtrl',
@@ -35,42 +35,74 @@ function($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('map');
 }]);
 
-app.factory('markers', ['$http', function($http) {
-  var o = {
-    markers: []
+app.factory('products', ['$http', function($http) {
+  var object = {
+    showDemand: true,
+    showSentiment: false,
+    currentTopic: "",
+    currentTopicOptions: [],
+    currentOptionIndex: 0,
+    currentTopicClass: "",
+    topics: [
+      "Apps and Games",
+      "Books",
+      "Cars and Motorbikes",
+      "Computers and Accessories",
+      "Watches"
+    ],
+    topicsOptions: [
+      ["Entire Market","Temple Run","Cut the Rope","iFitness","Tripr"], // Apps and Games
+      [], // Books
+      [], // Cars and Motorbikes
+      [], // Computers and Accessories
+      ["iWatch", "Casio watch"]  // Watches
+    ],
   };
-
-  o.getAll = function() {
-    return $http.get('/getMarkersSample.json').success(function(data){
-      angular.copy(data, o.markers);
-    });
-  };
-
-  return o;
-
+  return object;
 }]);
-
-app.directive('draggable', function(){
-  return {
-    restrict: 'A',
-    link : function(scope,elem,attr){
-      $(elem).draggable();
-    }
-  }  
-});
-
-app.directive('resizable', function(){   
-  return {
-    restrict: 'A',
-    link : function(scope,elem,attr){
-      $(elem).resizable();
-    }
-  }  
-});
 
 app.controller('MenuCtrl', [
   '$scope',
-  function($scope){
+  'products',
+  function($scope, products){
+    $scope.searchText = 'What would you like to search for?';
+
+    $scope.products = products;
+
+    $scope.selecTopic = function(topicI){ // I is for index
+      $scope.products.currentOptionIndex = 0;
+      $scope.brighten = true;
+      $scope.products.currentTopicClass = $scope.products.topics[topicI];
+      $scope.products.currentTopic = $scope.products.topics[topicI];
+      $scope.products.currentTopicOptions = $scope.products.topicsOptions[topicI];
+      $scope.hideAll();
+    };
+    $scope.selectOption = function(optionI){
+      $scope.products.currentOptionIndex = optionI;
+      if (optionI == 0) { $scope.products.currentTopic = $scope.products.currentTopicClass; }
+      else { $scope.products.currentTopic = $scope.products.currentTopicOptions[optionI]; }
+      $scope.hideAll();
+    };
+    $scope.hideAll = function(){
+      $scope.optionsHidden = true;
+      $scope.optionsViewIsT = false;
+    };
+    $scope.showOptions = function(){
+      $scope.optionsHidden = false;
+    };
+    $scope.toggleTopiClasses = function(){
+      $scope.optionsViewIsT = !$scope.optionsViewIsT;
+    };
+    $scope.isTopiClass = function(t){
+      return t != $scope.products.currentTopiClass;
+    };
+    $scope.makeDemand = function(b){
+      $scope.products.showDemand = b;
+    };
+    $scope.makeSentiment = function(b){
+      $scope.products.showSentiment = b;
+    };
+
     $scope.menu = {
       map: {
         state: 'active',
@@ -86,60 +118,5 @@ app.controller('MenuCtrl', [
       active.state = 'active';
       $scope.active = active;
     };
-  }
-]);
-
-app.controller('MapCtrl', [
-  '$scope',
-  'markers',
-  function($scope, markers){
-    $scope.infoVisible = false;
-    $scope.infoTitle = "";
-    $scope.infoText = "Initial text.";
-
-    $scope.showInfo = function (index){
-      $scope.infoTitle = $scope.markers[index].item;
-      $scope.infoText = "Clicked on the marker with id:"+$scope.markers[index].id;
-
-      $scope.infoVisible = true;
-      $scope.$apply();
-    };
-    $scope.hideInfo = function (){
-      $scope.infoText = "";
-      $scope.infoVisible = false;
-    };
-
-    $scope.markers = markers.markers;
-    console.log($scope.markers);
-
-    $scope.map = {
-      latitude: 51.752285,
-      longitude: -1.247093,
-      zoom: 5,
-      bounds: {}
-    };
-
-    $scope.options = {
-      scrollwheel: false
-    };
-
-    $scope.$on('mapInitialized', function(evt, map) {
-      map.set('streetViewControl', false);
-      for (var i=0; i<$scope.markers.length; i++) {
-        var content = '<div class= "marker-arrow-size'+$scope.markers[i].scale+'"></div>'+
-                      '<img class= "circle-marker marker-size'+$scope.markers[i].scale+'" src="'+$scope.markers[i].imageUrl+'"/>'
-        var marker = new RichMarker({
-          map: map,   // !! $scope.map
-          index: i,    //change for id
-          position: new google.maps.LatLng($scope.markers[i].latitude,$scope.markers[i].longitude),
-          flat: true,
-          anchor: RichMarkerPosition.MIDDLE,
-          content: content
-        });
-        google.maps.event.addListener(marker, 'click', function() {
-          $scope.showInfo(this.index);
-        });
-      };
-    });
   }
 ]);

@@ -16,6 +16,7 @@
 
     <!--My style-->
     <link rel="stylesheet" type="text/css" href="stylesheets/Maps.css">
+    <link rel="stylesheet" type="text/css" href="stylesheets/Graphs.css">
     <link rel="stylesheet" type="text/css" href="stylesheets/CustomBootstrap.css">
     <!--Google maps API.-->
     <script type="text/javascript"
@@ -30,11 +31,15 @@
     <script src="APIs/ng-map.js"></script>
     <script src="APIs/richmarker.js"></script>
 
+    <!--D3-->
+    <script src="APIs/d3/d3.js"></script>
+    <script src="APIs/d3.layout.cloud.js"></script>
 
     <!--Google charts API.-->
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
     <script type="text/javascript" src="javascripts/angularApp.js"></script>
+    <script type="text/javascript" src="javascripts/angularMap.js"></script>
     <script type="text/javascript" src="javascripts/angularGraphs.js"></script>
   </head>
   <body>
@@ -62,6 +67,42 @@
       </div><!-- /.container-fluid -->
     </nav>
     <ui-view></ui-view>
+    <div ng-controller= "MenuCtrl">
+      <div ng-hide="brighten">
+        <div class="darkness">
+        </div>
+        <div class="selection">
+          <button type="button" class="topicBtn" ng-repeat="topic in products.topics" ng-click="selecTopic($index)">{{topic}}</button>
+        </div>
+      </div>
+
+      <div class="seleption" ng-show="brighten" ng-mouseleave="hideAll()">
+        <button type="button" class="topicBtnSelected" ng-mouseenter="showOptions()" ng-show="optionsHidden">{{products.currentTopic}}</button>
+        <div ng-hide="optionsHidden">
+          <div ng-hide="optionsViewIsT">
+            <button type="button" class="topicBtn" ng-click="toggleTopiClasses()">{{products.currentTopicClass}}</button>
+            <div ng-repeat="topicOption in products.currentTopicOptions">
+              <button type="button" class="seleoptiBtn" ng-if="$index != products.currentOptionIndex" ng-click="selectOption($index)" >{{topicOption}}</button>
+              <button type="button" class="selecedOptiBtn" ng-if="$index == products.currentOptionIndex">{{topicOption}}</button>
+            </div>
+          </div>
+          <div ng-show="optionsViewIsT">
+            <div>
+              <input type="text" class="searchBox" ng-model="searchText">
+            </div>
+            <button type="button" class="topicBtn" ng-repeat="topic in products.topics" ng-click="selecTopic($index)">{{topic}}</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="demSent" ng-show="brighten">
+        <button          type="button" class="demSentBtn"         ng-hide="products.showDemand"    ng-click="makeDemand(true)">Demand
+        </button><button type="button" class="demSentBtnSelected" ng-show="products.showDemand"    ng-click="makeDemand(false)">Demand
+        </button><button type="button" class="demSentBtn"         ng-hide="products.showSentiment" ng-click="makeSentiment(true)">Sentiment
+        </button><button type="button" class="demSentBtnSelected" ng-show="products.showSentiment" ng-click="makeSentiment(false)">Sentiment
+        </button>
+      </div>
+    </div>
   </body>
 </html>
 

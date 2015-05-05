@@ -1,24 +1,158 @@
 /* all map containers must be full height */
 html, body { 
-	height: 100%;
-	width: 100%;
-	overflow: hidden;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
 }
 
-.chart-div {
-	width: 500px;
-  	height: 500px;
+.darkness {
+  background: black;
+  opacity: 0.5;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index:98;
+}
+.selection {
+  text-align: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  margin-top: -100px;
+  margin-left: -50%;
+  z-index:99;
+}
+/*.selectioNormal {
+  text-align: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 280px;
+  margin-top: -100px;
+  margin-left: -140px;
+  z-index:99;
+}*/
+.topicBtn {
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 14px;
+  padding: 15px;
+  background: #002147;
+  text-decoration: none;
+  border-style: solid;
+  border: 0px;
+  width: 100%;
+}
+.topicBtn:hover {
+  background: #115BA6;
+  text-decoration: none;
+}
+.topicBtnSelected {
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 14px;
+  padding: 15px;
+  background: #6699cc;
+  text-decoration: none;
+  border-style: solid;
+  border: 0px;
+  width: 100%;
+}
+.seleption {
+  background: yellow;
+  position: fixed;
+  top: 0px;
+  left: 50%;
+  margin-left: -140px;
+  width: 280px;
+  height: 50px;
+}
+.seleoptions {
+  background: yellow;
+  width: 280px;
+}
+.seleoptiBtn {
+  font-family: Arial;
+  color: #ffffff;
+  text-align: left;
+  font-size: 14px;
+  padding: 5px;
+  background: #002147;
+  text-decoration: none;
+  border-style: solid;
+  border: 0px;
+  width: 100%;
+}
+.seleoptiBtn:hover {
+  background: #115BA6;
+  text-decoration: none;
+}
+.selecedOptiBtn {
+  font-family: Arial;
+  color: #ffffff;
+  text-align: left;
+  font-size: 14px;
+  padding: 5px;
+  background: #6699cc;
+  text-decoration: none;
+  border-style: solid;
+  border: 0px;
+  width: 100%;
+}
+.demSent {
+  background: yellow;
+  position: fixed;
+  top: 0px;
+  left: 50%;
+  margin-left: 140px;
+  height: 50px;
+}
+.demSentBtn {
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 14px;
+  padding: 15px;
+  background: #002147;
+  text-decoration: none;
+  border-style: solid;
+  border: 0px;
+}
+.demSentBtn:hover {
+  background: #115BA6;
+  text-decoration: none;
+}
+.demSentBtnSelected {
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 14px;
+  padding: 15px;
+  background: #6699cc;
+  text-decoration: none;
+  border-style: solid;
+  border: 0px;
+}
+.demSentBtnSelected:hover {
+  background: #115BA6;
+  text-decoration: none;
+}
+.searchBox {
+  text-align: center;
+  font-family: Arial;
+  font-size: 14px;
+  padding: 15px;
+  border: 0px;
+  width: 100%;
 }
 
-.cloud {
-	width: 100%;
-	height: 500px;
-}
 
 .map { 
-	height: 100%;
-	position: relative;
-	top: -20px; 
+  height: 100%;
+  width: 100%;
+  position: relative;
+  top: -1px;
 }
 
 .info {
@@ -28,91 +162,95 @@ html, body {
   width: 300px;
 }
 
+.aCircle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  opacity: 0.5;
+}
+
 .circle-marker {
     border-radius: 50%;
 }
 
 .marker-size0 {
-	position: relative;
-	top: -9px;
+  position: relative;
+  top: -9px;
     width: 50px;
     height: 50px;
     border: 1px solid #041e42;
 }
 .marker-arrow-size0 {
-	position: relative;
-	top: 48px;
-	width: 0; 
-	height: 0;
-	margin: auto; 
-	border-left: 10px solid transparent;
-	border-right: 10px solid transparent;
-	border-top: 10px solid #041e42;
+  position: relative;
+  top: 48px;
+  width: 0; 
+  height: 0;
+  margin: auto; 
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #041e42;
 }
 .marker-bottom-size0 {
-	height: 57px;
+  height: 57px;
 }
 
 .marker-size1 {
-	position: relative;
-	top: -49px;
+  position: relative;
+  top: -49px;
     width: 70px;
     height: 70px;
     border: 1px solid #041e42;
 }
 .marker-arrow-size1 {
-	position: relative;
-	top: 29px;
-	width: 0; 
-	height: 0;
-	margin: auto; 
-	border-left: 10px solid transparent;
-	border-right: 10px solid transparent;
-	border-top: 10px solid #041e42;
+  position: relative;
+  top: 29px;
+  width: 0; 
+  height: 0;
+  margin: auto; 
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #041e42;
 }
 
 .marker-size5 {
-	position: relative;
-	top: -63px;
+  position: relative;
+  top: -63px;
     width: 100px;
     height: 100px;
     border: 1px solid #041e42;
 }
 
 .marker-arrow-size5 {
-	position: relative;
-	top: 45px;
-	width: 0; 
-	height: 0;
-	margin: auto; 
-	border-left: 10px solid transparent;
-	border-right: 10px solid transparent;
-	border-top: 10px solid #041e42;
+  position: relative;
+  top: 45px;
+  width: 0; 
+  height: 0;
+  margin: auto; 
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #041e42;
 }
 
 .marker-size10 {
-	position: relative;
-	top: -139px;
+  position: relative;
+  top: -139px;
     width: 250px;
     height: 250px;
     border: 1px solid #041e42;
 }
 
 .marker-arrow-size10 {
-	position: relative;
-	top: 119px;
-	width: 0; 
-	height: 0;
-	margin: auto; 
-	border-left: 10px solid transparent;
-	border-right: 10px solid transparent;
-	border-top: 10px solid #041e42;
+  position: relative;
+  top: 119px;
+  width: 0; 
+  height: 0;
+  margin: auto; 
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #041e42;
 }
 .marker-bottom-size10 {
-	height: 258px;
-	width: 250px;
-	margin: auto;
+  height: 258px;
+  width: 250px;
+  margin: auto;
 }
-
-
-
