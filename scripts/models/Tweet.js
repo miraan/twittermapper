@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var deepPopulate = require('mongoose-deep-populate');
 
 var TweetSchema = mongoose.Schema({
 	id: Number,
@@ -6,20 +7,42 @@ var TweetSchema = mongoose.Schema({
 	text: String,
 	source: String,
 	truncated: Boolean,
-	user: { type: mongoose.Schema.Types.ObjectId, ref: 'TwitterUser'},
-	point: { type: mongoose.Schema.Types.ObjectId, ref: 'Point' },
-	bounds: { type: mongoose.Schema.Types.ObjectId, ref: 'Bounds' },
+	user: {
+		id: Number,
+		name: String,
+		screen_name: String,
+		location: String,
+		url: String,
+		description: String,
+		protected: Boolean,
+		verified: Boolean,
+		followers_count: Number,
+		friends_count: Number,
+		listed_count: Number,
+		favourites_count: Number,
+		statuses_count: Number,
+		created_at: Date,
+		utc_offset: Number,
+		time_zone: String,
+		geo_enabled: Boolean,
+		lang: String
+	},
+	geo: { type: [Number], index: '2d' },
+	bounds: [ { type: [Number], index: '2d' } ],
 	retweet_count: Number,
 	favourite_count: Number,
 	favorited: Boolean,
 	retweeted: Boolean,
 	possibly_sensitive: Boolean,
 	lang: String,
-	searchText: String
+	product: String,
+	indicatesDemand: Boolean
 });
 
 TweetSchema.methods.getDescription = function() {
 	return this.text;
 }
+
+TweetSchema.plugin(deepPopulate, null);
 
 mongoose.model('Tweet', TweetSchema);
