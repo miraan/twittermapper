@@ -10,7 +10,6 @@ app.config([
 '$stateProvider',
 '$urlRouterProvider',
 function($stateProvider, $urlRouterProvider) {
-
   $stateProvider
     .state('map', {
       url: '/map',
@@ -21,7 +20,8 @@ function($stateProvider, $urlRouterProvider) {
           return markers.getAll();
         }]
       }
-    }).state('graphs', {
+    })
+    .state('graphs', {
       url: '/graphs/{id}',
       templateUrl: 'Views/graphs.html',
       controller: 'GraphsCtrl',
@@ -91,11 +91,34 @@ app.controller('MenuCtrl', [
 
 app.controller('MapCtrl', [
   '$scope',
+  '$http',
   'markers',
-  function($scope, markers){
+  function($scope, $http, markers){
+    $scope.topics = [
+      "Apps and Games",
+      "Books",
+      "Cars and Motorbikes",
+      "Computers and Accessories",
+      "Watches"
+    ];
+    $scope.topicsOptions = [
+      ["Entire Market","Temple Run","Cut the Rope","iFitness","Tripr"], // Apps and Games
+      [], // Books
+      [], // Cars and Motorbikes
+      [], // Computers and Accessories
+      []  // Watches
+    ]
+
+
     $scope.infoVisible = false;
     $scope.infoTitle = "";
     $scope.infoText = "Initial text.";
+
+    $scope.circles = [];
+    $http.get('/getSentimentsSample.json')
+      .then(function(res){
+        $scope.circles = res.data;
+    });
 
     $scope.showInfo = function (index){
       $scope.infoTitle = $scope.markers[index].item;
@@ -109,8 +132,37 @@ app.controller('MapCtrl', [
       $scope.infoVisible = false;
     };
 
+    $scope.selecTopic = function(topicI){ // I is for index
+      $scope.optIndex = 0;
+      $scope.brighten = true;
+      $scope.topiClass = $scope.topics[topicI];
+      $scope.topic = $scope.topics[topicI];
+      $scope.topicOptions = $scope.topicsOptions[topicI];
+      $scope.hideAll();
+    };
+    $scope.selectOption = function(optionI){
+      $scope.optIndex = optionI;
+      if (optionI == 0) { $scope.topic = $scope.topiClass; }
+      else { $scope.topic = $scope.topicOptions[optionI]; }
+      $scope.hideAll();
+    };
+    $scope.hideAll = function(){
+      $scope.optionsHidden = true;
+      $scope.optionsViewIsT = false;
+    };
+    $scope.showOptions = function(){
+      $scope.optionsHidden = false;
+    };
+    $scope.toggleTopiClasses = function(){
+      $scope.optionsViewIsT = !$scope.optionsViewIsT;
+    };
+    $scope.isTopiClass = function(t){
+      return t != $scope.topiClass;
+    }
+
+
     $scope.markers = markers.markers;
-    console.log($scope.markers);
+    //console.log($scope.markers);
 
     $scope.map = {
       latitude: 51.752285,
@@ -119,27 +171,52 @@ app.controller('MapCtrl', [
       bounds: {}
     };
 
-    $scope.options = {
-      scrollwheel: false
-    };
-
     $scope.$on('mapInitialized', function(evt, map) {
       map.set('streetViewControl', false);
-      for (var i=0; i<$scope.markers.length; i++) {
-        var content = '<div class= "marker-arrow-size'+$scope.markers[i].scale+'"></div>'+
-                      '<img class= "circle-marker marker-size'+$scope.markers[i].scale+'" src="'+$scope.markers[i].imageUrl+'"/>'
-        var marker = new RichMarker({
-          map: map,   // !! $scope.map
-          index: i,    //change for id
-          position: new google.maps.LatLng($scope.markers[i].latitude,$scope.markers[i].longitude),
-          flat: true,
-          anchor: RichMarkerPosition.MIDDLE,
-          content: content
-        });
-        google.maps.event.addListener(marker, 'click', function() {
-          $scope.showInfo(this.index);
-        });
-      };
+
+      function drawCircles(circs) {
+        function redOrGreen(x) {
+          if (x < 0) { return 'red' } else {return 'green'}
+        }
+        function opacity(x) {
+          if (x < 0) { return x*(-0.1) } else {return x*0.1}
+        }
+
+        for (var i=0; i<circs.length; i++) {
+          var content = '<div class="aCircle"'+
+                            ' style="background:'+redOrGreen(circs[i].scale)+';'+
+                                   ' opacity:'+opacity(circs[i].scale)+';">'+
+                        '</div>';
+          var circle = new RichMarker({
+            map: map,
+            position: new google.maps.LatLng(circs[i].latitude,circs[i].longitude),
+            anchor: RichMarkerPosition.MIDDLE,
+            flat: true,
+            content: content
+          });
+        };
+      }
+
+      function drawBubbles(bubs) {
+        for (var i=0; i<bubs.length; i++) {
+          var content = '<div class= "marker-arrow-size'+bubs[i].scale+'"></div>'+
+                        '<img class= "circle-marker marker-size'+bubs[i].scale+'" src="'+bubs[i].imageUrl+'"/>'
+          var marker = new RichMarker({
+            map: map,   // !! $scope.map
+            index: i,    //change for id
+            position: new google.maps.LatLng(bubs[i].latitude,bubs[i].longitude),
+            flat: true,
+            anchor: RichMarkerPosition.MIDDLE,
+            content: content
+          });
+          google.maps.event.addListener(marker, 'click', function() {
+            $scope.showInfo(this.index);
+          });
+        };
+      }
+
+      drawCircles($scope.circles);
+      drawBubbles($scope.markers);
     });
   }
 ]);

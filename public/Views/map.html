@@ -1,3 +1,11 @@
+<div ng-hide="brighten">
+  <div class="darkness">
+  </div>
+  <div class="selection">
+    <button type="button" class="topicBtn" ng-repeat="topic in topics" ng-click="selecTopic($index)">{{topic}}</button>
+  </div>
+</div>
+
 <map class = "map" center="{{map.latitude}},{{map.longitude}}" zoom="{{map.zoom}}"></map>
 <div class="panel panel-custom info" ng-show = "infoVisible" role="dialog" draggable resizable>
   <div class="panel-heading">
@@ -6,5 +14,21 @@
   </div>
   <div class="panel-body">
     {{infoText}}
+  </div>
+</div>
+
+<div class="seleption" ng-show="brighten" ng-mouseleave="hideAll()">
+  <button type="button" class="topicBtn" ng-mouseenter="showOptions()" ng-show="optionsHidden">{{topic}}</button>
+  <div ng-hide="optionsHidden">
+    <div ng-hide="optionsViewIsT">
+      <button type="button" class="topicBtn" ng-click="toggleTopiClasses()">{{topiClass}}</button>
+      <div ng-repeat="topicOption in topicOptions">
+        <button type="button" class="seleoptiBtn" ng-if="$index != optIndex" ng-click="selectOption($index)" >{{topicOption}}</button>
+        <button type="button" class="selecedOptiBtn" ng-if="$index == optIndex">{{topicOption}}</button>
+      </div>
+    </div>
+    <div ng-show="optionsViewIsT">
+      <button type="button" class="topicBtn" ng-repeat="topic in topics" ng-click="selecTopic($index)">{{topic}}</button>
+    </div>
   </div>
 </div>
