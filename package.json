@@ -17,6 +17,7 @@
     "express": "~4.12.2",
     "mongoose": "^4.0.2",
     "morgan": "~1.5.1",
+    "natural": "^0.2.1",
     "request": "^2.55.0",
     "sentiment": "^1.0.2",
     "serve-favicon": "~2.2.0",
