@@ -65,6 +65,8 @@ app.controller('MenuCtrl', [
   '$scope',
   'products',
   function($scope, products){
+    $scope.searchText = 'What would you like to search for?';
+
     $scope.products = products;
 
     $scope.selecTopic = function(topicI){ // I is for index
@@ -93,6 +95,12 @@ app.controller('MenuCtrl', [
     };
     $scope.isTopiClass = function(t){
       return t != $scope.products.currentTopiClass;
+    };
+    $scope.makeDemand = function(b){
+      $scope.products.showDemand = b;
+    };
+    $scope.makeSentiment = function(b){
+      $scope.products.showSentiment = b;
     };
 
     $scope.menu = {

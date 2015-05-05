@@ -76,6 +76,17 @@ app.controller('MapCtrl', [
     $scope.$on('mapInitialized', function(evt, map) {
       theMap = map;
       map.set('streetViewControl', false);
+      map.set('mapTypeControl', false);
+      map.set('minZoom', 3);  //minimum is 0;
+      map.set('maxZoom', 12); //maximum is 21;
+      /*If we want to change the size of the buble when the zoom is changed.
+      google.maps.event.addListener(map, 'zoom_changed', function() {
+          var zoomLevel = map.getZoom();
+          console.log(zoomLevel);
+          console.log($scope.map.zoom);
+          console.log(circles);
+          circles[0].setRadius(circles[0].radius*2);
+        });*/
 
       function drawCircles(circs) {
         function redOrGreen(x) {
@@ -84,7 +95,7 @@ app.controller('MapCtrl', [
         function opacity(x) {
           if (x < 0) { return x*(-0.1) } else {return x*0.1}
         }
-
+        /*
         for (var i=0; i<circs.length; i++) {
           var content = '<div class="aCircle"'+
                             ' style="background:'+redOrGreen(circs[i].scale)+';'+
@@ -96,10 +107,21 @@ app.controller('MapCtrl', [
             anchor: RichMarkerPosition.MIDDLE,
             flat: true,
             content: content
-          }));
+          }));*/
+        
+          for (var i=0; i<circs.length; i++){
+            var circleOptions = {
+              strokeWeight: 0,
+              fillColor: redOrGreen(circs[i].scale),
+              fillOpacity: opacity(circs[i].scale),
+              map: map,
+              center: new google.maps.LatLng(circs[i].latitude,circs[i].longitude),
+              radius: 50000
+            };
+            // Add the circle to the map.
+            circles.push(new google.maps.Circle(circleOptions));
+          };
         };
-      }
-
       function drawBubbles(bubs) {
         for (var i=0; i<bubs.length; i++) {
           var content = '<div class= "marker-arrow-size'+bubs[i].scale+'"></div>'+

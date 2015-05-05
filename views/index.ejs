@@ -77,7 +77,7 @@
       </div>
 
       <div class="seleption" ng-show="brighten" ng-mouseleave="hideAll()">
-        <button type="button" class="topicBtn" ng-mouseenter="showOptions()" ng-show="optionsHidden">{{products.currentTopic}}</button>
+        <button type="button" class="topicBtnSelected" ng-mouseenter="showOptions()" ng-show="optionsHidden">{{products.currentTopic}}</button>
         <div ng-hide="optionsHidden">
           <div ng-hide="optionsViewIsT">
             <button type="button" class="topicBtn" ng-click="toggleTopiClasses()">{{products.currentTopicClass}}</button>
@@ -87,9 +87,20 @@
             </div>
           </div>
           <div ng-show="optionsViewIsT">
+            <div>
+              <input type="text" class="searchBox" ng-model="searchText">
+            </div>
             <button type="button" class="topicBtn" ng-repeat="topic in products.topics" ng-click="selecTopic($index)">{{topic}}</button>
           </div>
         </div>
+      </div>
+
+      <div class="demSent" ng-show="brighten">
+        <button          type="button" class="demSentBtn"         ng-hide="products.showDemand"    ng-click="makeDemand(true)">Demand
+        </button><button type="button" class="demSentBtnSelected" ng-show="products.showDemand"    ng-click="makeDemand(false)">Demand
+        </button><button type="button" class="demSentBtn"         ng-hide="products.showSentiment" ng-click="makeSentiment(true)">Sentiment
+        </button><button type="button" class="demSentBtnSelected" ng-show="products.showSentiment" ng-click="makeSentiment(false)">Sentiment
+        </button>
       </div>
     </div>
   </body>
