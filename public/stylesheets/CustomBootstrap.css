@@ -144,7 +144,7 @@ fieldset[disabled] .navbar-custom .btn-link:focus {
     padding: 0px;
 }
 
-.btn-custom {
+.btn-close {
   color: #fff;
   background-color: #041e42;
   border-color: #041e42;
@@ -152,6 +152,56 @@ fieldset[disabled] .navbar-custom .btn-link:focus {
   border: 0px;
   border-left: 1px solid #041e42;
   border-bottom: 1px solid #041e42;
+  text-decoration: bold;
+  float: right;
+  vertical-align: top;
+}
+.btn-close:hover,
+.btn-close:focus,
+.btn-close.focus,
+.btn-close:active,
+.btn-close.active,
+.open > .dropdown-toggle.btn-close {
+  color: #fff;
+  background-color: #115BA6;
+}
+.btn-close:active,
+.btn-close.active,
+.open > .dropdown-toggle.btn-close {
+  background-image: none;
+}
+.btn-close.disabled,
+.btn-close[disabled],
+fieldset[disabled] .btn-close,
+.btn-close.disabled:hover,
+.btn-close[disabled]:hover,
+fieldset[disabled] .btn-close:hover,
+.btn-close.disabled:focus,
+.btn-close[disabled]:focus,
+fieldset[disabled] .btn-close:focus,
+.btn-close.disabled.focus,
+.btn-close[disabled].focus,
+fieldset[disabled] .btn-close.focus,
+.btn-close.disabled:active,
+.btn-close[disabled]:active,
+fieldset[disabled] .btn-close:active,
+.btn-close.disabled.active,
+.btn-close[disabled].active,
+fieldset[disabled] .btn-close.active {
+  background-color: #337ab7;
+  border-color: #2e6da4;
+}
+.btn-close .badge {
+  color: #337ab7;
+  background-color: #fff;
+}
+
+.btn-custom {
+  color: #fff;
+  background-color: #041e42;
+  border-color: #041e42;
+  border-radius: 0px;
+  border: 1px solid #041e42;
   text-decoration: bold;
   float: right;
   vertical-align: top;
@@ -195,3 +245,4 @@ fieldset[disabled] .btn-custom.active {
   color: #337ab7;
   background-color: #fff;
 }
+

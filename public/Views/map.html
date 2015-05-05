@@ -1,7 +1,7 @@
 <map class = "map" center="{{map.latitude}},{{map.longitude}}" zoom="{{map.zoom}}"></map>
 <div class="panel panel-custom info" ng-show = "infoVisible" role="dialog" draggable resizable>
   <div class="panel-heading">
-  	<button type="button" class = "btn btn-custom" ng-click = "hideInfo()">X</button>
+  	<button type="button" class = "btn btn-close" ng-click = "hideInfo()">X</button>
     <h3 class="panel-title">{{infoTitle}}</h3>
   </div>
   <div class="panel-body">
