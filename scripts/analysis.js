@@ -7,6 +7,26 @@ var helper = require('../scripts/helper');
 var categories = ["mobile phones", "cars and motorbikes"];
 var products = [["iphone 6", "lg g4", "galaxy s6"], ["honda civic", "toyota auris"]];
 
+// tweets is an array of tweet objects where each object has at least the property 'text'
+var countWordsInTweets = function(tweets) {
+  	var index = {};
+  	_.each(tweets, function(tweet) {
+		var words = tweet.text
+		.replace(/[.,?!;()"'-]/g, " ")
+		.replace(/\s+/g, " ")
+		.toLowerCase()
+		.split(" ");
+
+		_.each(words, function(word) {
+			if (!(index.hasOwnProperty(word))) {
+				index[word] = 1;
+			}
+			index[word]++;
+		});
+  	});
+    return index;
+}
+
 var getProductsForCategory = function(category) {
 	var categoryIndex = 0;
 	while (categories[categoryIndex] != category && categoryIndex <= categories.length) {
@@ -367,7 +387,70 @@ var getLocationsForCategory = function(category, dateLowerBound, callback) {
 	});
 }
 
+// callback takes params: error, words, where words is an array of 2d arrays [text, size]
+var getWordCloudForProduct = function(product, dateLowerBound, callback) {
+	database.getTweets( { product: product, select: 'text', dateLowerBound: dateLowerBound }, function(error, tweets) {
+		if (error) {
+			callback(error);
+			return;
+		}
+
+		var index = countWordsInTweets(tweets);
+		var minimumWordCount = Math.floor(tweets.length / 10);
+		var minimumWordLength = 4;
+		var words = [];
+		_.each(_.keys(index), function(key) {
+			var word = {};
+			word.text = key;
+			word.size = index[key];
+			if (word.size >= minimumWordCount && word.text.length >= minimumWordLength) {
+				words.push(word);
+			}
+		});
+		words = _.sortBy(words, 'size');
+		callback(null, words);
+	});
+}
+
+// callback takes params: error, data, where data is an array of objects with fields:
+// product, words, and words is an array of objects with fields: text, size
+var getWordCloudForCategory = function(category, dateLowerBound, callback) {
+	var products = getProductsForCategory(category);
+	var data = [];
+
+	var entireMarketItem = {};
+	entireMarketItem.product = "entire market";
+	entireMarketItem.words = [];
+
+	async.each(products, function(product, callback) {
+		var item = {};
+		item.product = product;
+		data.push(item);
+
+		getWordCloudForProduct(product, dateLowerBound, function(error, words) {
+			if (error) {
+				callback(error);
+				return;
+			}
+
+			item.words = words;
+			entireMarketItem.words = entireMarketItem.words.concat(words);
+
+			callback();
+		});
+
+	}, function(error) {
+		if (error) {
+			callback(error);
+			return;
+		}
+
+		callback(null, data);
+	});
+}
+
 module.exports.getGraphForCategory = getGraphForCategory;
 module.exports.getLocationsForCategory = getLocationsForCategory;
 module.exports.getCategories = getCategories;
+module.exports.getWordCloudForCategory = getWordCloudForCategory;
 

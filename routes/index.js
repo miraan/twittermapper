@@ -43,4 +43,19 @@ router.get('/getLocations/:category/:days', function(req, res, next) {
 	});
 });
 
+router.get('/getWordCloud/:category/:days', function(req, res, next) {
+	var category = req.params.category;
+	var days = req.params.days;
+	var dateLowerBound = helper.daysAgo(days);
+
+	analysis.getWordCloudForCategory(category, dateLowerBound, function(error, words) {
+		if (error) {
+			res.error(error);
+			return;
+		}
+
+		res.json(words);
+	});
+});
+
 module.exports = router;
