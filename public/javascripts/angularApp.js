@@ -90,9 +90,8 @@ app.factory('globalSelection', ['$http', function($http) {
     slider: {
       value: 7,
       min: 1,
-      max: 9,
+      max: 7,
       step: 1,
-      timeBack: 168,
       text: '1 week'
     },
 
@@ -109,7 +108,7 @@ app.factory('globalSelection', ['$http', function($http) {
 
   o.getAll = function() {
     o.haveCategories = true;
-    return $http.get('/getCategories').success(function(data){
+    return $http.get('/getCategories.json').success(function(data){
       var object = {
         data: {}
       }
@@ -211,40 +210,25 @@ app.controller('MenuCtrl', [
     $scope.evalSlide = function() {
       switch ($scope.products.slider.value) {
         case '1':
-          $scope.products.slider.timeBack = 1;
-          $scope.products.slider.text = '1 hour';
-          break;
-        case '2':
-          $scope.products.slider.timeBack = 3;
-          $scope.products.slider.text = '3 hours';
-          break;
-        case '3':
-          $scope.products.slider.timeBack = 12;
-          $scope.products.slider.text = '12 hours';
-          break;
-        case '4':
-          $scope.products.slider.timeBack = 24;
           $scope.products.slider.text = '1 day';
           break;
-        case '5':
-          $scope.products.slider.timeBack = 48;
+        case '2':
           $scope.products.slider.text = '2 days';
           break;
-        case '6':
-          $scope.products.slider.timeBack = 120;
+        case '3':
+          $scope.products.slider.text = '3 days';
+          break;
+        case '4':
+          $scope.products.slider.text = '4 days';
+          break;
+        case '5':
           $scope.products.slider.text = '5 days';
           break;
+        case '6':
+          $scope.products.slider.text = '6 days';
+          break;
         case '7':
-          $scope.products.slider.timeBack = 168;
-          $scope.products.slider.text = 'one week';
-          break;
-        case '8':
-          $scope.products.slider.timeBack = 240;
-          $scope.products.slider.text = '10 days';
-          break;
-        case '9':
-          $scope.products.slider.timeBack = 720;
-          $scope.products.slider.text = '1 month';
+          $scope.products.slider.text = '1 week';
           break;
         default:
           console.log('default');
