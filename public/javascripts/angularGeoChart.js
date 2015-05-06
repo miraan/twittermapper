@@ -2,15 +2,16 @@ app.directive('geochart', function() {
   return {
     restrict: 'A',
     link: function($scope, elm, attrs) {
-      $scope.$watch('geochart.line', function() {
-        var geochart = '';
+      $scope.$watch('products.showDemand', function() {
+        var geochart = new google.visualization.GeoChart(elm[0]);
  
-        if ($scope.geochart.line == '1') {
+        if ($scope.products.showDemand) {
+          console.log("Geo demand.");
           $scope.geochart.data = google.visualization.arrayToDataTable($scope.graphData.geoDemand);
-          geochart = new google.visualization.GeoChart(elm[0]);
+          $scope.geochart.options = $scope.geochart.sentimentOptions
         } else {
           $scope.geochart.data = google.visualization.arrayToDataTable($scope.graphData.geoSentiment);
-          geochart = new google.visualization.GeoChart(elm[0]);
+          $scope.geochart.options = $scope.geochart.demandOptions
         }
  
         geochart.draw($scope.geochart.data, $scope.geochart.options);
@@ -61,16 +62,19 @@ app.controller('GeoChartCtrl', [
 
     $scope.timeline = timeline;
 
-    var geochartOptions = {
-      colorAxis: {colors: ['red', 'blue']},
-      backgroundColor: '#81d4fa',
-      datalessRegionColor: 'white',
-      defaultColor: '#f5f5f5',
-    };
-    var geochart = {
-      line: 1
+    $scope.geochart = {
+      sentimentOptions: {
+        colorAxis: {colors: ['red','blue','green']},
+        backgroundColor: '#81d4fa',
+        datalessRegionColor: 'white',
+        defaultColor: '#f5f5f5',
+      },
+      demandOptions: {
+        colorAxis: {colors: ['red','yellow','green']},
+        backgroundColor: '#81d4fa',
+        datalessRegionColor: 'white',
+        defaultColor: '#f5f5f5',
+      },
     }
-    geochart.options = geochartOptions;
-    $scope.geochart = geochart;
   }
 ]);

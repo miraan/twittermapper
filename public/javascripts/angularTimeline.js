@@ -18,9 +18,7 @@ app.directive('timeline', function() {
     restrict: 'A',
     link: function($scope, elm, attrs) {
       $scope.$watch('products.showDemand', function() {
-        var timeline = '';
-
-        timeline = new google.visualization.LineChart(elm[0]);
+        var timeline = new google.visualization.LineChart(elm[0]);
 
         if ($scope.products.showDemand) {
           $scope.timeline.data = $scope.demandData;

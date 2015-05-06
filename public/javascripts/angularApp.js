@@ -90,7 +90,7 @@ app.factory('globalSelection', ['$http', function($http) {
     slider: {
       value: 5,
       min: 1,
-      max: 10,
+      max: 7,
       step: 1
     },
 
