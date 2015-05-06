@@ -16,15 +16,15 @@ function($stateProvider, $urlRouterProvider) {
       templateUrl: 'Views/map.html',
       controller: 'MapCtrl',
       resolve: {
-        markerPromise: ['markers', function(markers) {
-          return markers.getAll();
-        }],
         selectionPromise: ['globalSelection', function(selection) {
           if (selection.needToRequest) {
             return selection.getAll();
           } else {
             return null;
           }
+        }],
+        markerPromise: ['markers', function(markers) {
+          return markers.getAll();
         }]
       }
     })
@@ -33,15 +33,15 @@ function($stateProvider, $urlRouterProvider) {
       templateUrl: 'Views/timeline.html',
       controller: 'TimelineCtrl',
       resolve: {
-        markerPromise: ['graphData', function(graphData) {
-          return graphData.getAll();
-        }],
         selectionPromise: ['globalSelection', function(selection) {
           if (selection.needToRequest) {
             return selection.getAll();
           } else {
             return null;
           }
+        }],
+        markerPromise: ['graphData', function(graphData) {
+          return graphData.getAll();
         }]
       }
     })

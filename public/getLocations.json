@@ -1,0 +1,108 @@
+[
+	{
+		"product": "iPhone",
+		"demand": 
+		[
+		  {
+		  	"tweetId": 12,
+		    "latitude": 55.3617609,
+		    "longitude": -3.4433238,
+		  },
+		  {	
+		  	"tweetId": 14,
+		    "latitude": 51.909151,
+		    "longitude": -1.224958,
+		  },
+		  {
+		  	"tweetId": 15,
+		    "latitude": 52.054035,
+		    "longitude": 1.176698,
+		  },
+		  {
+		  	"tweetId": 16,
+		    "latitude": 51.752285,
+		    "longitude": -1.247093,
+		  }
+		],
+		"sentiment": 
+		[
+		  {
+		  	"tweetId": 123,
+		    "latitude": 55.3617609,
+		    "longitude": -3.4433238,
+		    "sentiment": 136
+		  },
+		  {
+		  	"tweetId": 124,
+		    "latitude": 51.909151,
+		    "longitude": -1.224958,
+		    "sentiment": 36
+		  },
+		  {
+		  	"tweetId": 125,
+		    "latitude": 52.054035,
+		    "longitude": 1.176698,
+		    "sentiment": 89
+		  },
+		  {
+		  	"tweetId": 126,
+		    "latitude": 51.752285,
+		    "longitude": -1.247093,
+		    "sentiment": 200
+		  }
+		]
+	},
+	{
+		"product": "Nexus 5",
+		"demand": 
+		[
+		  {
+		  	"tweetId": 12,
+		    "latitude": 55.3617609,
+		    "longitude": -3.4433238,
+		  },
+		  {	
+		  	"tweetId": 14,
+		    "latitude": 51.909151,
+		    "longitude": -1.224958,
+		  },
+		  {
+		  	"tweetId": 15,
+		    "latitude": 52.054035,
+		    "longitude": 1.176698,
+		  },
+		  {
+		  	"tweetId": 16,
+		    "latitude": 51.752285,
+		    "longitude": -1.247093,
+		  }
+		],
+		"sentiment": 
+		[
+		  {
+		  	"tweetId": 123,
+		    "latitude": 55.3617609,
+		    "longitude": -3.4433238,
+		    "sentiment": 136
+		  },
+		  {
+		  	"tweetId": 124,
+		    "latitude": 51.909151,
+		    "longitude": -1.224958,
+		    "sentiment": 36
+		  },
+		  {
+		  	"tweetId": 125,
+		    "latitude": 52.054035,
+		    "longitude": 1.176698,
+		    "sentiment": 89
+		  },
+		  {
+		  	"tweetId": 126,
+		    "latitude": 51.752285,
+		    "longitude": -1.247093,
+		    "sentiment": 200
+		  }
+		]
+	}
+]

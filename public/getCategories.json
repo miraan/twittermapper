@@ -1,18 +1,12 @@
 {
 	"topics": 
 		[
-			"Apps and Games",
-		     "Books",
-		     "Cars and Motorbikes",
-		     "Computers and Accessories",
-		     "Watches"
+			"Phones",
+			"Apps"
 		],
 	"topicsOptions":
 		[
-			["Entire Market","Temple Run","Cut the Rope","iFitness","Tripr"],
-	      	["Entire Market"],
-	      	["Entire Market"],
-	      	["Entire Market"],
-	      	["Entire Market","iWatch","Casio watch"]
+			["iPhone", "Nexus"],
+			["Temple run", "Asphalt"]
 		]
 }

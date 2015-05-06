@@ -3,8 +3,8 @@ app.factory('graphData', ['$http', function($http) {
     graphData: []
   };
 
-  o.getAll = function() {
-    return $http.get('/getGraphData.json').success(function(data){
+  o.getAll = function(topic, day) {
+    return $http.get('/getGraph.json').success(function(data){
       angular.copy(data, o.graphData);
     });
   };
@@ -17,17 +17,34 @@ app.directive('timeline', function() {
   return {
     restrict: 'A',
     link: function($scope, elm, attrs) {
-      $scope.$watch('products.showDemand', function() {
-        var timeline = new google.visualization.LineChart(elm[0]);
-
+      var timeline = new google.visualization.LineChart(elm[0]);
+      var drawChart = function() {
         if ($scope.products.showDemand) {
-          $scope.timeline.data = $scope.demandData;
+          $scope.timelineData = $scope.demandData[$scope.products.currentOptionIndex];
         } else {
-          $scope.timeline.data = $scope.sentimentData;
+          $scope.timelineData = $scope.sentimentData[$scope.products.currentOptionIndex];
         }
  
-        timeline.draw($scope.timeline.data, $scope.timeline.options);
-      },true);
+        timeline.draw($scope.timelineData, $scope.timelineOptions);
+      };
+
+      $scope.$watch('products.showDemand', drawChart,true);
+
+      $scope.$watch('products.currentOptionIndex', drawChart,true);
+
+      var refreshData = function(){
+        $scope.graphData.getAll($scope.products.currentTopic, $scope.products.slider.value);
+        $scope.initialise();
+      };
+
+      var refreshAndDraw = function() {
+        refreshData();
+        drawChart();
+      }
+
+      $scope.$watch('products.slider.value', refreshAndDraw, true);
+
+      $scope.$watch('products.currentTopicClass', refreshAndDraw, true);
     }
   };
 });
@@ -38,99 +55,44 @@ app.controller('TimelineCtrl', [
   'globalSelection',
   function($scope,graphData, globalSelection){
     $scope.products = globalSelection;
-    $scope.graphData = graphData.graphData;
+    $scope.graphData = graphData;
 
-    var timelineOptions = {
+    $scope.timelineOptions = {
       curveType: 'function',
       legend: { position: 'bottom' }
     };
-    var timeline = {
-      data: []
-    };
- 
-    timeline.options = timelineOptions;
+    $scope.timelineData = {};
+    $scope.demandData = [];
+    $scope.sentimentData = [];
+    $scope.initialise = function () {
+      $scope.timelineData = {};
+      $scope.demandData = [];
+      $scope.sentimentData = [];
 
-    var demandData = new google.visualization.DataTable();
-    demandData.addColumn('date', 'Date');
-    demandData.addColumn('number', 'iPhone');
-    for (var i = 0; i < $scope.graphData.demand.length; i++) {
-      demandData.addRow([new Date($scope.graphData.demand[i][0]), $scope.graphData.demand[i][1]]);
-    };
-    $scope.demandData = demandData;
+      for (var j = 0; j<$scope.graphData.graphData.length; j++) {
+        var demandData = new google.visualization.DataTable();
+        demandData.addColumn('date', 'Date');
+        demandData.addColumn('number', $scope.graphData.graphData[j].product);
+        for (var i = 0; i < $scope.graphData.graphData[j].demand.length; i++) {
+          demandData.addRow([new Date($scope.graphData.graphData[j].demand[i][0]), $scope.graphData.graphData[j].demand[i][1]]);
+        };
+        $scope.demandData.push(demandData);
 
-    var sentimentData = new google.visualization.DataTable();
-    sentimentData.addColumn('date', 'Date');
-    sentimentData.addColumn('number', 'iPhone');
-    for (var i = 0; i < $scope.graphData.sentiment.length; i++) {
-      sentimentData.addRow([new Date($scope.graphData.sentiment[i][0]), $scope.graphData.sentiment[i][1]]);
+        var sentimentData = new google.visualization.DataTable();
+        sentimentData.addColumn('date', 'Date');
+        sentimentData.addColumn('number', 'iPhone');
+        for (var i = 0; i < $scope.graphData.graphData[j].sentiment.length; i++) {
+          sentimentData.addRow([new Date($scope.graphData.graphData[j].sentiment[i][0]), $scope.graphData.graphData[j].sentiment[i][1]]);
+        };
+        $scope.sentimentData.push(sentimentData);
+      };
     };
-    $scope.sentimentData = sentimentData;
-
+    
+    $scope.initialise();
     if ($scope.products.showDemand) {
-      timeline.data = demandData;
+      $scope.timelineData = $scope.demandData[$scope.products.currentOptionIndex];
     } else {
-      timeline.data = sentimentData;
+      $scope.timelineData = $scope.sentimentData[$scope.products.currentOptionIndex];
     }
-
-    $scope.timeline = timeline;
-
-    var geochartOptions = {
-      colorAxis: {colors: ['red', 'blue']},
-      backgroundColor: '#81d4fa',
-      datalessRegionColor: 'white',
-      defaultColor: '#f5f5f5',
-    };
-    var geochart = {
-      line: 1
-    }
-    geochart.options = geochartOptions;
-    $scope.geochart = geochart;
   }
 ]);
-
-// google.maps.event.addDomListener(window, 'load', initialize);
-
-/*
-// Load the Visualization API and the piechart package.
-google.load('visualization', '1.0', {'packages':['corechart']});
-
-// Set a callback to run when the Google Visualization API is loaded.
-google.setOnLoadCallback(drawChart);
-
-// Callback that creates and populates a data table,
-// instantiates the pie chart, passes in the data and
-// draws it.
-var chart;
-var data;
-var options;
-function reDrawChart() {
-  // Set chart options
-  options.width = angular.element('#chart_div').width;
-  options.height = angular.element('#chart_div').height;
-  chart.draw(data, options);
-}
-
-function drawChart() {
-
-  // Create the data table.
-  data = new google.visualization.DataTable();
-    data.addColumn('string', 'Topping');
-    data.addColumn('number', 'Slices');
-    data.addRows([
-      ['Male', 35],
-      ['Female', 28]
-    ]);
-
-  options = {'title':'Male female ratio',
-             'width': 0,
-            'height': 0};  
-
-  // Instantiate and draw our chart, passing in some options.
-  chart = new google.visualization.PieChart(angular.element('#chart_div'));
-  reDrawChart();
-}
-
-
-$(window).resize(reDrawChart);*/
-
-
