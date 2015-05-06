@@ -88,10 +88,12 @@ app.factory('globalSelection', ['$http', function($http) {
     needToRequest: true,
 
     slider: {
-      value: 5,
+      value: 7,
       min: 1,
-      max: 7,
-      step: 1
+      max: 9,
+      step: 1,
+      timeBack: 168,
+      text: '1 week'
     },
 
     showDemand: true,
@@ -204,6 +206,49 @@ app.controller('MenuCtrl', [
       $scope.active.state = 'navBtn';
       active.state = 'navBtnActive';
       $scope.active = active;
+    };
+
+    $scope.evalSlide = function() {
+      switch ($scope.products.slider.value) {
+        case '1':
+          $scope.products.slider.timeBack = 1;
+          $scope.products.slider.text = '1 hour';
+          break;
+        case '2':
+          $scope.products.slider.timeBack = 3;
+          $scope.products.slider.text = '3 hours';
+          break;
+        case '3':
+          $scope.products.slider.timeBack = 12;
+          $scope.products.slider.text = '12 hours';
+          break;
+        case '4':
+          $scope.products.slider.timeBack = 24;
+          $scope.products.slider.text = '1 day';
+          break;
+        case '5':
+          $scope.products.slider.timeBack = 48;
+          $scope.products.slider.text = '2 days';
+          break;
+        case '6':
+          $scope.products.slider.timeBack = 120;
+          $scope.products.slider.text = '5 days';
+          break;
+        case '7':
+          $scope.products.slider.timeBack = 168;
+          $scope.products.slider.text = 'one week';
+          break;
+        case '8':
+          $scope.products.slider.timeBack = 240;
+          $scope.products.slider.text = '10 days';
+          break;
+        case '9':
+          $scope.products.slider.timeBack = 720;
+          $scope.products.slider.text = '1 month';
+          break;
+        default:
+          console.log('default');
+      }
     };
   }
 ]);

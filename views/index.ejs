@@ -43,13 +43,13 @@
     <script type="text/javascript" src="javascripts/angularGeoChart.js"></script>
     <script type="text/javascript" src="javascripts/angularWordCloud.js"></script>
   </head>
-  <body>
+  <body style="min-width=2000px;">
 
     <div class="navigation"></div>
 
     <ui-view></ui-view>
-    <div ng-controller= "MenuCtrl">
 
+    <div ng-controller= "MenuCtrl">
       <!-- initial darkening -->
       <div ng-hide="brighten">
         <div class="darkness">
@@ -58,10 +58,8 @@
           <button type="button" class="topicBtn" ng-repeat="topic in products.topics" ng-click="selecTopic($index)">{{topic}}</button>
         </div>
       </div>
-
-
-
       <button type="button" class="OxTwi">OxTwi</button>
+
       <!-- left navigation -->
       <div class="leftStuff">
         <a       href="#/map"
@@ -82,8 +80,6 @@
                  ng-click="setActive(menu.wordcloud)">Word Cloud</button></a
         >
       </div>
-
-
 
       <!-- aligned centre -->
       <div class="seleption" ng-show="brighten" ng-mouseleave="hideAll()">
@@ -107,18 +103,17 @@
 
       <!-- right navigation -->
       <div class="demSent">
-        <button          type="button" class="demSentBtn"         ng-hide="products.showDemand"    ng-click="makeDemand()">Demand
-        </button><button type="button" class="demSentBtnSelected" ng-show="products.showDemand">Demand
-        </button><button type="button" class="demSentBtn"         ng-hide="products.showSentiment" ng-click="makeSentiment()">Sentiment
-        </button><button type="button" class="demSentBtnSelected" ng-show="products.showSentiment">Sentiment
-        </button>
+        <div ng-hide="menu.wordcloud.state == 'navBtnActive'">
+          <button          type="button" class="demSentBtn"         ng-hide="products.showDemand"    ng-click="makeDemand()">Demand
+          </button><button type="button" class="demSentBtnSelected" ng-show="products.showDemand">Demand
+          </button><button type="button" class="demSentBtn"         ng-hide="products.showSentiment" ng-click="makeSentiment()">Sentiment
+          </button><button type="button" class="demSentBtnSelected" ng-show="products.showSentiment">Sentiment
+          </button>
+        </div>
         <div class="slider"><input type="range" min="{{products.slider.min}}" max="{{products.slider.max}}" 
-              step="{{products.slider.step}}" ng-model="products.slider.value"></div>
-        <div class="sliderValue">{{products.slider.value}}</div>
+              step="{{products.slider.step}}" ng-model="products.slider.value" ng-change="evalSlide()"></div>
+        <div class="sliderValue">{{products.slider.text}}</div>
       </div>
-
-
-
     </div>
   </body>
 </html>
