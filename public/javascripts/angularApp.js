@@ -186,23 +186,23 @@ app.controller('MenuCtrl', [
 
     $scope.menu = {
       map: {
-        state: 'active',
+        state: 'navBtnActive',
       },
       timeline: {
-        state: '',
+        state: 'navBtn',
       },
       geochart: {
-        state: '',
+        state: 'navBtn',
       },
       wordcloud: {
-        state: '',
+        state: 'navBtn',
       }
     };
 
     $scope.active = $scope.menu.map;
     $scope.setActive = function(active){
-      $scope.active.state = "";
-      active.state = 'active';
+      $scope.active.state = 'navBtn';
+      active.state = 'navBtnActive';
       $scope.active = active;
     };
   }
