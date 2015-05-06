@@ -9,10 +9,6 @@ var Tweet = mongoose.model('Tweet');
 // callback has params error, tweet
 var saveTweet = function(tweetJson, callback) {
 	var point;
-	var southWestPoint;
-	var northWestPoint;
-	var northEastPoint;
-	var southEastPoint;
 	var twitterUser;
 	var tweet;
 
@@ -21,21 +17,24 @@ var saveTweet = function(tweetJson, callback) {
 			return;
 		}
 
-		point = [
-			tweetJson.geo.coordinates[0],
-			tweetJson.geo.coordinates[1]
-		];
-	};
-
-	var makeBoundsPoints = function() {
-		if (!tweetJson.place || !tweetJson.place.bounding_box) {
+		if (tweetJson.geo.coordinates[0] != 0 || tweetJson.geo.coordinates[1] != 0) {
+			point = [
+				tweetJson.geo.coordinates[0],
+				tweetJson.geo.coordinates[1]
+			];
 			return;
 		}
 
-		southWestPoint = [tweetJson.place.bounding_box.coordinates[0][0][1], tweetJson.place.bounding_box.coordinates[0][0][0]];
-		northWestPoint = [tweetJson.place.bounding_box.coordinates[0][1][1], tweetJson.place.bounding_box.coordinates[0][1][0]];
-		northEastPoint = [tweetJson.place.bounding_box.coordinates[0][2][1], tweetJson.place.bounding_box.coordinates[0][2][0]];
-		southEastPoint = [tweetJson.place.bounding_box.coordinates[0][3][1], tweetJson.place.bounding_box.coordinates[0][3][0]];
+		// we have 0,0 returned from twitter. use the bounding box coordinates instead, lat lng are reversed
+		var southWest = tweetJson.place.bounding_box.coordinates[0][0];
+		var northWest = tweetJson.place.bounding_box.coordinates[0][1];
+		var northEast = tweetJson.place.bounding_box.coordinates[0][2];
+		var southEast = tweetJson.place.bounding_box.coordinates[0][3];
+
+		var lat = (southWest[1] + southEast[1]) / 2;
+		var lng = (southWest[0] + northWest[0]) / 2;
+		point = [lat, lng];
+		console.log(point);
 	};
 
 	var makeTwitterUser = function() {
@@ -70,7 +69,6 @@ var saveTweet = function(tweetJson, callback) {
 			truncated: tweetJson.truncated,
 			user: twitterUser,
 			geo: point,
-			bounds: [],
 			retweet_count: tweetJson.retweet_count,
 			favourite_count: tweetJson.favorite_count,
 			favorited: tweetJson.favorited,
@@ -80,15 +78,9 @@ var saveTweet = function(tweetJson, callback) {
 			product: tweetJson.product,
 			indicatesDemand: tweetJson.indicatesDemand
 		});
-
-		tweet.bounds[0] = southWestPoint;
-		tweet.bounds[1] = northWestPoint;
-		tweet.bounds[2] = northEastPoint;
-		tweet.bounds[3] = southEastPoint;
 	};
 
 	makePoint();
-	makeBoundsPoints();
 	makeTwitterUser();
 	makeTweet();
 
@@ -108,6 +100,9 @@ var getTweets = function(options, callback) {
 
 	if (options.product) {
 		query = query.where('product').equals(options.product);
+	}
+	if (options.products) {
+		query = query.where('product').in(options.products);
 	}
 	if (options.demand) {
 		query = query.where('indicatesDemand').equals(options.demand);
@@ -134,7 +129,6 @@ var getTweets = function(options, callback) {
 	}
 
 	query.exec(function(error, tweets) {
-		console.log("got tweets");
 		if (error) {
 			callback(error, null);
 			return;
