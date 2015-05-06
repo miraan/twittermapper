@@ -29,7 +29,6 @@
     <script src="APIs/ui-bootstrap-tpls-0.13.0.min.js"></script>
     <script src="APIs/lodash/dist/lodash.compat.js"></script>
     <script src="APIs/ng-map.js"></script>
-    <script src="APIs/richmarker.js"></script>
 
     <!--D3-->
     <script src="APIs/d3/d3.js"></script>
@@ -77,8 +76,11 @@
       </div>
 
       <div class="seleption" ng-show="brighten" ng-mouseleave="hideAll()">
-        <button type="button" class="topicBtnSelected" ng-mouseenter="showOptions()" ng-show="optionsHidden">{{products.currentTopic}}</button>
-        <div ng-hide="optionsHidden">
+        <form ng-submit="submitSearch()" ng-show="searchFocus || optionsViewIsT">
+          <input type="text" class="searchBox" ng-model="searchText" ng-focus="getToTyping()" ng-blur="finishTyping()">
+        </form>
+        <button type="button" class="topicBtnSelected" ng-mouseenter="showOptions()" ng-show="optionsHidden && !(searchFocus)">{{products.currentTopic}}</button>
+        <div ng-hide="optionsHidden || searchFocus">
           <div ng-hide="optionsViewIsT">
             <button type="button" class="topicBtn" ng-click="toggleTopiClasses()">{{products.currentTopicClass}}</button>
             <div ng-repeat="topicOption in products.currentTopicOptions">
@@ -87,22 +89,18 @@
             </div>
           </div>
           <div ng-show="optionsViewIsT">
-            <div>
-              <input type="text" class="searchBox" ng-model="searchText">
-            </div>
             <button type="button" class="topicBtn" ng-repeat="topic in products.topics" ng-click="selecTopic($index)">{{topic}}</button>
           </div>
         </div>
       </div>
 
       <div class="demSent" ng-show="brighten">
-        <button          type="button" class="demSentBtn"         ng-hide="products.showDemand"    ng-click="makeDemand(true)">Demand
-        </button><button type="button" class="demSentBtnSelected" ng-show="products.showDemand"    ng-click="makeDemand(false)">Demand
-        </button><button type="button" class="demSentBtn"         ng-hide="products.showSentiment" ng-click="makeSentiment(true)">Sentiment
-        </button><button type="button" class="demSentBtnSelected" ng-show="products.showSentiment" ng-click="makeSentiment(false)">Sentiment
+        <button          type="button" class="demSentBtn"         ng-hide="products.showDemand"    ng-click="makeDemand()">Demand
+        </button><button type="button" class="demSentBtnSelected" ng-show="products.showDemand">Demand
+        </button><button type="button" class="demSentBtn"         ng-hide="products.showSentiment" ng-click="makeSentiment()">Sentiment
+        </button><button type="button" class="demSentBtnSelected" ng-show="products.showSentiment">Sentiment
         </button>
       </div>
     </div>
   </body>
 </html>
-

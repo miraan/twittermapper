@@ -134,10 +134,6 @@ html, body {
   border-style: solid;
   border: 0px;
 }
-.demSentBtnSelected:hover {
-  background: #115BA6;
-  text-decoration: none;
-}
 .searchBox {
   text-align: center;
   font-family: Arial;

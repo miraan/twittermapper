@@ -52,10 +52,10 @@ app.factory('products', ['$http', function($http) {
     ],
     topicsOptions: [
       ["Entire Market","Temple Run","Cut the Rope","iFitness","Tripr"], // Apps and Games
-      [], // Books
-      [], // Cars and Motorbikes
-      [], // Computers and Accessories
-      ["iWatch", "Casio watch"]  // Watches
+      ["Entire Market"], // Books
+      ["Entire Market"], // Cars and Motorbikes
+      ["Entire Market"], // Computers and Accessories
+      ["Entire Market","iWatch","Casio watch"]  // Watches
     ],
   };
   return object;
@@ -65,7 +65,26 @@ app.controller('MenuCtrl', [
   '$scope',
   'products',
   function($scope, products){
-    $scope.searchText = 'What would you like to search for?';
+    $scope.searchText = "What would you like to search for?";
+
+    $scope.getToTyping = function(){
+      $scope.searchText = "";
+      $scope.searchFocus = true;
+    }
+    $scope.finishTyping = function(){
+      $scope.searchFocus = false;
+      $scope.searchText = "What would you like to search for?";
+    }
+    $scope.submitSearch = function(){
+      if ($scope.searchText != null && $scope.searchText != "") { 
+        $scope.products.currentTopic = $scope.searchText;
+        $scope.products.currentTopicClass = $scope.searchText;
+        $scope.products.currentTopicOptions = [];
+        $scope.products.currentOptionIndex = 0;
+      } 
+      $scope.finishTyping();
+      $scope.hideAll();
+    }
 
     $scope.products = products;
 
@@ -96,11 +115,13 @@ app.controller('MenuCtrl', [
     $scope.isTopiClass = function(t){
       return t != $scope.products.currentTopiClass;
     };
-    $scope.makeDemand = function(b){
-      $scope.products.showDemand = b;
+    $scope.makeDemand = function(){
+      $scope.products.showDemand = true;
+      $scope.products.showSentiment = false;
     };
-    $scope.makeSentiment = function(b){
-      $scope.products.showSentiment = b;
+    $scope.makeSentiment = function(){
+      $scope.products.showSentiment = true;
+      $scope.products.showDemand = false;
     };
 
     $scope.menu = {
