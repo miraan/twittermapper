@@ -139,6 +139,54 @@ var getTweets = function(options, callback) {
 	})
 }
 
+// callback takes params: error, tweet
+var getTweet = function(options, callback) {
+	var query = Tweet.findOne();
+
+	if (options.tweetId) {
+		query = query.where('id').equals(options.tweetId);
+	}
+	if (options.product) {
+		query = query.where('product').equals(options.product);
+	}
+	if (options.products) {
+		query = query.where('product').in(options.products);
+	}
+	if (options.demand) {
+		query = query.where('indicatesDemand').equals(options.demand);
+	}
+	if (options.geo) {
+		query = query.exists('geo');
+	}
+	if (options.sort) {
+		query = query.sort(options.sort);
+	}
+	if (options.dateLowerBound) {
+		query = query.where('created_at').gte(options.dateLowerBound);
+	}
+	if (options.limit) {
+		query = query.limit(options.limit);
+	}
+	if (options.excludedProducts) {
+		_.each(options.excludedProducts, function(excludedProduct) {
+			query = query.where('product').ne(excludedProduct);
+		});
+	}
+	if (options.select) {
+		query = query.select(options.select);
+	}
+
+	query.exec(function(error, tweet) {
+		if (error) {
+			callback(error, null);
+			return;
+
+		}
+
+		callback(null, tweet);
+	})
+}
+
 var wipeDatabase = function(callback) {
 	var models = [Tweet];
 
@@ -177,5 +225,6 @@ db.once('open', function(callback) {
 
 module.exports.saveTweet = saveTweet;
 module.exports.getTweets = getTweets;
+module.exports.getTweet = getTweet;
 module.exports.wipeDatabase = wipeDatabase;
 
