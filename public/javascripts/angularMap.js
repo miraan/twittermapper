@@ -69,15 +69,8 @@ app.controller('MapCtrl', [
     var theMap = null;
 
     var draw = function() {
-      $scope.markers.getAll();
-    };
-
-    $scope.$on('mapInitialized', function(evt, map) {
-      theMap = map;
-      map.set('streetViewControl', false);
-      map.set('mapTypeControl', false);
-      map.set('minZoom', 3);  //minimum is 0;
-      map.set('maxZoom', 12); //maximum is 21;
+      $scope.markers.getAll($scope.products.currentTopicClass, $scope.products.slider.value);
+      var currentProduct = $scope.markers.markers[$scope.currentOptionIndex];
 
       function createSentimentCircles(circs) {
         function redOrGreen(x) {
@@ -121,11 +114,18 @@ app.controller('MapCtrl', [
 
           demandCircles.push(new google.maps.Circle(circleOptions));
         };
-      };
 
-      createDemandCircles($scope.markers[0].demand);
-      createSentimentCircles($scope.markers[0].sentiment);
-      switchDemandSentiment();
+      createDemandCircles(currentProduct.demand);
+      createSentimentCircles(currentProduct.sentiment);
+
+    };
+
+    $scope.$on('mapInitialized', function(evt, map) {
+      theMap = map;
+      map.set('streetViewControl', false);
+      map.set('mapTypeControl', false);
+      map.set('minZoom', 3);  //minimum is 0;
+      map.set('maxZoom', 12); //maximum is 21;
     });
 
     function showCircles(show, hide) {
