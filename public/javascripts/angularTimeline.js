@@ -4,7 +4,7 @@ app.factory('graphData', ['$http', function($http) {
   };
 
   o.getAll = function(topic, day) {
-    return $http.get('/getGraph.json').success(function(data){
+    return $http.get('/getGraph/' + topic + '/' + day).success(function(data){
       angular.copy(data, o.graphData);
     });
   };

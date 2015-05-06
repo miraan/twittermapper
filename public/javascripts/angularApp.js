@@ -102,7 +102,7 @@ app.factory('globalSelection', ['$http', function($http) {
 
   o.getAll = function() {
     o.haveCategories = true;
-    return $http.get('/getCategories.json').success(function(data){
+    return $http.get('/getCategories').success(function(data){
       var object = {
         data: {}
       }
