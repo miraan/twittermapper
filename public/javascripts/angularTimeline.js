@@ -24,13 +24,14 @@ app.directive('timeline', function() {
         } else {
           $scope.timelineData = $scope.sentimentData[$scope.products.currentOptionIndex];
         }
- 
-        timeline.draw($scope.timelineData, $scope.timelineOptions);
+        if($scope.timelineData!= undefined) {
+          timeline.draw($scope.timelineData, $scope.timelineOptions);
+        }  
       };
 
-      $scope.$watch('products.showDemand', drawChart,true);
+      $scope.$watch('products.showDemand', drawChart);
 
-      $scope.$watch('products.currentOptionIndex', drawChart,true);
+      $scope.$watch('products.currentOptionIndex', drawChart);
 
       var refreshData = function(){
         $scope.graphData.getAll($scope.products.currentTopic, $scope.products.slider.value);
@@ -42,9 +43,9 @@ app.directive('timeline', function() {
         drawChart();
       }
 
-      $scope.$watch('products.slider.value', refreshAndDraw, true);
+      $scope.$watch('products.slider.value', refreshAndDraw);
 
-      $scope.$watch('products.currentTopicClass', refreshAndDraw, true);
+      $scope.$watch('products.currentTopicClass', refreshAndDraw);
     }
   };
 });
@@ -87,12 +88,5 @@ app.controller('TimelineCtrl', [
         $scope.sentimentData.push(sentimentData);
       };
     };
-    
-    $scope.initialise();
-    if ($scope.products.showDemand) {
-      $scope.timelineData = $scope.demandData[$scope.products.currentOptionIndex];
-    } else {
-      $scope.timelineData = $scope.sentimentData[$scope.products.currentOptionIndex];
-    }
   }
 ]);

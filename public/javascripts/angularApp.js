@@ -39,9 +39,6 @@ function($stateProvider, $urlRouterProvider) {
           } else {
             return null;
           }
-        }],
-        markerPromise: ['graphData', function(graphData) {
-          return graphData.getAll();
         }]
       }
     })
