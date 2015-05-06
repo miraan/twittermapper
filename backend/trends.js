@@ -48,7 +48,7 @@ function getFrequencyTableForMany(tweets){
 }
 
 function simpleTrendDetectionAgainst(tweet, freqTable){
-	
+	// TODO
 }
 
 var tweets = ["Today starts with a Good morning #happy", "Today's show was quite a disappointment", "Did you see my new book?",
