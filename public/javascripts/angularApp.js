@@ -37,6 +37,12 @@ function($stateProvider, $urlRouterProvider) {
 
 app.factory('products', ['$http', function($http) {
   var object = {
+    slider: {
+      value: 5,
+      min: 1,
+      max: 10,
+      step: 1
+    },
     showDemand: true,
     showSentiment: false,
     currentTopic: "",

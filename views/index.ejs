@@ -29,6 +29,7 @@
     <script src="APIs/ui-bootstrap-tpls-0.13.0.min.js"></script>
     <script src="APIs/lodash/dist/lodash.compat.js"></script>
     <script src="APIs/ng-map.js"></script>
+    <script src="APIs/slider.js"></script>
 
     <!--D3-->
     <script src="APIs/d3/d3.js"></script>
@@ -61,6 +62,9 @@
           <ul class="nav navbar-nav" ng-controller= "MenuCtrl">
             <li class="{{menu.map.state}}" ng-click="setActive(menu.map)"><a href="#/map">Maps</a></li>
             <li class="{{menu.graphs.state}}" ng-click="setActive(menu.graphs)"><a href="#/graphs/0">Graphs</a></li>
+            <li class="slider"><input type="range" min="{{products.slider.min}}" max="{{products.slider.max}}" 
+                step="{{products.slider.step}}" ng-model="products.slider.value"></li>
+            <li>{{products.slider.value}}</li>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->

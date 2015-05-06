@@ -5,6 +5,11 @@ html, body {
   overflow: hidden;
 }
 
+.slider {
+  height: 50px;
+  padding-top: 18px;
+}
+
 .darkness {
   background: black;
   opacity: 0.5;

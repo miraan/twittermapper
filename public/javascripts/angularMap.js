@@ -34,19 +34,15 @@ app.factory('markers', ['$http', function($http) {
 
 app.controller('MapCtrl', [
   '$scope',
-  '$http',
   'markers',
-  function($scope, $http, markers){
+  'products',
+  function($scope, markers, products){
+
+    $scope.products = products;
 
     $scope.infoVisible = false;
     $scope.infoTitle = "";
     $scope.infoText = "Initial text.";
-
-    $scope.circles = [];
-    $http.get('/getSentimentsSample.json')
-      .then(function(res){
-        $scope.circles = res.data;
-    });
 
     $scope.showInfo = function (index){
       $scope.infoTitle = $scope.markers[index].item;
@@ -70,7 +66,8 @@ app.controller('MapCtrl', [
       bounds: {}
     };
 
-    var circles = [];
+    var demandCircles = [];
+    var sentimentCircles = [];
     var theMap = null;
 
     $scope.$on('mapInitialized', function(evt, map) {
@@ -88,60 +85,74 @@ app.controller('MapCtrl', [
           circles[0].setRadius(circles[0].radius*2);
         });*/
 
-      function drawCircles(circs) {
+      function createSentimentCircles(circs) {
         function redOrGreen(x) {
           if (x < 0) { return 'red' } else {return 'green'}
         }
         function opacity(x) {
           if (x < 0) { return x*(-0.1) } else {return x*0.1}
         }
-        /*
-        for (var i=0; i<circs.length; i++) {
-          var content = '<div class="aCircle"'+
-                            ' style="background:'+redOrGreen(circs[i].scale)+';'+
-                                   ' opacity:'+opacity(circs[i].scale)+';">'+
-                        '</div>';
-          circles.push( new RichMarker({
-            map: map,
-            position: new google.maps.LatLng(circs[i].latitude,circs[i].longitude),
-            anchor: RichMarkerPosition.MIDDLE,
-            flat: true,
-            content: content
-          }));*/
-        
-          for (var i=0; i<circs.length; i++){
-            var circleOptions = {
-              strokeWeight: 0,
-              fillColor: redOrGreen(circs[i].scale),
-              fillOpacity: opacity(circs[i].scale),
-              map: map,
-              center: new google.maps.LatLng(circs[i].latitude,circs[i].longitude),
-              radius: 50000
-            };
-            // Add the circle to the map.
-            circles.push(new google.maps.Circle(circleOptions));
-          };
-        };
-      function drawBubbles(bubs) {
-        for (var i=0; i<bubs.length; i++) {
-          var content = '<div class= "marker-arrow-size'+bubs[i].scale+'"></div>'+
-                        '<img class= "circle-marker marker-size'+bubs[i].scale+'" src="'+bubs[i].imageUrl+'"/>'
-          var marker = new RichMarker({
-            map: map,   // !! $scope.map
-            index: i,    //change for id
-            position: new google.maps.LatLng(bubs[i].latitude,bubs[i].longitude),
-            flat: true,
-            anchor: RichMarkerPosition.MIDDLE,
-            content: content
-          });
-          google.maps.event.addListener(marker, 'click', function() {
-            $scope.showInfo(this.index);
-          });
-        };
-      }
 
-      drawCircles($scope.circles);
-      //drawBubbles($scope.markers);
+        for (var i=0; i<circs.length; i++){
+          var circleOptions = {
+            map: null,
+            strokeWeight: 0,
+            fillColor: redOrGreen(circs[i].scale),
+            fillOpacity: opacity(circs[i].scale),
+            center: new google.maps.LatLng(circs[i].latitude,circs[i].longitude),
+            radius: 50000
+          };
+          
+          sentimentCircles.push(new google.maps.Circle(circleOptions));
+        };
+      };
+
+      function createDemandCircles(circs) {
+        function getColor(index) {
+           return 'blue';
+        }
+        function opacity(x) {
+          return x*0.003;
+        }
+
+        for (var i=0; i<circs.length; i++){
+          var circleOptions = {
+            map: null,
+            strokeWeight: 0,
+            fillColor: getColor(i),
+            fillOpacity: opacity(circs[i].value),
+            center: new google.maps.LatLng(circs[i].latitude,circs[i].longitude),
+            radius: 50000
+          };
+
+          demandCircles.push(new google.maps.Circle(circleOptions));
+        };
+      };
+
+      createDemandCircles($scope.markers[0].demand);
+      createSentimentCircles($scope.markers[0].sentiment);
+      switchDemandSentiment();
     });
+
+    function showCircles(show, hide) {
+      for (var i = 0; i<hide.length; i++) {
+        hide[i].setMap(null);
+      };
+      for (var i = 0; i<show.length; i++) {
+        show[i].setMap(theMap);
+      };
+    };
+
+    function switchDemandSentiment(){
+      if ($scope.products.showDemand) {
+        showCircles(demandCircles, sentimentCircles);
+      } else {
+        showCircles(sentimentCircles, demandCircles);
+      };
+    }
+
+    
+    $scope.$watch('products.showDemand', switchDemandSentiment,true);
+
   }
 ]);

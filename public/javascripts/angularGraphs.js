@@ -17,18 +17,16 @@ app.directive('timeline', function() {
   return {
     restrict: 'A',
     link: function($scope, elm, attrs) {
-      $scope.$watch('timeline.line', function() {
+      $scope.$watch('products.showDemand', function() {
         var timeline = '';
 
         timeline = new google.visualization.LineChart(elm[0]);
- /*
-        if ($scope.timeline.line == '1') {
-          $scope.timeline.data = google.visualization.arrayToDataTable($scope.graphData.demand);
-          timeline = new google.visualization.LineChart(elm[0]);
+
+        if ($scope.products.showDemand) {
+          $scope.timeline.data = $scope.demandData;
         } else {
-          $scope.timeline.data = google.visualization.arrayToDataTable($scope.graphData.sentiment);
-          timeline = new google.visualization.LineChart(elm[0]);
-        }*/
+          $scope.timeline.data = $scope.sentimentData;
+        }
  
         timeline.draw($scope.timeline.data, $scope.timeline.options);
       },true);
@@ -61,7 +59,7 @@ app.directive('wordcloud', function() {
   return {
     restrict: 'A',
     link: function($scope, elm, attrs) {
-      console.log($scope.graphData.wordCloud);
+      //console.log($scope.graphData.wordCloud);
       var fill = d3.scale.category20();
 
       d3.layout.cloud().size([300, 300])
@@ -102,41 +100,38 @@ app.controller('GraphsCtrl', [
   function($scope,graphData, products){
     $scope.products = products;
     $scope.graphData = graphData.graphData;
-/*
-    var header = $scope.graphData[0];
-    var timelineData = [];
-    for (var i = 0; i < header.demand.length; i++) {
-      timelineData.push([header.demand[i]]);
-    };
-    console.log(timelineData);
-    for (var i = 1; i < $scope.graphData.length; i++) {
-      for (var j = 0; j < header.demand.length; j++) {
-        timelineData[j].push($scope.graphData[i].demand[j]);
-      };
-    };*/
-    
 
     var timelineOptions = {
       curveType: 'function',
       legend: { position: 'bottom' }
     };
     var timeline = {
-      data: [],
-      line: 1
+      data: []
     };
  
-    //timeline.data = google.visualization.arrayToDataTable(timelineData);
     timeline.options = timelineOptions;
 
-    var data = new google.visualization.DataTable();
-    data.addColumn('date', 'Date');
-    data.addColumn('number', 'iPhone');
-
+    var demandData = new google.visualization.DataTable();
+    demandData.addColumn('date', 'Date');
+    demandData.addColumn('number', 'iPhone');
     for (var i = 0; i < $scope.graphData.demand.length; i++) {
-      data.addRow([new Date($scope.graphData.demand[i][0]), $scope.graphData.demand[i][1]]);
+      demandData.addRow([new Date($scope.graphData.demand[i][0]), $scope.graphData.demand[i][1]]);
     };
-    timeline.data = data;
+    $scope.demandData = demandData;
 
+    var sentimentData = new google.visualization.DataTable();
+    sentimentData.addColumn('date', 'Date');
+    sentimentData.addColumn('number', 'iPhone');
+    for (var i = 0; i < $scope.graphData.sentiment.length; i++) {
+      sentimentData.addRow([new Date($scope.graphData.sentiment[i][0]), $scope.graphData.sentiment[i][1]]);
+    };
+    $scope.sentimentData = sentimentData;
+
+    if ($scope.products.showDemand) {
+      timeline.data = demandData;
+    } else {
+      timeline.data = sentimentData;
+    }
 
     $scope.timeline = timeline;
 
