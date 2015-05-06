@@ -75,7 +75,7 @@ var outputSavedTweets = function(options) {
 		}
 
 		console.log("Found " + tweets.length + " " + tweetType + " tweets. Random sample of 10: ");
-		_.each(helper.getRandomSample(10, tweets), function(tweet) { console.log(tweet.text); });
+		_.each(helper.getRandomSample(20, tweets), function(tweet) { console.log("product: '" + tweet.product + "'"); });
 	});
 }
 
@@ -93,9 +93,9 @@ var outputDemandGraph = function(product, dateLowerBound) {
 
 // wipeDatabase();
 // outputRandomSample("have iphone 6");
-// saveTweets( { product: "iphone 6", demand: true } );
-// outputSavedTweets({ product: "iphone 6", demand: false, geo: true, sort: "created_at"});
-// outputSavedTweets({});
-outputDemandGraph("iphone 6", helper.daysAgo(5));
+// saveTweets( { product: "iphone 6", demand: false, delayBetweenRequests: twitter.getSafeDelayBetweenRequests() } );
+// outputSavedTweets({ product: "iphone 6", select: 'created_at product indicatesDemand', limit: 100000 });
+// outputSavedTweets({ limit: 10000, select: 'created_at product indicatesDemand' });
+// outputDemandGraph("iphone 6", helper.daysAgo(7));
 
 

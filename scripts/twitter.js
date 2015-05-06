@@ -13,6 +13,14 @@ var client = new Twitter({
 	access_token_secret: 'uJLRVqlcoEIpXr2uOVWODkUPlblQZVQ1kXeFsMOgDzyJo'
 });
 
+var getSafeDelayBetweenRequests = function() {
+	var allowedRequests = 180;
+	var interval = 15 * 60 * 1000;
+	var delay = Math.ceil(interval / allowedRequests);
+	var safeDelay = Math.ceil(delay * 1.1);
+	return safeDelay;
+}
+
 var getStream = function(searchText, callback) {
 	client.stream('statuses/filter', { track: searchText, language: 'en' },  function(stream) {
 		stream.on('data', function(tweet) {
@@ -118,6 +126,19 @@ var doSearch = function(searchText, options, callback) {
 
 	var allTweets = [];
 
+	var callGetPage = function(searchOptions, getPageCallback) {
+		if (!options.delayBetweenRequests) {
+			getPage(searchOptions, getPageCallback);
+			return;
+		}
+
+		// otherwise call it after the specified delay
+		console.log("waiting for " + options.delayBetweenRequests / 1000 + " seconds before next request...");
+		setTimeout(function() {
+			getPage(searchOptions, getPageCallback);
+		}, options.delayBetweenRequests);
+	}
+
 	var getPageCallback = function(error, tweets, nextSearchOptions) {
 		if (error) {
 			callback(error, null);
@@ -141,13 +162,13 @@ var doSearch = function(searchText, options, callback) {
 				return;
 			}
 
-			getPage(nextSearchOptions, getPageCallback);
+			callGetPage(nextSearchOptions, getPageCallback);
 
 		});
 
 	};
 
-	getPage(searchOptions, getPageCallback);
+	callGetPage(searchOptions, getPageCallback);
 }
 
 // callback takes params error, tweets
@@ -219,3 +240,6 @@ var saveTweets = function(options, callback) {
 
 module.exports.getRandomSample = getRandomSample;
 module.exports.saveTweets = saveTweets;
+module.exports.getSafeDelayBetweenRequests = getSafeDelayBetweenRequests;
+
+
