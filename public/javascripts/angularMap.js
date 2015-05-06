@@ -22,7 +22,7 @@ app.factory('markers', ['$http', function($http) {
   };
 
   o.getAll = function() {
-    return $http.get('/getMarkersSample.json').success(function(data){
+    return $http.get('/getLocations.json').success(function(data){
       angular.copy(data, o.markers);
     });
   };
@@ -38,7 +38,9 @@ app.controller('MapCtrl', [
   function($scope, markers, globalSelection){
 
     $scope.products = globalSelection;
+    $scope.markers = markers;
 
+/*
     $scope.infoVisible = false;
     $scope.infoTitle = "";
     $scope.infoText = "Initial text.";
@@ -53,10 +55,7 @@ app.controller('MapCtrl', [
     $scope.hideInfo = function (){
       $scope.infoText = "";
       $scope.infoVisible = false;
-    };
-
-    $scope.markers = markers.markers;
-    //console.log($scope.markers);
+    };*/
 
     $scope.map = {
       latitude: 51.752285,
@@ -69,20 +68,16 @@ app.controller('MapCtrl', [
     var sentimentCircles = [];
     var theMap = null;
 
+    var draw = function() {
+      $scope.markers.getAll();
+    };
+
     $scope.$on('mapInitialized', function(evt, map) {
       theMap = map;
       map.set('streetViewControl', false);
       map.set('mapTypeControl', false);
       map.set('minZoom', 3);  //minimum is 0;
       map.set('maxZoom', 12); //maximum is 21;
-      /*If we want to change the size of the buble when the zoom is changed.
-      google.maps.event.addListener(map, 'zoom_changed', function() {
-          var zoomLevel = map.getZoom();
-          console.log(zoomLevel);
-          console.log($scope.map.zoom);
-          console.log(circles);
-          circles[0].setRadius(circles[0].radius*2);
-        });*/
 
       function createSentimentCircles(circs) {
         function redOrGreen(x) {

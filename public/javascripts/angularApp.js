@@ -12,7 +12,7 @@ app.config([
 function($stateProvider, $urlRouterProvider) {
   $stateProvider
     .state('map', {
-      url: '/map/{id}',
+      url: '/map',
       templateUrl: 'Views/map.html',
       controller: 'MapCtrl',
       resolve: {
@@ -22,14 +22,11 @@ function($stateProvider, $urlRouterProvider) {
           } else {
             return null;
           }
-        }],
-        markerPromise: ['markers', function(markers) {
-          return markers.getAll();
         }]
       }
     })
     .state('timeline', {
-      url: '/timeline/{id}',
+      url: '/timeline',
       templateUrl: 'Views/timeline.html',
       controller: 'TimelineCtrl',
       resolve: {
@@ -43,7 +40,7 @@ function($stateProvider, $urlRouterProvider) {
       }
     })
     .state('geochart', {
-      url: '/geochart/{id}',
+      url: '/geochart',
       templateUrl: 'Views/geochart.html',
       controller: 'GeoChartCtrl',
       resolve: {
@@ -60,7 +57,7 @@ function($stateProvider, $urlRouterProvider) {
       }
     })
     .state('wordcloud', {
-      url: '/wordcloud/{id}',
+      url: '/wordcloud',
       templateUrl: 'Views/wordcloud.html',
       controller: 'WordCloudCtrl',
       resolve: {

@@ -34,7 +34,8 @@ app.directive('timeline', function() {
       $scope.$watch('products.currentOptionIndex', drawChart);
 
       var refreshData = function(){
-        $scope.graphData.getAll($scope.products.currentTopic, $scope.products.slider.value);
+        console.log($scope.products.currentTopicClass);
+        $scope.graphData.getAll($scope.products.currentTopicClass, $scope.products.slider.value);
         $scope.initialise();
       };
 
