@@ -1,6 +1,7 @@
 var async = require('async');
 var mongoose = require('mongoose');
 var deepPopulate = require('mongoose-deep-populate');
+var _ = require('underscore')._;
 require('./models/Tweet');
 
 var Tweet = mongoose.model('Tweet');
@@ -120,8 +121,20 @@ var getTweets = function(options, callback) {
 	if (options.dateLowerBound) {
 		query = query.where('created_at').gte(options.dateLowerBound);
 	}
+	if (options.limit) {
+		query = query.limit(options.limit);
+	}
+	if (options.excludedProducts) {
+		_.each(options.excludedProducts, function(excludedProduct) {
+			query = query.where('product').ne(excludedProduct);
+		});
+	}
+	if (options.select) {
+		query = query.select(options.select);
+	}
 
 	query.exec(function(error, tweets) {
+		console.log("got tweets");
 		if (error) {
 			callback(error, null);
 			return;
