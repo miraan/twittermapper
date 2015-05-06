@@ -58,4 +58,17 @@ router.get('/getWordCloud/:category/:days', function(req, res, next) {
 	});
 });
 
+router.get('/getTweet/:tweetId', function(req, res, next) {
+	var tweetId = req.params.tweetId;
+
+	analysis.getTweet(tweetId, function(error, tweet) {
+		if (error) {
+			res.error(error);
+			return;
+		}
+
+		res.json(tweet);
+	});
+});
+
 module.exports = router;

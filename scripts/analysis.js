@@ -449,8 +449,32 @@ var getWordCloudForCategory = function(category, dateLowerBound, callback) {
 	});
 }
 
+// callback takes params error, tweet, where tweet is an object with fields:
+// text, screen_name, created_at
+var getTweet = function(tweetId, callback) {
+	database.getTweet( { tweetId: tweetId, select: 'text user.screen_name created_at' }, function(error, tweet) {
+		if (error) {
+			callback(error);
+			return;
+		}
+
+		if (!tweet) {
+			callback("No tweet with that id");
+			return;
+		}
+
+		var result = {};
+		result.text = tweet.text;
+		result.screen_name = tweet.user.screen_name;
+		result.created_at = tweet.created_at;
+
+		callback(null, result);
+	});
+}
+
 module.exports.getGraphForCategory = getGraphForCategory;
 module.exports.getLocationsForCategory = getLocationsForCategory;
 module.exports.getCategories = getCategories;
 module.exports.getWordCloudForCategory = getWordCloudForCategory;
+module.exports.getTweet = getTweet;
 
