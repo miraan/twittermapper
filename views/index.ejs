@@ -12,7 +12,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <!-- Latest compiled and minified JavaScript for Bootstrap-->
-    <script src="APIs/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
+    <!-- <script src="APIs/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script> -->
 
     <!--My style-->
     <link rel="stylesheet" type="text/css" href="stylesheets/Maps.css">
@@ -44,48 +44,13 @@
     <script type="text/javascript" src="javascripts/angularWordCloud.js"></script>
   </head>
   <body>
-    <!-- Navigation bar-->
-    <nav class="navbar navbar-custom">
-      <div class="container">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">OxTwi</a>
-        </div>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav" ng-controller= "MenuCtrl">
-            <li class="{{menu.map.state}}" ng-click="setActive(menu.map)"><a href="#/map">Map</a></li>
-            <li class="{{menu.timeline.state}}" ng-click="setActive(menu.timeline)"><a href="#/timeline/0">Timeline</a></li>
-            <li class="{{menu.geochart.state}}" ng-click="setActive(menu.geochart)"><a href="#/geochart/0">GeoChart</a></li>
-            <li class="{{menu.wordcloud.state}}" ng-click="setActive(menu.wordcloud)"><a href="#/wordcloud/0">Word Cloud</a></li>
-            <li>
-              <div class="seleptionPlaceholder"></div>
-            </li>
-            <li>
-              <div>
-                <button          type="button" class="demSentBtn"         ng-hide="products.showDemand"    ng-click="makeDemand()">Demand
-                </button><button type="button" class="demSentBtnSelected" ng-show="products.showDemand">Demand
-                </button><button type="button" class="demSentBtn"         ng-hide="products.showSentiment" ng-click="makeSentiment()">Sentiment
-                </button><button type="button" class="demSentBtnSelected" ng-show="products.showSentiment">Sentiment
-                </button>
-              </div>
-            </li>
-            <li class="slider"><input type="range" min="{{products.slider.min}}" max="{{products.slider.max}}" 
-                step="{{products.slider.step}}" ng-model="products.slider.value"></li>
-            <li><a>{{products.slider.value}}</a></li>
-          </ul>
-        </div><!-- /.navbar-collapse -->
-      </div><!-- /.container-fluid -->
-    </nav>
+    <div class="navigation"></div>
+
     <ui-view></ui-view>
     <div ng-controller= "MenuCtrl">
+
+      <!-- initial darkening -->
       <div ng-hide="brighten">
         <div class="darkness">
         </div>
@@ -94,6 +59,33 @@
         </div>
       </div>
 
+
+
+      <button type="button" class="OxTwi">OxTwi</button>
+      <!-- left navigation -->
+      <div class="leftStuff">
+        <a       href="#/map"
+        ><button type="button"
+                 class="{{menu.map.state}}"
+                 ng-click="setActive(menu.map)">Map</button></a
+        ><a      href="#/timeline/0"
+        ><button type="button"
+                 class="{{menu.timeline.state}}"
+                 ng-click="setActive(menu.timeline)">Timeline</button></a
+        ><a      href="#/geochart/0"
+        ><button type="button"
+                 class="{{menu.geochart.state}}"
+                 ng-click="setActive(menu.geochart)">GeoChart</button></a
+        ><a      href="#/wordcloud/0"
+        ><button type="button"
+                 class="{{menu.wordcloud.state}}"
+                 ng-click="setActive(menu.wordcloud)">Word Cloud</button></a
+        >
+      </div>
+
+
+
+      <!-- aligned centre -->
       <div class="seleption" ng-show="brighten" ng-mouseleave="hideAll()">
         <form ng-submit="submitSearch()" ng-show="searchFocus || optionsViewIsT">
           <input type="text" class="searchBox" ng-model="searchText" ng-focus="getToTyping()" ng-blur="finishTyping()">
@@ -112,6 +104,21 @@
           </div>
         </div>
       </div>
+
+      <!-- right navigation -->
+      <div class="demSent">
+        <button          type="button" class="demSentBtn"         ng-hide="products.showDemand"    ng-click="makeDemand()">Demand
+        </button><button type="button" class="demSentBtnSelected" ng-show="products.showDemand">Demand
+        </button><button type="button" class="demSentBtn"         ng-hide="products.showSentiment" ng-click="makeSentiment()">Sentiment
+        </button><button type="button" class="demSentBtnSelected" ng-show="products.showSentiment">Sentiment
+        </button>
+        <div class="slider"><input type="range" min="{{products.slider.min}}" max="{{products.slider.max}}" 
+              step="{{products.slider.step}}" ng-model="products.slider.value"></div>
+        <div class="sliderValue">{{products.slider.value}}</div>
+      </div>
+
+
+
     </div>
   </body>
 </html>
