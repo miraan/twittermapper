@@ -3,7 +3,7 @@ var deepPopulate = require('mongoose-deep-populate');
 
 var TweetSchema = mongoose.Schema({
 	id: Number,
-	created_at: Date,
+	created_at: { type: Date, index: true },
 	text: String,
 	source: String,
 	truncated: Boolean,
@@ -28,7 +28,6 @@ var TweetSchema = mongoose.Schema({
 		lang: String
 	},
 	geo: { type: [Number], index: '2d' },
-	bounds: [ { type: [Number], index: '2d' } ],
 	retweet_count: Number,
 	favourite_count: Number,
 	favorited: Boolean,

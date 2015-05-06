@@ -125,6 +125,8 @@ var doSearch = function(searchText, options, callback) {
 	};
 
 	var allTweets = [];
+	var receivedTweetsCount = 0;
+	var geoTweetsCount = 0;
 
 	var callGetPage = function(searchOptions, getPageCallback) {
 		if (!options.delayBetweenRequests) {
@@ -146,8 +148,13 @@ var doSearch = function(searchText, options, callback) {
 
 		}
 
-		allTweets = allTweets.concat(tweets);
-		console.log("current search: " + searchText + ", received tweets: " + allTweets.length);
+		receivedTweetsCount += tweets.length;
+		if (!options.save) {
+			allTweets = allTweets.concat(tweets);
+		}
+
+		geoTweetsCount += _.filter(tweets, function(tweet) { return tweet.geo; }).length;
+		console.log("current search: " + searchText + ", received tweets: " + receivedTweetsCount + " of which " + geoTweetsCount + " are geo.");
 
 		saveTweetBatch(tweets, function(error, savedTweets) {
 			if (error) {
@@ -202,8 +209,6 @@ var getTweets = function(options, callback) {
 	}
 
 	var allTweets = [];
-	var allSavedTweets = [];
-	// var uk = locations.locations.UK;
 	async.eachSeries(searches, function(search, asyncCallback) {
 		doSearch(search, options, function(error, tweets) {
 			if (error) {

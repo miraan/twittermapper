@@ -24,15 +24,15 @@ var wipeDatabase = function() {
 	});
 }
 
-var outputRandomSample = function(searchText) {
-	twitter.getRandomSample(options, function(error, tweets) {
+var outputRandomSample = function(size, searchText, options) {
+	twitter.getRandomSample(size, searchText, options, function(error, tweets) {
 		if (error) {
 			console.log(error);
 			return;
 		}
 
 		_.each(tweets, function(tweet) {
-			console.log(tweet.text);
+			console.log(tweet.geo);
 		});
 	});
 }
@@ -52,7 +52,7 @@ var saveTweets = function(options) {
 			tweetType += " " + options.product;
 		}
 
-		console.log("Saved " + tweets.length + " " + tweetType + " tweets");
+		console.log("Saved " + tweetType + " tweets");
 	});
 }
 
@@ -74,8 +74,12 @@ var outputSavedTweets = function(options) {
 			tweetType += " geo";
 		}
 
-		console.log("Found " + tweets.length + " " + tweetType + " tweets. Random sample of 10: ");
-		_.each(helper.getRandomSample(20, tweets), function(tweet) { console.log("product: '" + tweet.product + "'"); });
+		console.log("Found " + tweets.length + " " + tweetType + " tweets.");
+		// console.log("Random sample of 10:");
+		// _.each(helper.getRandomSample(20, tweets), function(tweet) { console.log(tweet); });
+
+		console.log("First 10: ");
+		for (var i = 0; i < 10 && i < tweets.length; i++) { console.log(tweets[i].geo); }
 	});
 }
 
@@ -91,11 +95,24 @@ var outputDemandGraph = function(product, dateLowerBound) {
 	});
 }
 
+var outputSentimentGraph = function(product, dateLowerBound) {
+	analysis.getSentimentGraph(product, dateLowerBound, function(error, points) {
+		if (error) {
+			console.log("Error: " + error);
+			return;
+		}
+
+		// _.each(points, function(point) { console.log("Point: " + point); });
+		console.log("Result: " + JSON.stringify(points));
+	});
+}
+
 // wipeDatabase();
-// outputRandomSample("have iphone 6");
+// outputRandomSample(10, "have iphone 6", {});
 // saveTweets( { product: "iphone 6", demand: false, delayBetweenRequests: twitter.getSafeDelayBetweenRequests() } );
-// outputSavedTweets({ product: "iphone 6", select: 'created_at product indicatesDemand', limit: 100000 });
+// saveTweets( { product: "galaxy s6", demand: true } );
+// outputSavedTweets({ product: "lg g4", geo: true, demand: true, select: 'created_at geo', limit: 1000 });
 // outputSavedTweets({ limit: 10000, select: 'created_at product indicatesDemand' });
 // outputDemandGraph("iphone 6", helper.daysAgo(7));
-
+// outputSentimentGraph("iphone 6", helper.daysAgo(7));
 
