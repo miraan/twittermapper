@@ -35,10 +35,10 @@ app.factory('markers', ['$http', function($http) {
 app.controller('MapCtrl', [
   '$scope',
   'markers',
-  'products',
-  function($scope, markers, products){
+  'globalSelection',
+  function($scope, markers, globalSelection){
 
-    $scope.products = products;
+    $scope.products = globalSelection;
 
     $scope.infoVisible = false;
     $scope.infoTitle = "";
