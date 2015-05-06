@@ -11,6 +11,8 @@ var saveTweet = function(tweetJson, callback) {
 	var point;
 	var twitterUser;
 	var tweet;
+	var country;
+	var country_code;
 
 	var makePoint = function() {
 		if (!tweetJson.geo) {
@@ -34,8 +36,18 @@ var saveTweet = function(tweetJson, callback) {
 		var lat = (southWest[1] + southEast[1]) / 2;
 		var lng = (southWest[0] + northWest[0]) / 2;
 		point = [lat, lng];
-		console.log(point);
 	};
+
+	var makeCountry = function() {
+		if (tweetJson.place) {
+			if (tweetJson.place.country) {
+				country = tweetJson.place.country;
+			}
+			if (tweetJson.place.country_code) {
+				country_code = tweetJson.place.country_code;
+			}
+		}
+	}
 
 	var makeTwitterUser = function() {
 		twitterUser = {
@@ -69,6 +81,8 @@ var saveTweet = function(tweetJson, callback) {
 			truncated: tweetJson.truncated,
 			user: twitterUser,
 			geo: point,
+			country: country,
+			country_code: country_code,
 			retweet_count: tweetJson.retweet_count,
 			favourite_count: tweetJson.favorite_count,
 			favorited: tweetJson.favorited,
@@ -81,6 +95,7 @@ var saveTweet = function(tweetJson, callback) {
 	};
 
 	makePoint();
+	makeCountry();
 	makeTwitterUser();
 	makeTweet();
 
@@ -126,6 +141,18 @@ var getTweets = function(options, callback) {
 	}
 	if (options.select) {
 		query = query.select(options.select);
+	}
+	if (options.country) {
+		query = query.where('country').equals(options.country);
+	}
+	if (options.countryExists) {
+		query = query.exists('country');
+	}
+	if (options.country_code) {
+		query = query.where('country_code').equals(options.country_code);
+	}
+	if (options.countryCodeExists) {
+		query = query.exists('country_code');
 	}
 
 	query.exec(function(error, tweets) {

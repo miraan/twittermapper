@@ -58,6 +58,21 @@ router.get('/getWordCloud/:category/:days', function(req, res, next) {
 	});
 });
 
+router.get('/getGeoChart/:category/:days', function(req, res, next) {
+	var category = req.params.category;
+	var days = req.params.days;
+	var dateLowerBound = helper.daysAgo(days);
+
+	analysis.getGeoChartForCategory(category, dateLowerBound, function(error, data) {
+		if (error) {
+			res.error(error);
+			return;
+		}
+
+		res.json(data);
+	});
+});
+
 router.get('/getTweet/:tweetId', function(req, res, next) {
 	var tweetId = req.params.tweetId;
 

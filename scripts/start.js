@@ -32,7 +32,7 @@ var outputRandomSample = function(size, searchText, options) {
 		}
 
 		_.each(tweets, function(tweet) {
-			console.log(tweet.geo);
+			console.log(tweet);
 		});
 	});
 }
@@ -79,7 +79,7 @@ var outputSavedTweets = function(options) {
 		// _.each(helper.getRandomSample(20, tweets), function(tweet) { console.log(tweet); });
 
 		console.log("First 10: ");
-		for (var i = 0; i < 10 && i < tweets.length; i++) { console.log(tweets[i].geo); }
+		for (var i = 0; i < 10 && i < tweets.length; i++) { console.log(tweets[i]); }
 	});
 }
 
@@ -108,10 +108,10 @@ var outputSentimentGraph = function(product, dateLowerBound) {
 }
 
 // wipeDatabase();
-// outputRandomSample(10, "have iphone 6", {});
+// outputRandomSample(10, "have iphone 6", {latitude: 51.0, longitude: -0.5, radius: 10000});
 // saveTweets( { product: "iphone 6", demand: false, delayBetweenRequests: twitter.getSafeDelayBetweenRequests() } );
-// saveTweets( { product: "galaxy s6", demand: true } );
-// outputSavedTweets({ product: "lg g4", geo: true, demand: true, select: 'created_at geo', limit: 1000 });
+saveTweets( { product: "galaxy s6", demand: true } );
+// outputSavedTweets({ product: "iphone 6", countryExists: true, select: 'created_at country geo', limit: 1000 });
 // outputSavedTweets({ limit: 10000, select: 'created_at product indicatesDemand' });
 // outputDemandGraph("iphone 6", helper.daysAgo(7));
 // outputSentimentGraph("iphone 6", helper.daysAgo(7));

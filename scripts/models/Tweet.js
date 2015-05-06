@@ -28,6 +28,8 @@ var TweetSchema = mongoose.Schema({
 		lang: String
 	},
 	geo: { type: [Number], index: '2d' },
+	country: { type: String, index: true },
+	country_code: { type: String, index: true },
 	retweet_count: Number,
 	favourite_count: Number,
 	favorited: Boolean,

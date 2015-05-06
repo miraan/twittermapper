@@ -19,12 +19,59 @@ var countWordsInTweets = function(tweets) {
 
 		_.each(words, function(word) {
 			if (!(index.hasOwnProperty(word))) {
-				index[word] = 1;
+				index[word] = 0;
 			}
 			index[word]++;
 		});
   	});
     return index;
+}
+
+// tweets is an array of tweet objects where each object has at least the property 'country_code'
+var getCountryCountForTweets = function(tweets) {
+	var index = {};
+	_.each(tweets, function(tweet) {
+		if (!(index.hasOwnProperty(tweet.country_code))) {
+			index[tweet.country_code] = 0;
+		}
+		index[tweet.country_code]++;
+	});
+	return index;
+}
+
+// tweets is an array of tweet objects where each object has at least the properties 'country_code' and 'text'
+var getCountrySentimentForTweets = function(tweets) {
+	var index = {};
+	_.each(tweets, function(tweet) {
+		if (!(index.hasOwnProperty(tweet.country_code))) {
+			index[tweet.country_code] = 0;
+		}
+		index[tweet.country_code] += sentiment(tweet.text).score;
+	});
+	return index;
+}
+
+// charts is an array of charts, where a chart is a 2d string array [country, value]
+// returns the chart with the values for each chart summed together
+var sumCountryCharts = function(charts) {
+	var index = {};
+	_.each(charts, function(chart) {
+		_.each(chart, function(pair) {
+			var country = pair[0];
+			var value = pair[1];
+			if (!(index.hasOwnProperty(country))) {
+				index[country] = 0;
+			}
+			index[country] += value;
+		});
+	});
+
+	var chart = [];
+	_.each(_.keys(index), function(key) {
+		chart.push([key, index[key]]);
+	});
+
+	return chart;
 }
 
 var getProductsForCategory = function(category) {
@@ -93,7 +140,7 @@ var getAverageLine = function(lines) {
 
 // data is array of 2d arrays: data: [ [date, value] ]
 // callback takes params (error, points) where points is an array of 'numberOfPoints' 2d arrays: [  ]
-var getDemandForProduct = function(product, dateLowerBound, callback) {
+var getDemandGraphForProduct = function(product, dateLowerBound, callback) {
 	database.getTweets( { product: product, demand: true, sort: 'created_at', select: 'created_at', dateLowerBound: dateLowerBound }, function(error, tweets) {
 		if (error) {
 			callback(error, null);
@@ -145,7 +192,7 @@ var getDemandForProduct = function(product, dateLowerBound, callback) {
 
 // data is array of 2d arrays: data: [ [date, value] ]
 // callback takes params (error, points) where points is an array of 'numberOfPoints' 2d arrays: [  ]
-var getSentimentForProduct = function(product, dateLowerBound, callback) {
+var getSentimentGraphForProduct = function(product, dateLowerBound, callback) {
 	database.getTweets( { product: product, demand: false, sort: 'created_at', select: 'created_at text', dateLowerBound: dateLowerBound }, function(error, tweets) {
 		if (error) {
 			callback(error, null);
@@ -205,7 +252,7 @@ var getGraphForCategory = function(category, dateLowerBound, callback) {
 		item.product = product;
 		
 		var getDemand = function(callback) {
-			getDemandForProduct(product, dateLowerBound, function(error, points) {
+			getDemandGraphForProduct(product, dateLowerBound, function(error, points) {
 				if (error) {
 					callback(error);
 					return;
@@ -217,7 +264,7 @@ var getGraphForCategory = function(category, dateLowerBound, callback) {
 		}
 
 		var getSentiment = function(callback) {
-			getSentimentForProduct(product, dateLowerBound, function(error, points) {
+			getSentimentGraphForProduct(product, dateLowerBound, function(error, points) {
 				if (error) {
 					callback(error);
 					return;
@@ -449,6 +496,106 @@ var getWordCloudForCategory = function(category, dateLowerBound, callback) {
 	});
 }
 
+// callback takes params: error, chart where chart is an array of 2d arrays [country, value]
+var getDemandGeoChartForProduct = function(product, dateLowerBound, callback) {
+	database.getTweets( { product: product, demand: true, countryCodeExists: true, select: 'country_code', dateLowerBound: dateLowerBound }, function(error, tweets) {
+		if (error) {
+			callback(error);
+			return;
+		}
+
+		var index = getCountryCountForTweets(tweets);
+		var chart = [];
+		_.each(_.keys(index), function(key) {
+			chart.push([key, index[key]]);
+		});
+
+		callback(null, chart);
+	});
+}
+
+// callback takes params: error, chart, where chart is an array of 2d arrays [country, value]
+var getSentimentGeoChartForProduct = function(product, dateLowerBound, callback) {
+	database.getTweets( { product: product, demand: false, countryCodeExists: true, select: 'country_code text', dateLowerBound: dateLowerBound }, function(error, tweets) {
+		if (error) {
+			callback(error);
+			return;
+		}
+
+		var index = getCountrySentimentForTweets(tweets);
+		var chart = [];
+		_.each(_.keys(index), function(key) {
+			chart.push([key, index[key]]);
+		});
+
+		callback(null, chart);
+	});
+}
+
+// callback takes params: error, data, where data is an array of objects with fields:
+// product, demand, sentiment, where demand and sentiment are arrays of 2d arrays [country, value]
+var getGeoChartForCategory = function(category, dateLowerBound, callback) {
+	var products = getProductsForCategory(category);
+	var data = [];
+
+	var allDemandCharts = [];
+	var allSentimentCharts = [];
+	async.each(products, function(product, callback) {
+		var item = {};
+		item.product = product;
+
+		var getDemand = function(callback) {
+			getDemandGeoChartForProduct(product, dateLowerBound, function(error, chart) {
+				if (error) {
+					callback(error);
+					return;
+				}
+
+				item.demand = chart;
+				allDemandCharts.push(chart);
+				callback();
+			});
+		}
+
+		var getSentiment = function(callback) {
+			getSentimentGeoChartForProduct(product, dateLowerBound, function(error, chart) {
+				if (error) {
+					callback(error);
+					return;
+				}
+
+				item.sentiment = chart;
+				allSentimentCharts.push(chart);
+				callback();
+			});
+		}
+
+		async.parallel([getDemand, getSentiment], function(error) {
+			if (error) {
+				callback(error);
+				return;
+			}
+
+			data.push(item);
+			callback();
+		});
+
+	}, function(error) {
+		if (error) {
+			callback(error);
+			return;
+		}
+
+		var entireMarketItem = {};
+		entireMarketItem.product = "entire market";
+		entireMarketItem.demand = sumCountryCharts(allDemandCharts);
+		entireMarketItem.sentiment = sumCountryCharts(allSentimentCharts);
+		data.push(entireMarketItem);
+
+		callback(null, data);
+	});
+}
+
 // callback takes params error, tweet, where tweet is an object with fields:
 // text, screen_name, created_at
 var getTweet = function(tweetId, callback) {
@@ -477,4 +624,5 @@ module.exports.getLocationsForCategory = getLocationsForCategory;
 module.exports.getCategories = getCategories;
 module.exports.getWordCloudForCategory = getWordCloudForCategory;
 module.exports.getTweet = getTweet;
+module.exports.getGeoChartForCategory = getGeoChartForCategory;
 
