@@ -4,28 +4,58 @@
  *
  * and returns a moving average of the demand
  */
-function analyzeDemandSimple(tweets, period){
+
+function segmentTweetsByPeriod(tweets, period){
 	var left = 0
 	var right = 0
-	var inDemand = 0
 	var startDate = tweets[0].created_at
 	var result = []
 
 	while(right < tweets.length){
 		startDate = tweets[right].created_at
 		left = right
-		inDemand = 0
 		
 		while(right < tweets.length && tweets[right].created_at.getTime() - 1000 * period <= startDate.getDate()){
-			if(tweets[right].indicatesDemand)
-				inDemand++
 			right++
 		}
-
-		result.push({demand: inDemand / (right - left), total: right - left})
+	
+		result.push(tweets.slice(left, right))
 	}
 
 	return result
+}
+
+function analyzeDemandSimple(tweets){
+	var inDemand = 0
+	
+	for(var i = 0 ; i < tweets.length ; i++){
+		if(tweets[i].indicatesDemand)
+			inDemand++
+	}
+	
+	if(tweets.length == 0)
+		return 0
+
+	return inDemand / tweets.length
+}
+
+/*
+ *
+ */
+function analyzeDemandByImpact(tweets){
+	var sum = 0
+	var wsum = 0
+
+	for(var i = 0 ; i < tweets.length ; i++){
+		if(tweets[i].indicatesDemand){
+			var log = Math.log(1 + tweets[i].user.followers_count)
+			sum += log
+			wsum += log
+		}else
+			wsum += 1
+	}
+
+	return (sum + 1e-9) / (wsum + 1e-9)
 }
 
 /*
