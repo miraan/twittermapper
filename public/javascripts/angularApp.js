@@ -18,6 +18,7 @@ function($stateProvider, $urlRouterProvider) {
       resolve: {
         selectionPromise: ['globalSelection', function(selection) {
           if (selection.needToRequest) {
+            selection.needToRequest = false;
             return selection.getAll();
           } else {
             return null;
@@ -32,6 +33,7 @@ function($stateProvider, $urlRouterProvider) {
       resolve: {
         selectionPromise: ['globalSelection', function(selection) {
           if (selection.needToRequest) {
+            selection.needToRequest = false;
             return selection.getAll();
           } else {
             return null;
@@ -46,6 +48,7 @@ function($stateProvider, $urlRouterProvider) {
       resolve: {
         selectionPromise: ['globalSelection', function(selection) {
           if (selection.needToRequest) {
+            selection.needToRequest = false;
             return selection.getAll();
           } else {
             return null;
@@ -60,6 +63,7 @@ function($stateProvider, $urlRouterProvider) {
       resolve: {
         selectionPromise: ['globalSelection', function(selection) {
           if (selection.needToRequest) {
+            selection.needToRequest = false;
             return selection.getAll();
           } else {
             return null;

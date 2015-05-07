@@ -40,13 +40,6 @@ app.directive('timeline', function() {
 
       $scope.$watch('products.currentOptionIndex', drawChart);
 
-      var refreshData = function(){
-        if($scope.products.currentTopicClass!= ""){
-          $scope.graphData.getAll($scope.products.currentTopicClass, $scope.products.slider.value);
-          $scope.initialise();    
-        }
-      };
-
       var getData = function() {
         if ($scope.products.currentTopicClass!="" && $scope.products.isCurrentView('#/timeline')) {
           $scope.graphData.getAll($scope.products.currentTopicClass, $scope.products.slider.value);
