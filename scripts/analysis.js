@@ -87,8 +87,8 @@ var getProductsForCategory = function(category) {
 
 var getCategories = function() {
 	var result = {};
-	result.topics = analysis.categories;
-	result.topicsOptions = analysis.products;
+	result.topics = categories;
+	result.topicsOptions = products;
 	for (var i = 0; i < result.topicsOptions.length; i++) {
 		result.topicsOptions[i].unshift("entire market");
 	}
