@@ -92,7 +92,11 @@ app.factory('globalSelection', ['$http', function($http) {
     currentTopicClass: "",
 
     topics: [],
-    topicsOptions: [[]]
+    topicsOptions: [[]],
+
+    isCurrentView: function(view){
+      return window.location.hash==view;
+    }
   };
 
   o.getAll = function() {

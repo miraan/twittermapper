@@ -48,7 +48,9 @@ app.directive('timeline', function() {
       };
 
       var getData = function() {
-        $scope.graphData.getAll($scope.products.currentTopicClass, $scope.products.slider.value);
+        if ($scope.products.currentTopicClass!="" && $scope.products.isCurrentView('#/timeline')) {
+          $scope.graphData.getAll($scope.products.currentTopicClass, $scope.products.slider.value);
+        }
       };
 
       var refreshAndDraw = function() {
@@ -56,17 +58,9 @@ app.directive('timeline', function() {
         drawChart();
       };
 
-      $scope.$watch('products.slider.newValue', function(newValue, oldValue){
-        if ($scope.products.currentTopicClass!=""){
-          getData();
-        };
-      });
+      $scope.$watch('products.slider.newValue', getData);
 
-      $scope.$watch('products.currentTopicClass', function(newValue, oldValue){
-        if ($scope.products.currentTopicClass!=""){
-          getData();
-        };
-      });
+      $scope.$watch('products.currentTopicClass', getData);
 
       $scope.$watch('graphData', function() {
         $scope.initialise();
