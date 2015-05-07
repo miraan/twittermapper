@@ -106,15 +106,12 @@ app.factory('globalSelection', ['$http', function($http) {
   o.getAll = function() {
     o.haveCategories = true;
     return $http.get('/getCategories').success(function(data){
-      console.log(data);
       var object = {
         data: {}
       }
       angular.copy(data, object.data);
       o.topics = object.data.topics;
-      console.log(o.topics);
       o.topicsOptions = object.data.topicsOptions;
-      console.log(o.topicsOptions);
     });
   };
 
