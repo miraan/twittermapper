@@ -37,10 +37,13 @@ var outputRandomSample = function(size, searchText, options) {
 	});
 }
 
-var saveTweets = function(options) {
+var saveTweets = function(options, callback) {
 	twitter.saveTweets(options, function(error, tweets) {
 		if (error) {
 			console.log(error);
+			if (callback) {
+				callback(error);
+			}
 			return;
 		}
 
@@ -53,6 +56,9 @@ var saveTweets = function(options) {
 		}
 
 		console.log("Saved " + tweetType + " tweets");
+		if (callback) {
+			callback();
+		}
 	});
 }
 
@@ -107,6 +113,68 @@ var outputSentimentGraph = function(product, dateLowerBound) {
 	});
 }
 
+var setupDatabase = function() {
+	console.log("setting up database...");
+	
+	var functions = [];
+	_.each(analysis.products()[0], function(mobileProduct) {
+		var funcA = function(callback) {
+			console.log("downloading demand tweets for " + mobileProduct);
+			var options = { product: mobileProduct, demand: true, delayBetweenRequests: twitter.getSafeDelayBetweenRequests() };
+			saveTweets(options, callback);
+		};
+		var funcB = function(callback) {
+			console.log("downloading general tweets for " + mobileProduct);
+			var options = { product: mobileProduct, demand: false, delayBetweenRequests: twitter.getSafeDelayBetweenRequests() };
+			saveTweets(options, callback);
+		};
+
+		functions.push(funcA);
+		functions.push(funcB);
+	});
+
+	_.each(analysis.products()[1], function(foodProduct) {
+		var funcA = function(callback) {
+			console.log("downloading demand tweets for " + foodProduct);
+			var options = { product: foodProduct, demand: true, type: 'food', delayBetweenRequests: twitter.getSafeDelayBetweenRequests() };
+			saveTweets(options, callback);
+		};
+		var funcB = function(callback) {
+			console.log("downloading general tweets for " + foodProduct);
+			var options = { product: foodProduct, demand: false, type: 'food', delayBetweenRequests: twitter.getSafeDelayBetweenRequests() };
+			saveTweets(options, callback);
+		};
+
+		functions.push(funcA);
+		functions.push(funcB);
+	});
+
+	_.each(analysis.products()[2], function(coffeeProduct) {
+		var funcA = function(callback) {
+			console.log("downloading demand tweets for " + coffeeProduct);
+			var options = { product: coffeeProduct, demand: true, type: 'drink', delayBetweenRequests: twitter.getSafeDelayBetweenRequests() };
+			saveTweets(options, callback);
+		};
+		var funcB = function(callback) {
+			console.log("downloading general tweets for " + coffeeProduct);
+			var options = { product: coffeeProduct, demand: false, type: 'drink', delayBetweenRequests: twitter.getSafeDelayBetweenRequests() };
+			saveTweets(options, callback);
+		};
+
+		functions.push(funcA);
+		functions.push(funcB);
+	});
+
+	async.series(functions, function(error) {
+		if (error) {
+			console.log("error setting up database: " + error);
+			return;
+		}
+
+		console.log("finished setting up database successfully");
+	});
+}
+
 // wipeDatabase();
 // outputRandomSample(10, "have iphone 6", {latitude: 51.0, longitude: -0.5, radius: 10000});
 // saveTweets( { product: "iphone 6", demand: false, delayBetweenRequests: twitter.getSafeDelayBetweenRequests() } );
@@ -120,3 +188,4 @@ var outputSentimentGraph = function(product, dateLowerBound) {
 module.exports.wipeDatabase = wipeDatabase;
 module.exports.saveTweets = saveTweets;
 module.exports.outputSavedTweets = outputSavedTweets;
+module.exports.setupDatabase = setupDatabase;

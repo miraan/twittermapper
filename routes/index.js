@@ -94,16 +94,23 @@ router.get('/setup/wipeDatabase', function(req, res, next) {
 	res.json({ message: "Wiping Database"});
 });
 
-router.get('/setup/saveTweets/:product/:demand/:delay', function(req, res, next) {
+router.get('/setup/setupDatabase', function(req, res, next) {
+	start.setupDatabase();
+	res.json({message: "database setup started"});
+});
+
+router.get('/setup/saveTweets/:product/:type/:demand/:delay', function(req, res, next) {
 	var product = req.params.product;
+	var type = req.params.type;
 	var demand = req.params.demand;
 	var delay = req.params.delay;
 
-	var options = { product: product, demand: demand };
+	var options = { product: product, demand: demand, type: type };
 	if (delay == "true") {
 		options.delayBetweenRequests = twitter.getSafeDelayBetweenRequests();
 	}
 	start.saveTweets(options);
+	res.json({message: "started save"});
 });
 
 router.get('/setup/outputSavedTweets/:product/:demand/:select/:limit', function(req, res, next) {
@@ -134,7 +141,7 @@ router.get('/setup/outputSavedTweets/:product/:demand/:select/:limit', function(
 		var result = {};
 		result.message = "Found " + tweets.length + " " + tweetType + " tweets. First 10:";
 		result.tweets = [];
-		for (var i = 0; i < 10 && i < tweets.length; i++) { result.tweets.push[tweets[i]]; }
+		for (var i = 0; i < 10 && i < tweets.length; i++) { result.tweets.push(tweets[i]); }
 
 		res.json(result);
 	});

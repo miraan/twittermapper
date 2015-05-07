@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var deepPopulate = require('mongoose-deep-populate');
 
 var TweetSchema = mongoose.Schema({
-	id: { type: Number, index: true },
+	id: { type: Number, sparse: true },
 	created_at: { type: Date, index: true },
 	text: String,
 	source: String,

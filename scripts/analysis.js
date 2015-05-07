@@ -4,8 +4,15 @@ var async = require('async');
 var database = require('../scripts/database');
 var helper = require('../scripts/helper');
 
-var categories = function() { return ["mobile phones", "cars and motorbikes"]; };
-var products = function() { return [["iphone 6", "lg g4", "galaxy s6"], ["honda civic", "toyota auris"]]; };
+var categories = function() {
+	return ["mobile phones", "fast food", "coffee"];
+};
+
+var products = function() {
+	return [["iphone 6 plus", "iphone 6", "iphone 5c", "galaxy s6", "galaxy s5", "htc one m8", "xperia z3"], 
+			["mcdonalds", "kfc", "burger king", "dominos", "pizza hut"],
+			["starbucks", "costa", "caffe nero"]];
+};
 
 // tweets is an array of tweet objects where each object has at least the property 'text'
 var countWordsInTweets = function(tweets) {
@@ -625,4 +632,6 @@ module.exports.getCategories = getCategories;
 module.exports.getWordCloudForCategory = getWordCloudForCategory;
 module.exports.getTweet = getTweet;
 module.exports.getGeoChartForCategory = getGeoChartForCategory;
+module.exports.categories = categories;
+module.exports.products = products;
 

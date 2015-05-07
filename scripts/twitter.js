@@ -79,8 +79,10 @@ var saveTweetArray = function(tweetsToSave, options, callback) {
 				asyncCallback(error);
 				return;
 			}
-
-			savedTweets.push(savedTweet);
+			
+			if (savedTweet) {
+				savedTweets.push(savedTweet);
+			}
 			asyncCallback();
 		});
 
@@ -203,7 +205,7 @@ var getTweets = function(options, callback) {
 	// get the searches we are performing
 	var searches;
 	if (options.demand) {
-		searches = strings.getSearchStringsForProduct(options.product);
+		searches = strings.getSearchStringsForProduct(options.product, options);
 	} else {
 		searches = [options.product];
 	}

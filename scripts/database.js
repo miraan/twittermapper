@@ -103,6 +103,11 @@ var saveTweet = function(tweetJson, callback) {
 
 	tweet.save(function(error, savedTweet) {
 		if (error) {
+			if (error.code == 11000) {
+				console.log("duplicate tweet - skipped save");
+				callback(null, null);
+				return;
+			}
 			callback(error, null);
 			return;
 		}
@@ -266,7 +271,18 @@ var connect = function() {
 	});
 }
 
-connect();
+var connectToLocal = function() {
+	mongoose.connect('mongodb://localhost/twittermapper');
+	var conn = mongoose.connection;
+	 
+	conn.on('error', console.error.bind(console, 'connection error:'));
+	conn.once('open', function() {
+		console.log("Connected to mongodb://localhost/twittermapper");                        
+	});
+}
+
+// connect();
+connectToLocal();
 
 module.exports.saveTweet = saveTweet;
 module.exports.getTweets = getTweets;
