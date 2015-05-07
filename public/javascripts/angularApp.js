@@ -44,9 +44,6 @@ function($stateProvider, $urlRouterProvider) {
       templateUrl: 'Views/geochart.html',
       controller: 'GeoChartCtrl',
       resolve: {
-        markerPromise: ['graphData', function(graphData) {
-          return graphData.getAll();
-        }],
         selectionPromise: ['globalSelection', function(selection) {
           if (selection.needToRequest) {
             return selection.getAll();
@@ -61,9 +58,6 @@ function($stateProvider, $urlRouterProvider) {
       templateUrl: 'Views/wordcloud.html',
       controller: 'WordCloudCtrl',
       resolve: {
-        markerPromise: ['graphData', function(graphData) {
-          return graphData.getAll();
-        }],
         selectionPromise: ['globalSelection', function(selection) {
           if (selection.needToRequest) {
             return selection.getAll();
@@ -74,7 +68,7 @@ function($stateProvider, $urlRouterProvider) {
       }
     });
 
-  $urlRouterProvider.otherwise('map/0');
+  $urlRouterProvider.otherwise('map');
 }]);
 
 app.factory('globalSelection', ['$http', function($http) {
@@ -83,6 +77,7 @@ app.factory('globalSelection', ['$http', function($http) {
 
     slider: {
       value: 7,
+      newValue: 7,
       min: 1,
       max: 7,
       step: 1,
@@ -103,12 +98,15 @@ app.factory('globalSelection', ['$http', function($http) {
   o.getAll = function() {
     o.haveCategories = true;
     return $http.get('/getCategories').success(function(data){
+      console.log(data);
       var object = {
         data: {}
       }
       angular.copy(data, object.data);
       o.topics = object.data.topics;
+      console.log(o.topics);
       o.topicsOptions = object.data.topicsOptions;
+      console.log(o.topicsOptions);
     });
   };
 
@@ -133,9 +131,9 @@ app.controller('MenuCtrl', [
     $scope.submitSearch = function(){
       if ($scope.searchText != null && $scope.searchText != "") { 
         $scope.products.currentTopic = $scope.searchText;
-        $scope.products.currentTopicClass = $scope.searchText;
         $scope.products.currentTopicOptions = [];
         $scope.products.currentOptionIndex = 0;
+        $scope.products.currentTopicClass = $scope.searchText;
       } 
       $scope.finishTyping();
       $scope.hideAll();
@@ -146,9 +144,9 @@ app.controller('MenuCtrl', [
     $scope.selecTopic = function(topicI){ // I is for index
       $scope.products.currentOptionIndex = 0;
       $scope.brighten = true;
-      $scope.products.currentTopicClass = $scope.products.topics[topicI];
       $scope.products.currentTopic = $scope.products.topics[topicI];
       $scope.products.currentTopicOptions = $scope.products.topicsOptions[topicI];
+      $scope.products.currentTopicClass = $scope.products.topics[topicI];
       $scope.hideAll();
     };
     $scope.selectOption = function(optionI){
@@ -179,26 +177,12 @@ app.controller('MenuCtrl', [
       $scope.products.showDemand = false;
     };
 
-    $scope.menu = {
-      map: {
-        state: 'navBtnActive',
-      },
-      timeline: {
-        state: 'navBtn',
-      },
-      geochart: {
-        state: 'navBtn',
-      },
-      wordcloud: {
-        state: 'navBtn',
-      }
-    };
-
-    $scope.active = $scope.menu.map;
-    $scope.setActive = function(active){
-      $scope.active.state = 'navBtn';
-      active.state = 'navBtnActive';
-      $scope.active = active;
+    $scope.getState = function(location) {
+      if (window.location.hash==location) {
+        return 'navBtnActive';
+      } else {
+        return 'navBtn';
+      };
     };
 
     $scope.evalSlide = function() {
@@ -228,5 +212,6 @@ app.controller('MenuCtrl', [
           console.log('default');
       }
     };
+
   }
 ]);

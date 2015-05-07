@@ -5,7 +5,7 @@ app.factory('graphData', ['$http', function($http) {
 
   o.getAll = function(topic, day) {
     return $http.get('/getGraph/' + topic + '/' + day).success(function(data){
-      angular.copy(data, o.graphData);
+      o.graphData= data;
     });
   };
 
@@ -19,10 +19,17 @@ app.directive('timeline', function() {
     link: function($scope, elm, attrs) {
       var timeline = new google.visualization.LineChart(elm[0]);
       var drawChart = function() {
+        var product = $scope.products.currentTopicOptions[$scope.products.currentOptionIndex];
+        var index = 0;
+        for (var i = 0; i<$scope.graphData.graphData.length; i++) {
+          if ($scope.graphData.graphData[i].product == product) {
+            index = i;
+          }
+        };
         if ($scope.products.showDemand) {
-          $scope.timelineData = $scope.demandData[$scope.products.currentOptionIndex];
+          $scope.timelineData = $scope.demandData[index];
         } else {
-          $scope.timelineData = $scope.sentimentData[$scope.products.currentOptionIndex];
+          $scope.timelineData = $scope.sentimentData[index];
         }
         if($scope.timelineData!= undefined) {
           timeline.draw($scope.timelineData, $scope.timelineOptions);
@@ -34,18 +41,37 @@ app.directive('timeline', function() {
       $scope.$watch('products.currentOptionIndex', drawChart);
 
       var refreshData = function(){
+        if($scope.products.currentTopicClass!= ""){
+          $scope.graphData.getAll($scope.products.currentTopicClass, $scope.products.slider.value);
+          $scope.initialise();    
+        }
+      };
+
+      var getData = function() {
         $scope.graphData.getAll($scope.products.currentTopicClass, $scope.products.slider.value);
-        $scope.initialise();
       };
 
       var refreshAndDraw = function() {
         refreshData();
         drawChart();
-      }
+      };
 
-      $scope.$watch('products.slider.value', refreshAndDraw);
+      $scope.$watch('products.slider.newValue', function(newValue, oldValue){
+        if ($scope.products.currentTopicClass!=""){
+          getData();
+        };
+      });
 
-      $scope.$watch('products.currentTopicClass', refreshAndDraw);
+      $scope.$watch('products.currentTopicClass', function(newValue, oldValue){
+        if ($scope.products.currentTopicClass!=""){
+          getData();
+        };
+      });
+
+      $scope.$watch('graphData', function() {
+        $scope.initialise();
+        drawChart();
+      }, true);
     }
   };
 });
@@ -81,7 +107,7 @@ app.controller('TimelineCtrl', [
 
         var sentimentData = new google.visualization.DataTable();
         sentimentData.addColumn('date', 'Date');
-        sentimentData.addColumn('number', 'iPhone');
+        sentimentData.addColumn('number', $scope.graphData.graphData[j].product);
         for (var i = 0; i < $scope.graphData.graphData[j].sentiment.length; i++) {
           sentimentData.addRow([new Date($scope.graphData.graphData[j].sentiment[i][0]), $scope.graphData.graphData[j].sentiment[i][1]]);
         };

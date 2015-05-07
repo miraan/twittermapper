@@ -64,20 +64,16 @@
       <div class="leftStuff">
         <a       href="#/map"
         ><button type="button"
-                 class="{{menu.map.state}}"
-                 ng-click="setActive(menu.map)">Map</button></a
+                 class="{{getState('#/map')}}">Map</button></a
         ><a      href="#/timeline"
         ><button type="button"
-                 class="{{menu.timeline.state}}"
-                 ng-click="setActive(menu.timeline)">Timeline</button></a
+                 class="{{getState('#/timeline')}}">Timeline</button></a
         ><a      href="#/geochart"
         ><button type="button"
-                 class="{{menu.geochart.state}}"
-                 ng-click="setActive(menu.geochart)">GeoChart</button></a
+                 class="{{getState('#/geochart')}}">GeoChart</button></a
         ><a      href="#/wordcloud"
         ><button type="button"
-                 class="{{menu.wordcloud.state}}"
-                 ng-click="setActive(menu.wordcloud)">Word Cloud</button></a
+                 class="{{getState('#/wordcloud')}}">Word Cloud</button></a
         >
       </div>
 
@@ -111,7 +107,8 @@
           </button>
         </div>
         <div class="slider"><input type="range" min="{{products.slider.min}}" max="{{products.slider.max}}" 
-              step="{{products.slider.step}}" ng-model="products.slider.value" ng-change="evalSlide()"></div>
+              step="{{products.slider.step}}" ng-model="products.slider.value" ng-change="evalSlide()" 
+              ng-mouseup="products.slider.newValue = products.slider.value"></div>
         <div class="sliderValue">{{products.slider.text}}</div>
       </div>
     </div>

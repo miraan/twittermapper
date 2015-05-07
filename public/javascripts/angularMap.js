@@ -21,8 +21,8 @@ app.factory('markers', ['$http', function($http) {
     markers: []
   };
 
-  o.getAll = function() {
-    return $http.get('/getLocations.json').success(function(data){
+  o.getAll = function(topic, day) {
+    return $http.get('/getLocations/'+ topic + '/' + day).success(function(data){
       angular.copy(data, o.markers);
     });
   };
@@ -68,9 +68,18 @@ app.controller('MapCtrl', [
     var sentimentCircles = [];
     var theMap = null;
 
-    var draw = function() {
-      $scope.markers.getAll($scope.products.currentTopicClass, $scope.products.slider.value);
-      var currentProduct = $scope.markers.markers[$scope.currentOptionIndex];
+    function createCircles() {
+      var product = $scope.products.currentTopicOptions[$scope.products.currentOptionIndex];
+      var index = 0;
+        for (var i = 0; i<$scope.markers.markers.length; i++) {
+          if ($scope.markers.markers[i].product == product) {
+            index = i;
+          }
+        };
+      var currentProduct = $scope.markers.markers[index];
+      demandCircles = [];
+      sentimentCircles = [];
+      theMap = null;
 
       function createSentimentCircles(circs) {
         function redOrGreen(x) {
@@ -114,9 +123,12 @@ app.controller('MapCtrl', [
 
           demandCircles.push(new google.maps.Circle(circleOptions));
         };
+      };
+      if (currentProduct!= undefined) {
+        createDemandCircles(currentProduct.demand);
+        createSentimentCircles(currentProduct.sentiment);
+      }
 
-      createDemandCircles(currentProduct.demand);
-      createSentimentCircles(currentProduct.sentiment);
 
     };
 
@@ -126,6 +138,7 @@ app.controller('MapCtrl', [
       map.set('mapTypeControl', false);
       map.set('minZoom', 3);  //minimum is 0;
       map.set('maxZoom', 12); //maximum is 21;
+      //$scope.$watch
     });
 
     function showCircles(show, hide) {
@@ -137,16 +150,55 @@ app.controller('MapCtrl', [
       };
     };
 
+    function removeCircles(circs) {
+      for (var i = 0; i<circs.length; i++) {
+        circs[i].setMap(null);
+      };
+    };
+
     function switchDemandSentiment(){
       if ($scope.products.showDemand) {
         showCircles(demandCircles, sentimentCircles);
       } else {
         showCircles(sentimentCircles, demandCircles);
       };
-    }
+    };
+
+    function requestData(){
+      if ($scope.products.currentTopicClass!= "") {
+        $scope.markers.getAll($scope.products.currentTopicClass, $scope.products.slider.value);
+      }
+    };
 
     
-    $scope.$watch('products.showDemand', switchDemandSentiment,true);
+    $scope.$watch('products.showDemand', switchDemandSentiment);
+
+    $scope.$watch('products.slider.value', function(){
+      //Clear the map first.
+      if ($scope.products.showDemand) {
+        removeCircles(demandCircles);
+      } else {
+        removeCircles(sentimentCircles);
+      };
+
+      requestData();
+      createCircles();
+      switchDemandSentiment();
+
+    });
+
+    $scope.$watch('products.currentTopic', function(){
+      //Clear the map first.
+      if ($scope.products.showDemand) {
+        removeCircles(demandCircles);
+      } else {
+        removeCircles(sentimentCircles);
+      };
+
+      requestData();
+      createCircles();
+      switchDemandSentiment();
+    });
 
   }
 ]);
