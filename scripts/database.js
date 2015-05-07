@@ -1,5 +1,7 @@
 var async = require('async');
 var mongoose = require('mongoose');
+var uriUtil = require('mongodb-uri');
+
 var deepPopulate = require('mongoose-deep-populate');
 var _ = require('underscore')._;
 require('./models/Tweet');
@@ -242,13 +244,29 @@ var wipeDatabase = function(callback) {
 	});
 }
 
-mongoose.connect('mongodb://localhost/twittermapper');
+var connect = function() {
+	var options = { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } },
+	replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 30000 } } };
 
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function(callback) {
-	console.log("Connected to MongoDB");
-});
+	var mongodbUser = 'miraan';
+	var mongodbPassword = '123xyz';
+	var mongodbServer = 'ds031802.mongolab.com';
+	var mongodbPort = '31802';
+	var mongodbName = 'heroku_app36261480';
+
+	var mongodbUri = 'mongodb://'+ mongodbUser + ':' + mongodbPassword + '@' + mongodbServer + ':' + mongodbPort + '/' + mongodbName;
+	var mongooseUri = uriUtil.formatMongoose(mongodbUri);
+	 
+	mongoose.connect(mongooseUri, options);
+	var conn = mongoose.connection;
+	 
+	conn.on('error', console.error.bind(console, 'connection error:'));
+	conn.once('open', function() {
+		console.log("Connected to mongodb://" + mongodbServer + ":" + mongodbPort + "/" + mongodbName);                        
+	});
+}
+
+connect();
 
 module.exports.saveTweet = saveTweet;
 module.exports.getTweets = getTweets;
