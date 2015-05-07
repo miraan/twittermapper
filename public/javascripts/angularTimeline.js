@@ -28,8 +28,10 @@ app.directive('timeline', function() {
         };
         if ($scope.products.showDemand) {
           $scope.timelineData = $scope.demandData[index];
+          $scope.timelineOptions = $scope.timelineDemandOptions;
         } else {
           $scope.timelineData = $scope.sentimentData[index];
+          $scope.timelineOptions = $scope.timelineSentimentOptions;
         }
         if($scope.timelineData!= undefined) {
           timeline.draw($scope.timelineData, $scope.timelineOptions);
@@ -71,9 +73,19 @@ app.controller('TimelineCtrl', [
     $scope.products = globalSelection;
     $scope.graphData = graphData;
 
-    $scope.timelineOptions = {
+    $scope.timelineOptions = {};
+
+    $scope.timelineDemandOptions = {
       curveType: 'function',
       legend: { position: 'bottom' }
+    };
+
+    $scope.timelineSentimentOptions = {
+      curveType: 'function',
+      legend: { position: 'bottom' },
+      series: {
+        0: { color: 'green' }
+      }
     };
     $scope.timelineData = {};
     $scope.demandData = [];

@@ -110,7 +110,7 @@ app.controller('MapCtrl', [
           var circleOptions = {
             map: null,
             strokeWeight: 0,
-            fillColor: redOrGreen(circs[i].scale),
+            fillColor: redOrGreen(circs[i].sentiment),
             fillOpacity: opacity(),
             center: new google.maps.LatLng(circs[i].latitude,circs[i].longitude),
             radius: 50000,
