@@ -116,3 +116,7 @@ var outputSentimentGraph = function(product, dateLowerBound) {
 // outputDemandGraph("iphone 6", helper.daysAgo(7));
 // outputSentimentGraph("iphone 6", helper.daysAgo(7));
 
+
+module.exports.wipeDatabase = wipeDatabase;
+module.exports.saveTweets = saveTweets;
+module.exports.outputSavedTweets = outputSavedTweets;
