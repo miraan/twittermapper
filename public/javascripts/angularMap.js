@@ -68,7 +68,15 @@ app.controller('MapCtrl', [
     var sentimentCircles = [];
     var theMap = null;
 
-    function createCircles() {
+    $scope.$on('mapInitialized', function(evt, map) {
+      theMap = map;
+      map.set('streetViewControl', false);
+      map.set('mapTypeControl', false);
+      map.set('minZoom', 3);  //minimum is 0;
+      map.set('maxZoom', 12); //maximum is 21;
+
+      var initialise = function() {
+      console.log("initialise called");
       var product = $scope.products.currentTopicOptions[$scope.products.currentOptionIndex];
       var index = 0;
         for (var i = 0; i<$scope.markers.markers.length; i++) {
@@ -79,14 +87,14 @@ app.controller('MapCtrl', [
       var currentProduct = $scope.markers.markers[index];
       demandCircles = [];
       sentimentCircles = [];
-      theMap = null;
 
       function createSentimentCircles(circs) {
         function redOrGreen(x) {
           if (x < 0) { return 'red' } else {return 'green'}
         }
-        function opacity(x) {
-          if (x < 0) { return x*(-0.1) } else {return x*0.1}
+        function opacity() {
+          //if (x < 0) { return x*(-0.1) } else {return x*0.1}
+          return 0.5;
         }
 
         for (var i=0; i<circs.length; i++){
@@ -94,7 +102,7 @@ app.controller('MapCtrl', [
             map: null,
             strokeWeight: 0,
             fillColor: redOrGreen(circs[i].scale),
-            fillOpacity: opacity(circs[i].scale),
+            fillOpacity: opacity(),
             center: new google.maps.LatLng(circs[i].latitude,circs[i].longitude),
             radius: 50000
           };
@@ -107,8 +115,8 @@ app.controller('MapCtrl', [
         function getColor(index) {
            return 'blue';
         }
-        function opacity(x) {
-          return x*0.003;
+        function opacity() {
+          return 0.5;
         }
 
         for (var i=0; i<circs.length; i++){
@@ -116,7 +124,7 @@ app.controller('MapCtrl', [
             map: null,
             strokeWeight: 0,
             fillColor: getColor(i),
-            fillOpacity: opacity(circs[i].value),
+            fillOpacity: opacity(),
             center: new google.maps.LatLng(circs[i].latitude,circs[i].longitude),
             radius: 50000
           };
@@ -125,23 +133,15 @@ app.controller('MapCtrl', [
         };
       };
       if (currentProduct!= undefined) {
+        console.log("circles created");
         createDemandCircles(currentProduct.demand);
         createSentimentCircles(currentProduct.sentiment);
+        console.log(demandCircles);
       }
-
-
     };
-
-    $scope.$on('mapInitialized', function(evt, map) {
-      theMap = map;
-      map.set('streetViewControl', false);
-      map.set('mapTypeControl', false);
-      map.set('minZoom', 3);  //minimum is 0;
-      map.set('maxZoom', 12); //maximum is 21;
-      //$scope.$watch
-    });
-
-    function showCircles(show, hide) {
+      
+      function showCircles(show, hide) {
+      console.log("showCircles called");
       for (var i = 0; i<hide.length; i++) {
         hide[i].setMap(null);
       };
@@ -157,6 +157,7 @@ app.controller('MapCtrl', [
     };
 
     function switchDemandSentiment(){
+      console.log("switchDemandSentiment called");
       if ($scope.products.showDemand) {
         showCircles(demandCircles, sentimentCircles);
       } else {
@@ -173,32 +174,33 @@ app.controller('MapCtrl', [
     
     $scope.$watch('products.showDemand', switchDemandSentiment);
 
-    $scope.$watch('products.slider.value', function(){
-      //Clear the map first.
-      if ($scope.products.showDemand) {
-        removeCircles(demandCircles);
-      } else {
-        removeCircles(sentimentCircles);
-      };
 
-      requestData();
-      createCircles();
-      switchDemandSentiment();
+    $scope.$watch('products.showDemand', switchDemandSentiment);
 
-    });
-
-    $scope.$watch('products.currentTopic', function(){
-      //Clear the map first.
-      if ($scope.products.showDemand) {
-        removeCircles(demandCircles);
-      } else {
-        removeCircles(sentimentCircles);
-      };
-
-      requestData();
-      createCircles();
+    $scope.$watch('products.currentOptionIndex', function(){
+      initialise();
       switchDemandSentiment();
     });
+
+    var getData = function() {
+      if ($scope.products.currentTopicClass!= "") {
+        $scope.markers.getAll($scope.products.currentTopicClass, $scope.products.slider.value);
+      }
+    };
+
+      $scope.$watch('products.slider.newValue', getData);
+
+      $scope.$watch('products.currentTopicClass', getData);
+
+      $scope.$watch('markers', function() {
+        console.log($scope.markers);
+        initialise();
+        switchDemandSentiment();
+        console.log(demandCircles);
+      }, true);
+    });
+
+
 
   }
 ]);
