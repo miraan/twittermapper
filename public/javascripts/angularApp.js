@@ -193,25 +193,25 @@ app.controller('MenuCtrl', [
     $scope.evalSlide = function() {
       switch ($scope.products.slider.value) {
         case '1':
-          $scope.products.slider.text = '1 day';
+          $scope.products.slider.text = 'Past 24 Hours';
           break;
         case '2':
-          $scope.products.slider.text = '2 days';
+          $scope.products.slider.text = 'Past 2 Days';
           break;
         case '3':
-          $scope.products.slider.text = '3 days';
+          $scope.products.slider.text = 'Past 3 Days';
           break;
         case '4':
-          $scope.products.slider.text = '4 days';
+          $scope.products.slider.text = 'Past 4 Days';
           break;
         case '5':
-          $scope.products.slider.text = '5 days';
+          $scope.products.slider.text = 'Past 5 Days';
           break;
         case '6':
-          $scope.products.slider.text = '6 days';
+          $scope.products.slider.text = 'Past 6 Days';
           break;
         case '7':
-          $scope.products.slider.text = '1 week';
+          $scope.products.slider.text = 'Past Week';
           break;
         default:
           console.log('default');
