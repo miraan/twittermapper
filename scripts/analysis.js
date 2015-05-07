@@ -4,8 +4,8 @@ var async = require('async');
 var database = require('../scripts/database');
 var helper = require('../scripts/helper');
 
-var categories = ["mobile phones", "cars and motorbikes"];
-var products = [["iphone 6", "lg g4", "galaxy s6"], ["honda civic", "toyota auris"]];
+var categories = function() { return ["mobile phones", "cars and motorbikes"]; };
+var products = function() { return [["iphone 6", "lg g4", "galaxy s6"], ["honda civic", "toyota auris"]]; };
 
 // tweets is an array of tweet objects where each object has at least the property 'text'
 var countWordsInTweets = function(tweets) {
@@ -76,19 +76,19 @@ var sumCountryCharts = function(charts) {
 
 var getProductsForCategory = function(category) {
 	var categoryIndex = 0;
-	while (categories[categoryIndex] != category && categoryIndex <= categories.length) {
+	while (categories()[categoryIndex] != category && categoryIndex <= categories().length) {
 		categoryIndex++;
 	}
-	if (categoryIndex == categories.length) {
+	if (categoryIndex == categories().length) {
 		return [];
 	}
-	return products[categoryIndex];
+	return products()[categoryIndex];
 }
 
 var getCategories = function() {
 	var result = {};
-	result.topics = categories;
-	result.topicsOptions = products;
+	result.topics = categories();
+	result.topicsOptions = products();
 	for (var i = 0; i < result.topicsOptions.length; i++) {
 		result.topicsOptions[i].unshift("entire market");
 	}

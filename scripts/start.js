@@ -110,7 +110,7 @@ var outputSentimentGraph = function(product, dateLowerBound) {
 // wipeDatabase();
 // outputRandomSample(10, "have iphone 6", {latitude: 51.0, longitude: -0.5, radius: 10000});
 // saveTweets( { product: "iphone 6", demand: false, delayBetweenRequests: twitter.getSafeDelayBetweenRequests() } );
-saveTweets( { product: "iphone 6", demand: true } );
+// saveTweets( { product: "iphone 6", demand: true } );
 // outputSavedTweets({ product: "iphone 6", countryExists: true, select: 'created_at country geo', limit: 1000 });
 // outputSavedTweets({ limit: 10000, select: 'created_at product indicatesDemand' });
 // outputDemandGraph("iphone 6", helper.daysAgo(7));
