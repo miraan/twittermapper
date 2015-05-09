@@ -487,7 +487,7 @@ var getWordCloudForProduct = function(product, dateLowerBound, callback) {
 			word.text = key;
 			word.size = index[key];
 			if (word.size >= minimumWordCount && word.text.length >= minimumWordLength) {
-				if(stopwords.indexOf(word.toLowerCase()) == -1)
+				if(stopwords.indexOf(word.text.toLowerCase()) == -1 && word.text.startsWith("http") == false)
 					words.push(word);
 			}
 		});
