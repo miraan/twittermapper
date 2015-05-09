@@ -21,6 +21,9 @@ var countWordsInTweets = function(tweets) {
 		var words = tweet.text
 		.replace(/[.,?!;()"'-]/g, " ")
 		.replace(/\s+/g, " ")
+		.replace(/@\w+/, "") // remove mentions?
+		.replace(/\bRT\b/, "") // remove retweets
+		.replace(/#\w+/, "") // remove hashtags 
 		.toLowerCase()
 		.split(" ");
 
@@ -34,8 +37,28 @@ var countWordsInTweets = function(tweets) {
     return index;
 }
 
+var getAggregate = function(els, key, value){
+	var index = {}
+
+	_.each(els, function(el){
+		var curKey = key(el)
+		if(!index.hasOwnProperty(el[curKey])){
+			index[key] = 0
+		}
+
+		index[key] = value(index[key], el)
+	})
+
+	return index
+}
+
+function addOne(old, el){return old + 1}
+function getCountryCode(tweet){return tweet.country_code}
+
 // tweets is an array of tweet objects where each object has at least the property 'country_code'
 var getCountryCountForTweets = function(tweets) {
+	return getAggregate(tweets, getCountryCode, addOne);
+	/*
 	var index = {};
 	_.each(tweets, function(tweet) {
 		if (!(index.hasOwnProperty(tweet.country_code))) {
@@ -44,10 +67,15 @@ var getCountryCountForTweets = function(tweets) {
 		index[tweet.country_code]++;
 	});
 	return index;
+	*/
 }
 
 // tweets is an array of tweet objects where each object has at least the properties 'country_code' and 'text'
 var getCountrySentimentForTweets = function(tweets) {
+	return getAggregate(tweets, getCountryCode, function(old, tweet){
+		return old + sentiment(tweet.text).score
+	})
+	/*
 	var index = {};
 	_.each(tweets, function(tweet) {
 		if (!(index.hasOwnProperty(tweet.country_code))) {
@@ -56,6 +84,7 @@ var getCountrySentimentForTweets = function(tweets) {
 		index[tweet.country_code] += sentiment(tweet.text).score;
 	});
 	return index;
+	*/
 }
 
 // charts is an array of charts, where a chart is a 2d string array [country, value]
@@ -145,6 +174,22 @@ var getAverageLine = function(lines) {
 	return averageLine;
 }
 
+function getSegments(lowerBound, numberOfSegments){
+	var today = Math.floor(now().getTime());
+	var interval = Math.floor((today - lowerBound) / numberOfSegments);
+	var segments = [];
+	var start = lowerBound;
+
+	// a segment is a 2d array [dateLowerBound, dateUpperBound]
+	for (var i = 0; i < numberOfSegments; i++) {
+		var segment = [start, start + interval];
+		segments.push(segment);
+		start += interval;
+	}
+
+	return segments
+}
+
 // data is array of 2d arrays: data: [ [date, value] ]
 // callback takes params (error, points) where points is an array of 'numberOfPoints' 2d arrays: [  ]
 var getDemandGraphForProduct = function(product, dateLowerBound, callback) {
@@ -155,18 +200,9 @@ var getDemandGraphForProduct = function(product, dateLowerBound, callback) {
 		}
 
 		var numberOfSegments = 30; // also numberOfPoints
-		var today = Math.floor(now().getTime());
 		var lowerBound = Math.floor(dateLowerBound.getTime());
-		var interval = Math.floor((today - lowerBound) / numberOfSegments);
-		var segments = [];
-		var start = lowerBound;
-
-		// a segment is a 2d array [dateLowerBound, dateUpperBound]
-		for (var i = 0; i < numberOfSegments; i++) {
-			var segment = [start, start + interval];
-			segments.push(segment);
-			start += interval;
-		}
+		
+		var segments = getSegments(lowerBound, numberOfSegments)
 
 		// we iterate through the tweets array
 		// since it is sorted, we get each segment's count in one pass
@@ -207,18 +243,9 @@ var getSentimentGraphForProduct = function(product, dateLowerBound, callback) {
 		}
 
 		var numberOfSegments = 30; // also numberOfPoints
-		var today = Math.floor(now().getTime());
 		var lowerBound = Math.floor(dateLowerBound.getTime());
-		var interval = Math.floor((today - lowerBound) / numberOfSegments);
-		var segments = [];
-		var start = lowerBound;
-
-		// a segment is a 2d array [dateLowerBound, dateUpperBound]
-		for (var i = 0; i < numberOfSegments; i++) {
-			var segment = [start, start + interval];
-			segments.push(segment);
-			start += interval;
-		}
+		
+		var segments = getSegments(lowerBound, numberOfSegments)
 
 		// we iterate through the tweets array
 		// since it is sorted, we get each segment's count in one pass
@@ -453,12 +480,15 @@ var getWordCloudForProduct = function(product, dateLowerBound, callback) {
 		var minimumWordCount = Math.floor(tweets.length / 10);
 		var minimumWordLength = 4;
 		var words = [];
+		var stopwords = ["a’s", "able", "about", "above", "according", "accordingly", "across", "actually", "after", "afterwards", "again", "against", "ain’t", "all", "allow", "allows", "almost", "alone", "along", "already", "also", "although", "always", "am", "among", "amongst", "an", "and", "another", "any", "anybody", "anyhow", "anyone", "anything", "anyway", "anyways", "anywhere", "apart", "appear", "appreciate", "appropriate", "are", "aren’t", "around", "as", "aside", "ask", "asking", "associated", "at", "available", "away", "awfully", "be", "became", "because", "become", "becomes", "becoming", "been", "before", "beforehand", "behind", "being", "believe", "below", "beside", "besides", "best", "better", "between", "beyond", "both", "brief", "but", "by", "c’mon", "c’s", "came", "can", "can’t", "cannot", "cant", "cause", "causes", "certain", "certainly", "changes", "clearly", "co", "com", "come", "comes", "concerning", "consequently", "consider", "considering", "contain", "containing", "contains", "corresponding", "could", "couldn’t", "course", "currently", "definitely", "described", "despite", "did", "didn’t", "different", "do", "does", "doesn’t", "doing", "don’t", "done", "down", "downwards", "during", "each", "edu", "eg", "eight", "either", "else", "elsewhere", "enough", "entirely", "especially", "et", "etc", "even", "ever", "every", "everybody", "everyone", "everything", "everywhere", "ex", "exactly", "example", "except", "far", "few", "fifth", "first", "five", "followed", "following", "follows", "for", "former", "formerly", "forth", "four", "from", "further", "furthermore", "get", "gets", "getting", "given", "gives", "go", "goes", "going", "gone", "got", "gotten", "greetings", "had", "hadn’t", "happens", "hardly", "has", "hasn’t", "have", "haven’t", "having", "he", "he’s", "hello", "help", "hence", "her", "here", "here’s", "hereafter", "hereby", "herein", "hereupon", "hers", "herself", "hi", "him", "himself", "his", "hither", "hopefully", "how", "howbeit", "however", "i’d", "i’ll", "i’m", "i’ve", "ie", "if", "ignored", "immediate", "in", "inasmuch", "inc", "indeed", "indicate", "indicated", "indicates", "inner", "insofar", "instead", "into", "inward", "is", "isn’t", "it", "it’d", "it’ll", "it’s", "its", "itself", "just", "keep", "keeps", "kept", "know", "knows", "known", "last", "lately", "later", "latter", "latterly", "least", "less", "lest", "let", "let’s", "like", "liked", "likely", "little", "look", "looking", "looks", "ltd", "mainly", "many", "may", "maybe", "me", "mean", "meanwhile", "merely", "might", "more", "moreover", "most", "mostly", "much", "must", "my", "myself", "name", "namely", "nd", "near", "nearly", "necessary", "need", "needs", "neither", "never", "nevertheless", "new", "next", "nine", "no", "nobody", "non", "none", "noone", "nor", "normally", "not", "nothing", "novel", "now", "nowhere", "obviously", "of", "off", "often", "oh", "ok", "okay", "old", "on", "once", "one", "ones", "only", "onto", "or", "other", "others", "otherwise", "ought", "our", "ours", "ourselves", "out", "outside", "over", "overall", "own", "particular", "particularly", "per", "perhaps", "placed", "please", "plus", "possible", "presumably", "probably", "provides", "que", "quite", "qv", "rather", "rd", "re", "really", "reasonably", "regarding", "regardless", "regards", "relatively", "respectively", "right", "said", "same", "saw", "say", "saying", "says", "second", "secondly", "see", "seeing", "seem", "seemed", "seeming", "seems", "seen", "self", "selves", "sensible", "sent", "serious", "seriously", "seven", "several", "shall", "she", "should", "shouldn’t", "since", "six", "so", "some", "somebody", "somehow", "someone", "something", "sometime", "sometimes", "somewhat", "somewhere", "soon", "sorry", "specified", "specify", "specifying", "still", "sub", "such", "sup", "sure", "t’s", "take", "taken", "tell", "tends", "th", "than", "thank", "thanks", "thanx", "that", "that’s", "thats", "the", "their", "theirs", "them", "themselves", "then", "thence", "there", "there’s", "thereafter", "thereby", "therefore", "therein", "theres", "thereupon", "these", "they", "they’d", "they’ll", "they’re", "they’ve", "think", "third", "this", "thorough", "thoroughly", "those", "though", "three", "through", "throughout", "thru", "thus", "to", "together", "too", "took", "toward", "towards", "tried", "tries", "truly", "try", "trying", "twice", "two", "un", "under", "unfortunately", "unless", "unlikely", "until", "unto", "up", "upon", "us", "use", "used", "useful", "uses", "using", "usually", "value", "various", "very", "via", "viz", "vs", "want", "wants", "was", "wasn’t", "way", "we", "we’d", "we’ll", "we’re", "we’ve", "welcome", "well", "went", "were", "weren’t", "what", "what’s", "whatever", "when", "whence", "whenever", "where", "where’s", "whereafter", "whereas", "whereby", "wherein", "whereupon", "wherever", "whether", "which", "while", "whither", "who", "who’s", "whoever", "whole", "whom", "whose", "why", "will", "willing", "wish", "with", "within", "without", "won’t", "wonder", "would", "would", "wouldn’t", "yes", "yet", "you", "you’d", "you’ll", "you’re", "you’ve", "your", "yours", "yourself", "yourselves", "zero"]
+
 		_.each(_.keys(index), function(key) {
 			var word = {};
 			word.text = key;
 			word.size = index[key];
 			if (word.size >= minimumWordCount && word.text.length >= minimumWordLength) {
-				words.push(word);
+				if(stopwords.indexOf(word.toLowerCase()) == -1)
+					words.push(word);
 			}
 		});
 		words = _.sortBy(words, 'size');
