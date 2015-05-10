@@ -52,10 +52,110 @@
     <div ng-controller= "MenuCtrl">
       <!-- initial darkening -->
       <div ng-hide="brighten">
+
+        
+
+
+
+
         <div class="darkness">
+
+
+
+
         </div>
         <div class="selection">
-          <button type="button" class="topicBtn" ng-repeat="topic in products.topics" ng-click="selecTopic($index)">{{topic}}</button>
+
+
+        <div class="hexrow">
+            <!-- burger -->
+            <div ng-click="selecTopic(0)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <span>Fast Food</span>
+                <div></div>
+                <div></div>
+            </div>
+
+            <div ng-repeat="_ in ((_ = []) && (_.length=4) && _) track by $index" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <span></span>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+        <div class="hexrow">
+            <div style="visibility: hidden;">
+                <span></span>
+                <div></div>
+                <div></div>
+            </div>
+            <div ng-repeat="_ in ((_ = []) && (_.length=2) && _) track by $index" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <span></span>
+                <div></div>
+                <div></div>
+            </div>
+            <!-- phones -->
+            <div ng-click="selecTopic(1)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <span>Mobile Phones</span>
+                <div></div>
+                <div></div>
+            </div>
+            <div ng-repeat="_ in ((_ = []) && (_.length=4) && _) track by $index" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <span></span>
+                <div></div>
+                <div></div>
+            </div>
+            <div style="visibility: hidden;">
+                <span></span>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+        <div class="hexrow">
+            <div style="visibility: hidden;">
+                <span></span>
+                <div></div>
+                <div></div>
+            </div>
+            <div ng-repeat="_ in ((_ = []) && (_.length=4) && _) track by $index" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <span></span>
+                <div></div>
+                <div></div>
+            </div>
+            <!-- coffee -->
+            <div ng-click="selecTopic(2)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <span>Coffee</span>
+                <div></div>
+                <div></div>
+            </div>
+            <div ng-repeat="_ in ((_ = []) && (_.length=2) && _) track by $index" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <span></span>
+                <div></div>
+                <div></div>
+            </div>
+            <div style="visibility: hidden;" ng-repeat="_ in ((_ = []) && (_.length=1) && _) track by $index">
+                <span></span>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+        <div class="hexrow">
+            <div style="visibility: hidden;">
+                <span></span>
+                <div></div>
+                <div></div>
+            </div>
+            <div onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <span></span>
+                <div></div>
+                <div></div>
+            </div>
+            <div style="visibility: hidden;" ng-repeat="_ in ((_ = []) && (_.length=3) && _) track by $index">
+                <span></span>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+
+<!-- <button type="button" class="topicBtn" ng-repeat="topic in products.topics" ng-click="selecTopic($index)">{{topic}}</button> -->
         </div>
       </div>
       <button type="button" class="OxTwi">OxTwi</button>
