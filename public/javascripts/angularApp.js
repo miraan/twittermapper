@@ -202,6 +202,14 @@ app.controller('MenuCtrl', [
     $scope.selectOption = function(optionI){
       if ($scope.products.isCurrentView('#/map')||$scope.products.isCurrentView('#/timeline')) {
         $scope.products.currentProducts[optionI] = !($scope.products.currentProducts[optionI]);
+        if(optionI!=0 && $scope.products.isCurrentView('#/map')) {
+          $scope.products.currentProducts[0] = false;
+        };
+        if(optionI==0 && $scope.products.isCurrentView('#/map')) {
+          for (var i=1; i<$scope.products.currentProducts.length; i++){
+            $scope.products.currentProducts[i] = false;
+          };  
+        };
       } else {
         $scope.products.currentOptionIndex = optionI;
         if (optionI == 0) { $scope.products.currentTopic = $scope.products.currentTopicClass; }

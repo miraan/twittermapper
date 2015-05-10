@@ -24,6 +24,7 @@ app.factory('markers', ['$http', function($http) {
   o.getAll = function(topic, day) {
     return $http.get('/getLocations/'+ topic + '/' + day).success(function(data){
       angular.copy(data, o.markers);
+      console.log(o.markers);
     });
   };
 
@@ -72,11 +73,20 @@ app.controller('MapCtrl', [
       bounds: {}
     };
 
+    var demandColors = [
+      'blue',
+      '#8A2BE2',
+      '#FF00FF',
+      '#FF3E96',
+      '#00F5FF',
+      '#00FF7F',
+      '#B3EE3A',
+      '#DC143C',
+    ]
+
     var demandMarkers = [];    //type [[]]
     var sentimentMarkers = []; //type [[]]
 
-    var demandCircles = [];
-    var sentimentCircles = [];
     var theMap = null;
 
     $scope.$on('mapInitialized', function(evt, map) {
@@ -88,17 +98,10 @@ app.controller('MapCtrl', [
 
     });
 
+    var sortedMarkers = [];
+    var circlesCreated = false;
+
     var createCircles = function() {
-      var product = $scope.products.currentTopicOptions[$scope.products.currentOptionIndex];
-      var index = 0;
-        for (var i = 0; i<$scope.markers.markers.length; i++) {
-          if ($scope.markers.markers[i].product == product) {
-            index = i;
-          }
-        };
-      var currentProduct = $scope.markers.markers[index];
-      demandCircles = [];
-      sentimentCircles = [];
 
       function createSentimentCircles(circs) {
         function redOrGreen(x) {
@@ -109,6 +112,8 @@ app.controller('MapCtrl', [
           return 0.5;
         }
 
+        var sentimentCircles = [];
+
         for (var i=0; i<circs.length; i++){
           var circleOptions = {
             map: null,
@@ -116,7 +121,7 @@ app.controller('MapCtrl', [
             fillColor: redOrGreen(circs[i].sentiment),
             fillOpacity: opacity(),
             center: new google.maps.LatLng(circs[i].latitude,circs[i].longitude),
-            radius: 3000,
+            radius: 50000,
             clickable: true,
             tweetId: circs[i].tweetId
           };
@@ -128,11 +133,13 @@ app.controller('MapCtrl', [
 
       function createDemandCircles(circs) {
         function getColor(index) {
-           return 'blue';
+           return demandColors[demandMarkers.length];
         }
         function opacity() {
           return 0.5;
         }
+
+        var demandCircles = [];
 
         for (var i=0; i<circs.length; i++){
           var circleOptions = {
@@ -151,68 +158,134 @@ app.controller('MapCtrl', [
         demandMarkers.push(demandCircles);
       };
       
-      if (currentProduct!= undefined) {
-        createDemandCircles(currentProduct.demand);
-        createSentimentCircles(currentProduct.sentiment);
+      if ($scope.products.currentTopicClass != "") {
+        circlesCreated = false;
+        demandMarkers = [];
+        sentimentMarkers = [];
+        for (var i=0; i<sortedMarkers.length; i++) {
+          createDemandCircles(sortedMarkers[i].demand);
+          createSentimentCircles(sortedMarkers[i].sentiment);
+        };
+        circlesCreated = true;
       };
+      console.log(demandMarkers);
+      console.log(sentimentMarkers);
+      console.log("Circles created.")
     };
 
-    var currentCircles = [];
+    var currentCircles = []; //Storing all circles currently drawn on the map type [[]]
+
+    function find(product){
+      var i=0;
+      var found = false;
+      while(!found && i<$scope.markers.markers.length){
+        if ($scope.markers.markers[i].product==product) {
+          found = true;
+        } else {
+          i++;
+        };
+      };
+      if (found){
+        return $scope.markers.markers[i];
+      } else return undefined;
+    };
 
     var getData = function() {
       if ($scope.products.currentTopicClass!= "" && $scope.products.isCurrentView('#/map')) {
         $scope.markers.getAll($scope.products.currentTopicClass, $scope.products.slider.value);
-      }
+      };
     };
 
+    //Remove all circles from the map.
     function removeCircles() {
+      console.log(currentCircles.length);
+      console.log(currentCircles);
       for (var i = 0; i<currentCircles.length; i++) {
-        google.maps.event.clearListeners(currentCircles[i], 'click');
-        currentCircles[i].setMap(null);
+        for (var j=0; j<currentCircles[i].length; j++) {
+          google.maps.event.clearListeners(currentCircles[i][j], 'click');
+          currentCircles[i][j].setMap(null);
+        }
       };
       currentCircles = [];
     };
 
+    //Put cirles for the selected option to the currentCircles array.
+    function putDemandCircles() {
+      for (var i=0; i< $scope.products.currentProducts.length; i++) {
+        if ($scope.products.currentProducts[i]) {
+          console.log('demandMarkers[i]');
+          console.log(demandMarkers);
+          console.log(demandMarkers[i]);
+          currentCircles.push(demandMarkers[i]);
+        };
+      };
+      console.log("Put demand markers.");
+    };
+
+    //Put cirles for the selected option to the currentCircles array.
+    function putSentimentCircles() {
+      for (var i=0; i< $scope.products.currentProducts.length; i++) {
+        if ($scope.products.currentProducts[i]) {
+          currentCircles.push(sentimentMarkers[i]);
+        };
+      };
+    };
+
     function selectCircles(){
       if ($scope.products.showDemand) {
-        currentCircles = demandCircles;
+        putDemandCircles();
       } else {
-        currentCircles = sentimentCircles;
+        putSentimentCircles();
       };
     };
 
     function showCircles() {
+      console.log(currentCircles.length);
+      console.log(currentCircles);
       for (var i = 0; i<currentCircles.length; i++) {
-        currentCircles[i].setMap(theMap);
-        google.maps.event.addListener(currentCircles[i], 'click', function(){
-          $scope.tweet.getTweet(this.tweetId);
-          $scope.infoVisible = true;
-        });
+        for (var j=0; j<currentCircles[i].length; j++ ) {
+          currentCircles[i][j].setMap(theMap);
+          google.maps.event.addListener(currentCircles[i][j], 'click', function(){
+            $scope.tweet.getTweet(this.tweetId);
+          });
+        }
       };
-
     };
 
     $scope.$watch('products.showDemand', function(){
-      removeCircles();
-      selectCircles();
-      showCircles();
+      if (circlesCreated){
+        removeCircles();
+        selectCircles();
+        showCircles();
+      };
     });
 
-
-    $scope.$watch('products.currentOptionIndex', function(){
-      removeCircles();
-      createCircles();
-      selectCircles();
-      showCircles();
-    });
+    $scope.$watch('products.currentProducts', function(){
+      if (circlesCreated){
+        removeCircles();
+        selectCircles();
+        showCircles();
+      };
+    }, true);
 
     $scope.$watch('products.slider.newValue', getData);
 
     $scope.$watch('products.currentTopicClass', getData);
 
     $scope.$watch('markers', function() {
+      var sortedData = [];
+      for (var i=0; i<$scope.products.currentTopicOptions.length; i++) {
+        console.log("Looking for: "+$scope.products.currentTopicOptions[i]);
+        sortedData.push(find($scope.products.currentTopicOptions[i]));
+      };
+      //there is a problem!!!
+      console.log("sortedData");
+      console.log(sortedData);
+      sortedMarkers = sortedData;
       removeCircles();
       createCircles();
+      console.log("After creation and before selection.");
+      console.log(demandMarkers);
       selectCircles();
       showCircles();
     }, true);
@@ -220,6 +293,7 @@ app.controller('MapCtrl', [
     $scope.$watch('tweet.tweet', function(){
       if($scope.tweet.tweet.text!=undefined){
         $scope.infoText = $scope.tweet.tweet.text;
+        $scope.infoVisible = true;
       }
     }, true);
 
