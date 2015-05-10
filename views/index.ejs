@@ -53,11 +53,13 @@
   <body>
     <div ng-Controller="MenuCtrl">
       <div ng-hide="brighten">
+        <div class="darkness">
+        </div>
         <div class="selection">
             <div class="hexrow">
                 <!-- burger -->
-                <div ng-click="selecTopic(0)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
-                    <span>Fast Food</span>
+                <div ng-click="selecTopic(1)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                    <span></span>
                     <div></div>
                     <div></div>
                 </div>
@@ -80,8 +82,8 @@
                     <div></div>
                 </div>
                 <!-- phones -->
-                <div ng-click="selecTopic(1)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
-                    <span>Mobile Phones</span>
+                <div ng-click="selecTopic(0)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                    <span></span>
                     <div></div>
                     <div></div>
                 </div>
@@ -109,7 +111,7 @@
                 </div>
                 <!-- coffee -->
                 <div ng-click="selecTopic(2)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
-                    <span>Coffee</span>
+                    <span></span>
                     <div></div>
                     <div></div>
                 </div>

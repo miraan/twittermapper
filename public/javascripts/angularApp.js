@@ -85,7 +85,7 @@ app.factory('globalSelection', ['$http', function($http) {
       min: 1,
       max: 7,
       step: 1,
-      text: '1 week'
+      text: 'past week'
     },
 
     showDemand: true,
