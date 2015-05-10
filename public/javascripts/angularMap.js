@@ -72,6 +72,9 @@ app.controller('MapCtrl', [
       bounds: {}
     };
 
+    var demandMarkers = [];    //type [[]]
+    var sentimentMarkers = []; //type [[]]
+
     var demandCircles = [];
     var sentimentCircles = [];
     var theMap = null;
@@ -113,13 +116,14 @@ app.controller('MapCtrl', [
             fillColor: redOrGreen(circs[i].sentiment),
             fillOpacity: opacity(),
             center: new google.maps.LatLng(circs[i].latitude,circs[i].longitude),
-            radius: 50000,
+            radius: 3000,
             clickable: true,
             tweetId: circs[i].tweetId
           };
           
           sentimentCircles.push(new google.maps.Circle(circleOptions));
         };
+        sentimentMarkers.push(sentimentCircles);
       };
 
       function createDemandCircles(circs) {
@@ -144,7 +148,9 @@ app.controller('MapCtrl', [
 
           demandCircles.push(new google.maps.Circle(circleOptions));
         };
+        demandMarkers.push(demandCircles);
       };
+      
       if (currentProduct!= undefined) {
         createDemandCircles(currentProduct.demand);
         createSentimentCircles(currentProduct.sentiment);

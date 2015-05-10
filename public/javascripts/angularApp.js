@@ -4,7 +4,7 @@ google.setOnLoadCallback(function () {
   angular.bootstrap(document.body, ['oxTwi']);
 });
 
-var app = angular.module('oxTwi', ['ui.router','ngMap','ui.bootstrap']);
+var app = angular.module('oxTwi', ['ui.router','ngMap']);
 
 app.config([
 '$stateProvider',
@@ -89,8 +89,8 @@ app.factory('globalSelection', ['$http', function($http) {
     },
 
     showDemand: true,
-    showSentiment: false,
     currentTopic: "",
+    currentProducts: [],
     currentTopicOptions: [],
     currentOptionIndex: 0,
     currentTopicClass: "",
@@ -112,6 +112,7 @@ app.factory('globalSelection', ['$http', function($http) {
       angular.copy(data, object.data);
       o.topics = object.data.topics;
       o.topicsOptions = object.data.topicsOptions;
+
     });
   };
 
@@ -119,75 +120,100 @@ app.factory('globalSelection', ['$http', function($http) {
 
 }]);
 
+app.filter('capitalize', function() {
+  return function(input, all) {
+    return (!!input) ? input.replace(/([^\W_]+[^\s-]*) */g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}) : '';
+  }
+});
+
 app.controller('MenuCtrl', [
   '$scope',
   'globalSelection',
   function($scope, products, globalSelection){
-    $scope.searchText = "What would you like to search for?";
-
-    $scope.getToTyping = function(){
-      $scope.searchText = "";
-      $scope.searchFocus = true;
-    }
-    $scope.finishTyping = function(){
-      $scope.searchFocus = false;
-      $scope.searchText = "What would you like to search for?";
-    }
-    $scope.submitSearch = function(){
-      if ($scope.searchText != null && $scope.searchText != "") { 
-        $scope.products.currentTopic = $scope.searchText;
-        $scope.products.currentTopicOptions = [];
-        $scope.products.currentOptionIndex = 0;
-        $scope.products.currentTopicClass = $scope.searchText;
-      } 
-      $scope.finishTyping();
-      $scope.hideAll();
-    }
 
     $scope.products = products;
+
+    $scope.demandBtnClass = function (){
+      if (products.showDemand){
+        return 'active';
+      } else {
+        return '';
+      }
+    };
+
+    $scope.sentimentBtnClass = function (){
+      if (products.showDemand){
+        return '';
+      } else {
+        return 'active';
+      }
+    };
+
+    $scope.getState = function(location) {
+      if (window.location.hash==location) {
+        return 'active';
+      } else {
+        return '';
+      }
+    };
+
+    $scope.showCategories = false;
+
+    $scope.toggleCategories = function() {
+      $scope.showCategories = !($scope.showCategories);
+    };
+
+    $scope.getTopicClass = function(topic){
+      if (topic == $scope.products.currentTopicClass) {
+        return 'active';
+      } else {
+        return '';
+      }
+    };
+
+    $scope.getProductClass = function(index){
+      if ($scope.products.isCurrentView('#/map')||$scope.products.isCurrentView('#/timeline')) {
+        if ($scope.products.currentProducts[index]) return 'active'
+        else return '';
+      } else {
+        if (index==$scope.products.currentOptionIndex ) return 'active'
+        else return '';
+      };
+    };
+
+    $scope.getLink = function(location) {
+      return window.location.hash;
+    };
 
     $scope.selecTopic = function(topicI){ // I is for index
       $scope.products.currentOptionIndex = 0;
       $scope.brighten = true;
       $scope.products.currentTopic = $scope.products.topics[topicI];
       $scope.products.currentTopicOptions = $scope.products.topicsOptions[topicI];
+      $scope.products.currentProducts = [];
+      $scope.products.currentProducts.push(true);
+      for (var i=1; i<$scope.products.currentTopicOptions.length; i++){
+        $scope.products.currentProducts.push(false);
+      };
+      console.log($scope.products.currentProducts);
       $scope.products.currentTopicClass = $scope.products.topics[topicI];
-      $scope.hideAll();
+      $scope.showCategories = false;
     };
     $scope.selectOption = function(optionI){
-      $scope.products.currentOptionIndex = optionI;
-      if (optionI == 0) { $scope.products.currentTopic = $scope.products.currentTopicClass; }
-      else { $scope.products.currentTopic = $scope.products.currentTopicOptions[optionI]; }
-      $scope.hideAll();
+      if ($scope.products.isCurrentView('#/map')||$scope.products.isCurrentView('#/timeline')) {
+        $scope.products.currentProducts[optionI] = !($scope.products.currentProducts[optionI]);
+      } else {
+        $scope.products.currentOptionIndex = optionI;
+        if (optionI == 0) { $scope.products.currentTopic = $scope.products.currentTopicClass; }
+        else { $scope.products.currentTopic = $scope.products.currentTopicOptions[optionI]; }
+      }
     };
-    $scope.hideAll = function(){
-      $scope.optionsHidden = true;
-      $scope.optionsViewIsT = false;
-    };
-    $scope.showOptions = function(){
-      $scope.optionsHidden = false;
-    };
-    $scope.toggleTopiClasses = function(){
-      $scope.optionsViewIsT = !$scope.optionsViewIsT;
-    };
-    $scope.isTopiClass = function(t){
-      return t != $scope.products.currentTopiClass;
-    };
+    
     $scope.makeDemand = function(){
       $scope.products.showDemand = true;
-      $scope.products.showSentiment = false;
     };
     $scope.makeSentiment = function(){
-      $scope.products.showSentiment = true;
       $scope.products.showDemand = false;
-    };
-
-    $scope.getState = function(location) {
-      if (window.location.hash==location) {
-        return 'navBtnActive';
-      } else {
-        return 'navBtn';
-      };
     };
 
     $scope.evalSlide = function() {

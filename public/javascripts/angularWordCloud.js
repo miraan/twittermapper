@@ -35,11 +35,11 @@ app.directive('wordcloud', function() {
 
           var words =[];
           angular.copy($scope.cloudData.cloudData[index].words, words);
-          console.log(words.length);
-          /*for (var i = words.length-1; i >=0; i--) {
+          console.log(words);
+          for (var i = words.length-1; i >=0; i--) {
             words[i].size = Math.round(Math.sqrt(words[i].size)/3);
             console.log("{ text: '"+words[i].text+"', size: "+words[i].size+" },");
-          };*/
+          };
           
           var width = elm[0].clientWidth;
           var height = elm[0].clientHeight;
