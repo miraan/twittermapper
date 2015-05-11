@@ -530,6 +530,7 @@ var getWordCloudForCategory = function(category, dateLowerBound, callback) {
 			return;
 		}
 
+		data.push(entireMarketItem);
 		callback(null, data);
 	});
 }
