@@ -58,7 +58,7 @@ app.controller('MapCtrl', [
     $scope.tweet = tweet;
 
     $scope.infoVisible = false;
-    $scope.infoTitle = "Text of the tweet";
+    $scope.infoTitle = "Tweet Text";
     $scope.infoText = "Initial text.";
 
     $scope.hideInfo = function (){
