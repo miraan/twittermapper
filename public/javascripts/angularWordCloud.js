@@ -40,8 +40,8 @@ app.directive('wordcloud', function() {
             console.log("{ text: '"+words[i].text+"', size: "+words[i].size+" },");
           };
           
-          var width = elm[0].clientWidth-100;
-          var height = elm[0].clientHeight-100;
+          var width = elm[0].clientWidth;
+          var height = elm[0].clientHeight;
 
           var fill = d3.scale.category20();
 
@@ -59,7 +59,7 @@ app.directive('wordcloud', function() {
                 .attr("width", width)
                 .attr("height", height)
               .append("g")
-                .attr("transform", "translate(150,150)")
+                .attr("transform", "translate("+width/2+","+height/2+")")
               .selectAll("text")
                 .data(words)
               .enter().append("text")
