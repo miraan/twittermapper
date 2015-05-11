@@ -104,11 +104,12 @@ var saveTweet = function(tweetJson, callback) {
 	tweet.save(function(error, savedTweet) {
 		if (error) {
 			if (error.code == 11000) {
-				console.log("duplicate tweet - skipped save");
 				callback(null, null);
 				return;
 			}
-			callback(error, null);
+			// callback(error, null);
+			console.log("Error saving tweet: " + error);
+			callback(null, null);
 			return;
 		}
 
@@ -169,8 +170,57 @@ var getTweets = function(options, callback) {
 
 		}
 
+		// console.log("DB: retrieved " + tweets.length + " tweets");
 		callback(null, tweets);
-	})
+	});
+}
+
+// callback takes params error, count
+var countTweets = function(options, callback) {
+	var query = Tweet.count();
+
+	if (options.product) {
+		query = query.where('product').equals(options.product);
+	}
+	if (options.products) {
+		query = query.where('product').in(options.products);
+	}
+	if (options.demand) {
+		query = query.where('indicatesDemand').equals(options.demand);
+	}
+	if (options.geo) {
+		query = query.exists('geo');
+	}
+	if (options.dateLowerBound) {
+		query = query.where('created_at').gte(options.dateLowerBound);
+	}
+	if (options.excludedProducts) {
+		_.each(options.excludedProducts, function(excludedProduct) {
+			query = query.where('product').ne(excludedProduct);
+		});
+	}
+	if (options.country) {
+		query = query.where('country').equals(options.country);
+	}
+	if (options.countryExists) {
+		query = query.exists('country');
+	}
+	if (options.country_code) {
+		query = query.where('country_code').equals(options.country_code);
+	}
+	if (options.countryCodeExists) {
+		query = query.exists('country_code');
+	}
+
+	query.exec(function(error, count) {
+		if (error) {
+			callback(error, null);
+			return;
+
+		}
+
+		callback(null, count);
+	});
 }
 
 // callback takes params: error, tweet
@@ -286,6 +336,7 @@ connectToLocal();
 
 module.exports.saveTweet = saveTweet;
 module.exports.getTweets = getTweets;
+module.exports.countTweets = countTweets;
 module.exports.getTweet = getTweet;
 module.exports.wipeDatabase = wipeDatabase;
 

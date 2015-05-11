@@ -119,7 +119,10 @@ router.get('/setup/outputSavedTweets/:product/:demand/:select/:limit', function(
 	var select = req.params.select;
 	var limit = req.params.limit;
 
-	var options = { product: product, select: select, limit: limit };
+	var options = { product: product, select: select, demand: demand };
+	if (limit) {
+		options.limit = limit;
+	}
 
 	database.getTweets(options, function(error, tweets) {
 		if (error) {
@@ -145,6 +148,11 @@ router.get('/setup/outputSavedTweets/:product/:demand/:select/:limit', function(
 
 		res.json(result);
 	});
+});
+
+router.get('/setup/outputBreakdown', function(req, res, next) {
+	start.outputBreakdown();
+	res.json({message: "outputBreakdown started"});
 });
 
 module.exports = router;

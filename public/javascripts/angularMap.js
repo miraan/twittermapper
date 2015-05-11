@@ -97,13 +97,16 @@ app.controller('MapCtrl', [
       demandCircles = [];
       sentimentCircles = [];
 
+      var circleOpacity = 0.5;
+      var circleRadius = 25000;
+
       function createSentimentCircles(circs) {
         function redOrGreen(x) {
           if (x < 0) { return 'red' } else {return 'green'}
         }
         function opacity() {
           //if (x < 0) { return x*(-0.1) } else {return x*0.1}
-          return 0.5;
+          return circleOpacity;
         }
 
         for (var i=0; i<circs.length; i++){
@@ -113,7 +116,7 @@ app.controller('MapCtrl', [
             fillColor: redOrGreen(circs[i].sentiment),
             fillOpacity: opacity(),
             center: new google.maps.LatLng(circs[i].latitude,circs[i].longitude),
-            radius: 50000,
+            radius: circleRadius,
             clickable: true,
             tweetId: circs[i].tweetId
           };
@@ -127,7 +130,7 @@ app.controller('MapCtrl', [
            return 'blue';
         }
         function opacity() {
-          return 0.5;
+          return circleOpacity;
         }
 
         for (var i=0; i<circs.length; i++){
@@ -137,7 +140,7 @@ app.controller('MapCtrl', [
             fillColor: getColor(i),
             fillOpacity: opacity(),
             center: new google.maps.LatLng(circs[i].latitude,circs[i].longitude),
-            radius: 50000,
+            radius: circleRadius,
             clickable: true,
             tweetId: circs[i].tweetId
           };

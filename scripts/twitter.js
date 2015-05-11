@@ -43,10 +43,15 @@ function URLToArray(url) {
 	return request;
 }
 
+// callback takes params: error, tweets, nextSearchOptions
 var getPage = function(searchOptions, callback) {
 	client.get('search/tweets', searchOptions, function(error, tweets, response) {
 		if (error) {
-			callback(error, null, null);
+			// callback(error, null, null);
+			console.log("Error doing twitter search: " + error);
+			// just try again
+			callback(null, [], searchOptions);
+
 
 		} else {
 			var nextSearchOptions;
