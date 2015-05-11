@@ -5,30 +5,23 @@
     <meta charset="utf-8"> 
     <!-- To assure that the page scale correctly.-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="APIs/bootstrap-3.3.4-dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-
+    <!--jQuery-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    <!-- Latest compiled and minified JavaScript for Bootstrap-->
-    <!-- <script src="APIs/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script> -->
+    <!--Bootstrap-->
+    <script src="APIs/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
 
-    <!--My style-->
-    <link rel="stylesheet" type="text/css" href="stylesheets/Maps.css">
-    <link rel="stylesheet" type="text/css" href="stylesheets/Graphs.css">
-    <link rel="stylesheet" type="text/css" href="stylesheets/CustomBootstrap.css">
+    <!--Angular API.-->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.10/angular.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
+    <script src="APIs/lodash/dist/lodash.compat.js"></script>
+    <script src="APIs/ng-map.js"></script>
+
     <!--Google maps API.-->
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkTNanNXkad_od5dl2cRuW3Yqsvad0nBc">
     </script>
-    
-    <!--Angular API.-->
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.10/angular.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
-    <script src="APIs/ui-bootstrap-tpls-0.13.0.min.js"></script>
-    <script src="APIs/lodash/dist/lodash.compat.js"></script>
-    <script src="APIs/ng-map.js"></script>
 
     <!--D3-->
     <script src="APIs/d3/d3.js"></script>
@@ -37,80 +30,175 @@
     <!--Google charts API.-->
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
+    <!--Angular - Controllers and directives-->
     <script type="text/javascript" src="javascripts/angularApp.js"></script>
     <script type="text/javascript" src="javascripts/angularMap.js"></script>
     <script type="text/javascript" src="javascripts/angularTimeline.js"></script>
     <script type="text/javascript" src="javascripts/angularGeoChart.js"></script>
     <script type="text/javascript" src="javascripts/angularWordCloud.js"></script>
+
+    <!--Style - Bootstrap-->
+    <link rel="stylesheet" href="APIs/bootstrap-3.3.4-dist/css/bootstrap.min.css">
+    <!--Style - jQuery - UI -->
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+
+    <!--Style - My style-->
+    <link rel="stylesheet" type="text/css" href="stylesheets/Maps.css">
+    <link rel="stylesheet" type="text/css" href="stylesheets/Graphs.css">
+    <link rel="stylesheet" type="text/css" href="stylesheets/CustomBootstrap.css">
+    <link rel="stylesheet" type="text/css" href="stylesheets/BootstrapNavbar.css">
+    <link rel="stylesheet" type="text/css" href="stylesheets/HexagonalGrid.css">
+    
   </head>
-  <body style="min-width=2000px;">
-
-    <div class="navigation"></div>
-
-    <ui-view></ui-view>
-
-    <div ng-controller= "MenuCtrl">
-      <!-- initial darkening -->
+  <body>
+    <div ng-Controller="MenuCtrl">
       <div ng-hide="brighten">
         <div class="darkness">
         </div>
         <div class="selection">
-          <button type="button" class="topicBtn" ng-repeat="topic in products.topics" ng-click="selecTopic($index)">{{topic}}</button>
-        </div>
-      </div>
-      <button type="button" class="OxTwi">OxTwi</button>
+            <div class="hexrow">
+                <!-- burger -->
+                <div ng-click="selecTopic(1)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
 
-      <!-- left navigation -->
-      <div class="leftStuff">
-        <a       href="#/map"
-        ><button type="button"
-                 class="{{getState('#/map')}}">Map</button></a
-        ><a      href="#/timeline"
-        ><button type="button"
-                 class="{{getState('#/timeline')}}">Timeline</button></a
-        ><a      href="#/geochart"
-        ><button type="button"
-                 class="{{getState('#/geochart')}}">GeoChart</button></a
-        ><a      href="#/wordcloud"
-        ><button type="button"
-                 class="{{getState('#/wordcloud')}}">Word Cloud</button></a
-        >
-      </div>
-
-      <!-- aligned centre -->
-      <div class="seleption" ng-show="brighten" ng-mouseleave="hideAll()">
-        <form ng-submit="submitSearch()" ng-show="searchFocus || optionsViewIsT">
-          <input type="text" class="searchBox" ng-model="searchText" ng-focus="getToTyping()" ng-blur="finishTyping()">
-        </form>
-        <button type="button" class="topicBtnSelected" ng-mouseenter="showOptions()" ng-show="optionsHidden && !(searchFocus)">{{products.currentTopic}}</button>
-        <div ng-hide="optionsHidden || searchFocus">
-          <div ng-hide="optionsViewIsT">
-            <button type="button" class="topicBtn" ng-click="toggleTopiClasses()">{{products.currentTopicClass}}</button>
-            <div ng-repeat="topicOption in products.currentTopicOptions">
-              <button type="button" class="seleoptiBtn" ng-if="$index != products.currentOptionIndex" ng-click="selectOption($index)" >{{topicOption}}</button>
-              <button type="button" class="selecedOptiBtn" ng-if="$index == products.currentOptionIndex">{{topicOption}}</button>
+                <div ng-repeat="_ in ((_ = []) && (_.length=4) && _) track by $index" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
             </div>
-          </div>
-          <div ng-show="optionsViewIsT">
-            <button type="button" class="topicBtn" ng-repeat="topic in products.topics" ng-click="selecTopic($index)">{{topic}}</button>
-          </div>
+            <div class="hexrow">
+                <div style="visibility: hidden;">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div ng-repeat="_ in ((_ = []) && (_.length=2) && _) track by $index" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+                <!-- phones -->
+                <div ng-click="selecTopic(0)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div ng-repeat="_ in ((_ = []) && (_.length=4) && _) track by $index" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div style="visibility: hidden;">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+            <div class="hexrow">
+                <div style="visibility: hidden;">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div ng-repeat="_ in ((_ = []) && (_.length=4) && _) track by $index" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+                <!-- coffee -->
+                <div ng-click="selecTopic(2)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div ng-repeat="_ in ((_ = []) && (_.length=2) && _) track by $index" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div style="visibility: hidden;" ng-repeat="_ in ((_ = []) && (_.length=1) && _) track by $index">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+            <div class="hexrow">
+                <div style="visibility: hidden;">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div style="visibility: hidden;" ng-repeat="_ in ((_ = []) && (_.length=3) && _) track by $index">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
         </div>
       </div>
+      <nav class="navbar navbar-custom">
+        <div class="container">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand">OxTwi</a>
+          </div>
 
-      <!-- right navigation -->
-      <div class="demSent">
-        <div ng-hide="menu.wordcloud.state == 'navBtnActive'">
-          <button          type="button" class="demSentBtn"         ng-hide="products.showDemand"    ng-click="makeDemand()">Demand
-          </button><button type="button" class="demSentBtnSelected" ng-show="products.showDemand">Demand
-          </button><button type="button" class="demSentBtn"         ng-hide="products.showSentiment" ng-click="makeSentiment()">Sentiment
-          </button><button type="button" class="demSentBtnSelected" ng-show="products.showSentiment">Sentiment
-          </button>
-        </div>
-        <div class="slider"><input type="range" min="{{products.slider.min}}" max="{{products.slider.max}}" 
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+            <ul class="nav navbar-nav navbar-left">
+              <li class="{{getState('#/map')}}"><a href="#/map">Map</a></li>
+              <li class="{{getState('#/timeline')}}"><a href="#/timeline">Timeline</a></li>
+              <li class="{{getState('#/geochart')}}"><a href="#/geochart">GeoChart</a></li>
+              <li class="{{getState('#/wordcloud')}}"><a href="#/wordcloud">Word Cloud</a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-left">
+              <li><a>Selected product:</a></li>
+              <li class="dropdown dropdown-middle active">
+                <a role="button" aria-expanded="false" ng-click="toggleCategories()">
+                  {{products.currentTopic| capitalize}}
+                <ul class="dropdown-menu" role="menu">
+                  <li ng-show="false" ng-repeat="topic in products.topics" class="{{getTopicClass(topic)}}" >
+                    <a href="{{getLink()}}" ng-click="selecTopic($index)">{{topic| capitalize}}</a>
+                  </li>
+                  <li ng-show="showCategories" ng-repeat="topic in products.topics" class="{{getTopicClass(topic)}}" >
+                    <a href="{{getLink()}}" ng-click="selecTopic($index)">{{topic| capitalize}}</a>
+                  </li>
+                  <li ng-show="!showCategories" ng-repeat="topicOption in products.currentTopicOptions" class="{{getProductClass($index)}}">
+                    <a href="{{getLink()}}" ng-click="selectOption($index)">{{topicOption| capitalize}}</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+              <li class="{{demandBtnClass()}}" ng-if="!products.isCurrentView('#/wordcloud')"><a href="{{getLink()}}" ng-click="makeDemand()">Demand</a></li>
+              <li class="{{sentimentBtnClass()}}" ng-if="!products.isCurrentView('#/wordcloud')"><a href="{{getLink()}}" ng-click="makeSentiment()">Sentiment</a></li>
+              <li><div class="slider"><input type="range" min="{{products.slider.min}}" max="{{products.slider.max}}" 
               step="{{products.slider.step}}" ng-model="products.slider.value" ng-change="evalSlide()" 
-              ng-mouseup="products.slider.newValue = products.slider.value"></div>
-        <div class="sliderValue">{{products.slider.text}}</div>
-      </div>
+              ng-mouseup="products.slider.newValue = products.slider.value"></div></li>
+              <li><div class="sliderValue"> {{products.slider.text}} </div></li>
+            </ul>
+          </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+      </nav>
     </div>
+    <ui-view></ui-view>
   </body>
 </html>

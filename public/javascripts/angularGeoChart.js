@@ -77,13 +77,13 @@ app.controller('GeoChartCtrl', [
 
     $scope.geochartSentimentOptions = {
         colorAxis: {colors: ['red','yellow','green']},
-        backgroundColor: '#81d4fa',
+        backgroundColor: '#002147',
         datalessRegionColor: 'white',
         defaultColor: '#f5f5f5',
     };
     $scope.geochartDemandOptions = {
         colorAxis: {colors: ['#A8D8F0','#290AC4']},
-        backgroundColor: '#81d4fa',
+        backgroundColor: '#002147',
         datalessRegionColor: 'white',
         defaultColor: '#f5f5f5',
     };

@@ -27,7 +27,7 @@ html, body {
   top: 50%;
   left: 50%;
   width: 100%;
-  margin-top: -100px;
+  margin-top: -300px;
   margin-left: -50%;
   z-index:99;
 }
@@ -115,24 +115,16 @@ html, body {
 }
 
 .slider {
-  padding-top: 15px;
-  /*background: green;*/
-  position: fixed;
-  top: 0px;
-  left: 50%;
-  margin-left: 326px;
+  padding-top: 18px;
   height: 50px;
   width: 100px;
 }
 .sliderValue {
   color: white;
   padding-top: 15px;
-  /*background: green;*/
-  position: fixed;
-  top: 0px;
-  left: 50%;
-  margin-left: 436px;
+  margin-left: 10px;
   height: 50px;
+  width: 100px;
 }
 
 .demSent {
@@ -167,6 +159,10 @@ html, body {
   text-decoration: none;
   border-style: solid;
   border: 0px;
+}
+.demSentBtnSelected:hover {
+  background: #6699cc;
+  text-decoration: none;
 }
 .searchBox {
   text-align: center;
@@ -341,3 +337,11 @@ html, body {
   width: 250px;
   margin: auto;
 }*/
+.twitter-logo{
+  float: left;
+  height: 25px;
+  margin-top: 4px;
+  margin-left: 5px;
+  margin-right: 5px;
+  width: auto;
+}

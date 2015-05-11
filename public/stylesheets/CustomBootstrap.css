@@ -111,17 +111,34 @@ fieldset[disabled] .navbar-custom .btn-link:focus {
   color: #ccc;
 }
 
+ul.nav li.dropdown:hover > ul.dropdown-menu {
+    background-color: #002147;
+    color: white;
+    display: block;    
+    margin-top: 0px;
+}
+
+#dropdown-menu-links {
+    background-color: #002147;
+    color: white;
+    display: block; 
+    margin-top: 0px;
+    text-decoration: none; 
+}
+
+#dropdown-custom {
+  background-color: #002147;
+}
+
 .panel-custom {
   border-color: #002147;
-  border-radius: 0px;
   min-height: 100px;
-  min-width: 200px;
+  min-width: 220px;
 }
 .panel-custom > .panel-heading {
   color: #fff;
   background-color: #002147;
   border-color: #002147;
-  border-radius: 0px;
   padding: 0px;
   height: 33px;
 }
