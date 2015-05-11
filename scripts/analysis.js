@@ -37,28 +37,28 @@ var countWordsInTweets = function(tweets) {
     return index;
 }
 
-var getAggregate = function(els, key, value){
-	var index = {}
+// var getAggregate = function(els, key, value){
+// 	var index = {}
 
-	_.each(els, function(el){
-		var curKey = key(el)
-		if(!index.hasOwnProperty(el[curKey])){
-			index[key] = 0
-		}
+// 	_.each(els, function(el){
+// 		var curKey = key(el)
+// 		if(!index.hasOwnProperty(el[curKey])){
+// 			index[key] = 0
+// 		}
 
-		index[key] = value(index[key], el)
-	})
+// 		index[key] = value(index[key], el)
+// 	})
 
-	return index
-}
+// 	return index
+// }
 
-function addOne(old, el){return old + 1}
-function getCountryCode(tweet){return tweet.country_code}
+// function addOne(old, el){return old + 1}
+// function getCountryCode(tweet){return tweet.country_code}
 
 // tweets is an array of tweet objects where each object has at least the property 'country_code'
 var getCountryCountForTweets = function(tweets) {
-	return getAggregate(tweets, getCountryCode, addOne);
-	/*
+	// return getAggregate(tweets, getCountryCode, addOne);
+	
 	var index = {};
 	_.each(tweets, function(tweet) {
 		if (!(index.hasOwnProperty(tweet.country_code))) {
@@ -67,15 +67,15 @@ var getCountryCountForTweets = function(tweets) {
 		index[tweet.country_code]++;
 	});
 	return index;
-	*/
+	
 }
 
 // tweets is an array of tweet objects where each object has at least the properties 'country_code' and 'text'
 var getCountrySentimentForTweets = function(tweets) {
-	return getAggregate(tweets, getCountryCode, function(old, tweet){
-		return old + sentiment(tweet.text).score
-	})
-	/*
+	// return getAggregate(tweets, getCountryCode, function(old, tweet){
+	// 	return old + sentiment(tweet.text).score
+	// })
+	
 	var index = {};
 	_.each(tweets, function(tweet) {
 		if (!(index.hasOwnProperty(tweet.country_code))) {
@@ -84,7 +84,7 @@ var getCountrySentimentForTweets = function(tweets) {
 		index[tweet.country_code] += sentiment(tweet.text).score;
 	});
 	return index;
-	*/
+	
 }
 
 // charts is an array of charts, where a chart is a 2d string array [country, value]
@@ -236,7 +236,8 @@ var getDemandGraphForProduct = function(product, dateLowerBound, callback) {
 // data is array of 2d arrays: data: [ [date, value] ]
 // callback takes params (error, points) where points is an array of 'numberOfPoints' 2d arrays: [  ]
 var getSentimentGraphForProduct = function(product, dateLowerBound, callback) {
-	database.getTweets( { product: product, demand: false, sort: 'created_at', select: 'created_at text', dateLowerBound: dateLowerBound }, function(error, tweets) {
+	database.getTweets( { product: product, demand: false, sort: 'created_at', select: 'created_at text', dateLowerBound: dateLowerBound },
+	function(error, tweets) {
 		if (error) {
 			callback(error, null);
 			return;

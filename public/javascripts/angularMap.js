@@ -103,7 +103,7 @@ app.controller('MapCtrl', [
 
     var createCircles = function() {
 
-      var circleOpacity = 0.5;
+      var circleOpacity = 0.05;
       var circleRadius = 25000;
 
       function createSentimentCircles(circs) {

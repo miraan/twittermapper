@@ -8,6 +8,7 @@ var _ = require('underscore')._;
 var mongoose = require('mongoose');
 var deepPopulate = require('mongoose-deep-populate');
 var async = require('async');
+var sentiment = require('sentiment');
 require('console.table');
 
 require('../scripts/models/Tweet');
