@@ -78,6 +78,7 @@ function($stateProvider, $urlRouterProvider) {
 app.factory('globalSelection', ['$http', function($http) {
   var o = {
     needToRequest: true,
+    loadingData: false,
 
     slider: {
       value: 7,

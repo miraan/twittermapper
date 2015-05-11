@@ -6,6 +6,7 @@ app.factory('geoData', ['$http', function($http) {
   o.getAll = function(topic, day) {
     return $http.get('/getGeoChart/' + topic + '/' + day).success(function(data){
       o.graphData= data;
+      console.log(data);
     });
   };
 

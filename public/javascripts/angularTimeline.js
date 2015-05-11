@@ -19,47 +19,58 @@ app.directive('timeline', function() {
     link: function($scope, elm, attrs) {
       var timeline = new google.visualization.LineChart(elm[0]);
       var drawChart = function() {
-        var product = $scope.products.currentTopicOptions[$scope.products.currentOptionIndex];
-        var index = 0;
-        for (var i = 0; i<$scope.graphData.graphData.length; i++) {
-          if ($scope.graphData.graphData[i].product == product) {
-            index = i;
-          }
-        };
-        if ($scope.products.showDemand) {
-          $scope.timelineData = $scope.demandData[index];
-          $scope.timelineOptions = $scope.timelineDemandOptions;
-        } else {
-          $scope.timelineData = $scope.sentimentData[index];
-          $scope.timelineOptions = $scope.timelineSentimentOptions;
-        }
-        if($scope.timelineData!= undefined) {
+        if($scope.dataCreated && ($scope.timelineData.getNumberOfColumns())>1) {
           timeline.draw($scope.timelineData, $scope.timelineOptions);
         }  
       };
 
-      $scope.$watch('products.showDemand', drawChart);
+      function initialiseAndDraw() {
+        $scope.initialise();
+        drawChart();
+      };
 
-      $scope.$watch('products.currentOptionIndex', drawChart);
+      $scope.$watch('products.showDemand', initialiseAndDraw);
+
+      $scope.$watch('products.currentProducts', initialiseAndDraw, true);
 
       var getData = function() {
+        $scope.products.loadingData = true;
         if ($scope.products.currentTopicClass!="" && $scope.products.isCurrentView('#/timeline')) {
           $scope.graphData.getAll($scope.products.currentTopicClass, $scope.products.slider.value);
         }
-      };
-
-      var refreshAndDraw = function() {
-        refreshData();
-        drawChart();
       };
 
       $scope.$watch('products.slider.newValue', getData);
 
       $scope.$watch('products.currentTopicClass', getData);
 
+      function find(product){
+        var i=0;
+        var found = false;
+        while(!found && i<$scope.graphData.graphData.length){
+          if ($scope.graphData.graphData[i].product==product) {
+            found = true;
+          } else {
+            i++;
+          };
+        };
+        if (found){
+          return $scope.graphData.graphData[i];
+        } else return undefined;
+      };
+
       $scope.$watch('graphData', function() {
-        $scope.initialise();
-        drawChart();
+        $scope.dataCreated = false;
+        var sortedData = [];
+        for (var i=0; i<$scope.products.currentTopicOptions.length; i++) {
+          sortedData.push(find($scope.products.currentTopicOptions[i]));
+        };
+        $scope.sortedData = sortedData;
+        if (sortedData.length != 0) {
+          $scope.dataCreated = true;
+          $scope.products.loadingData = false;
+        };
+        initialiseAndDraw();
       }, true);
     }
   };
@@ -72,6 +83,7 @@ app.controller('TimelineCtrl', [
   function($scope,graphData, globalSelection){
     $scope.products = globalSelection;
     $scope.graphData = graphData;
+    $scope.sortedData = [];
 
     $scope.timelineOptions = {};
 
@@ -87,31 +99,62 @@ app.controller('TimelineCtrl', [
         0: { color: 'green' }
       }
     };
+
     $scope.timelineData = {};
-    $scope.demandData = [];
-    $scope.sentimentData = [];
+    $scope.dataCreated = false;
+
     $scope.initialise = function () {
-      $scope.timelineData = {};
-      $scope.demandData = [];
-      $scope.sentimentData = [];
+      if ($scope.dataCreated) {
+        $scope.timelineData = {};
 
-      for (var j = 0; j<$scope.graphData.graphData.length; j++) {
-        var demandData = new google.visualization.DataTable();
-        demandData.addColumn('date', 'Date');
-        demandData.addColumn('number', $scope.graphData.graphData[j].product);
-        for (var i = 0; i < $scope.graphData.graphData[j].demand.length; i++) {
-          demandData.addRow([new Date($scope.graphData.graphData[j].demand[i][0]), $scope.graphData.graphData[j].demand[i][1]]);
-        };
-        $scope.demandData.push(demandData);
+        var columnsIndexes = [];
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'Date');
 
-        var sentimentData = new google.visualization.DataTable();
-        sentimentData.addColumn('date', 'Date');
-        sentimentData.addColumn('number', $scope.graphData.graphData[j].product);
-        for (var i = 0; i < $scope.graphData.graphData[j].sentiment.length; i++) {
-          sentimentData.addRow([new Date($scope.graphData.graphData[j].sentiment[i][0]), $scope.graphData.graphData[j].sentiment[i][1]]);
+        for (var i=0; i<$scope.products.currentProducts.length; i++){
+          if ($scope.products.currentProducts[i]) {
+            data.addColumn('number', $scope.sortedData[i].product);
+            columnsIndexes.push(i);
+          };
         };
-        $scope.sentimentData.push(sentimentData);
-      };
+
+        if ($scope.products.showDemand){
+          $scope.timelineOptions = $scope.timelineDemandOptions;
+
+          for (var i=0; i<columnsIndexes.length; i++){
+            var index = columnsIndexes[i];
+            for (var j=0; j<$scope.sortedData[index].demand.length; j++){
+              var row = [new Date($scope.sortedData[index].demand[j][0])]
+              for (var k=0; k<i; k++){
+                row.push(null);
+              };
+              row.push($scope.sortedData[index].demand[j][1])
+              for (var k=i+1; k<columnsIndexes.length; k++){
+                row.push(null);
+              };
+              data.addRow(row);
+            };
+          };
+        } else {
+          $scope.timelineOptions = $scope.timelineSentimentOptions;
+
+          for (var i=0; i<columnsIndexes.length; i++){
+            var index = columnsIndexes[i];
+            for (var j=0; j<$scope.sortedData[index].sentiment.length; j++){
+              var row = [new Date($scope.sortedData[index].sentiment[j][0])]
+              for (var k=0; k<i; k++){
+                row.push(null);
+              };
+              row.push($scope.sortedData[index].sentiment[j][1])
+              for (var k=i+1; k<columnsIndexes.length; k++){
+                row.push(null);
+              };
+              data.addRow(row);
+            };
+          };
+        };
+        $scope.timelineData = data;
+      }
     };
   }
 ]);
