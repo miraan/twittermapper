@@ -161,7 +161,8 @@ var doSearch = function(searchText, options, callback) {
 		}
 
 		geoTweetsCount += _.filter(tweets, function(tweet) { return tweet.geo; }).length;
-		console.log("current search: " + searchText + ", received tweets: " + receivedTweetsCount + " of which " + geoTweetsCount + " are geo.");
+		var dateUpperBound = _.max(tweets, function(tweet) { return new Date(tweet.created_at).getTime(); }).created_at;
+		console.log("current search: " + searchText + ", received tweets: " + receivedTweetsCount + " of which " + geoTweetsCount + " are geo. Max created_at: " + dateUpperBound);
 
 		saveTweetBatch(tweets, function(error, savedTweets) {
 			if (error) {
@@ -171,7 +172,9 @@ var doSearch = function(searchText, options, callback) {
 
 			console.log("saved " + savedTweets.length + " tweets");
 
-			if (!nextSearchOptions || (options.limit && allTweets.length >= options.limit)) {
+			if (!nextSearchOptions || 
+				(options.limit && receivedTweetsCount >= options.limit) || 
+				(options.dateLowerBound && options.dateLowerBound.getTime() >= new Date(dateUpperBound).getTime())) {
 				callback(null, allTweets);
 				return;
 			}

@@ -305,9 +305,13 @@ var connect = function() {
 
 	var mongodbUser = 'miraan';
 	var mongodbPassword = '123xyz';
-	var mongodbServer = 'ds031802.mongolab.com';
-	var mongodbPort = '31802';
-	var mongodbName = 'heroku_app36261480';
+	var mongodbServer = 'c355.candidate.7.mongolayer.com';
+	var mongodbPort = '10355';
+	var mongodbName = 'twittermapper';
+
+	// mongo c355.candidate.7.mongolayer.com:10355/twittermapper -u <user> -p<password>
+	// mongo ds031802.mongolab.com:31802/heroku_app36261480 -u miraan -p 123xyz
+	// mongorestore -h c355.candidate.7.mongolayer.com:10355 -d twittermapper -u miraan -p 123xyz tweets.bson
 
 	var mongodbUri = 'mongodb://'+ mongodbUser + ':' + mongodbPassword + '@' + mongodbServer + ':' + mongodbPort + '/' + mongodbName;
 	var mongooseUri = uriUtil.formatMongoose(mongodbUri);
