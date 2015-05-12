@@ -175,6 +175,88 @@ var getAverageLine = function(lines) {
 	return averageLine;
 }
 
+var stockSymbolForCompany = function(product) {
+	var stockSymbols = {
+		"apple": "AAPL",
+		"samsung": "SSNLF",
+		"sony": "SNE",
+		"htc": null,
+		"mcdonalds": "MCD",
+		"dominos": "DPZ",
+		"pizza hut": "YUM",
+		"burger king": null,
+		"kfc": "YUM",
+		"starbucks": "SBUX",
+		"caffe nero": null,
+		"costa": "WTB"
+	}
+	return stockSymbols[product];
+}
+
+var companyForProduct = function(product) {
+	if (product == "iphone 6 plus" || product == "iphone 6" || product == "iphone 5c") {
+		return "apple";
+	} else if (product == "galaxy s6" || product == "galaxy s5") {
+		return "samsung";
+	} else if (product == "htc one m8") {
+		return "htc";
+	} else if (product == "xperia z3") {
+		return "sony";
+	} else {
+		return product;
+	}
+}
+
+var getCompaniesForCategory = function(category) {
+	var products = getProductsForCategory(category);
+	var companies = [];
+	for (var i = 0; i < products.length; i++) {
+		var company = companyForProduct(products[i]);
+		if (company && companies.indexOf(company) == -1) {
+			companies.push(company);
+		}
+	}
+	return companies;
+}
+
+// callback returns params: error, data
+var getStockData = function(company, startDay, endDay, callback){
+	var security = stockSymbolForCompany(company);
+	if (!security) {
+		callback("no stock symbol", null);
+		return;
+	}
+
+	var endDayIso = endDay.toISOString().substring(0, 10)
+	var startDayIso = startDay.toISOString().substring(0, 10)
+
+	yahooFinance.historical({
+		symbol: security,
+		from: startDayIso,
+		endDayIso: endDayIso,
+		period: 'd'
+
+	}, function(error, quotes){
+		if (error) {
+			callback(error, null);
+			return;
+
+		}
+		var data = []
+
+		for(var i = 0; i < quotes.length; i++){
+			var timestamp = quotes[i].date.getTime()
+			data.push([timestamp + 2 * 60 * 60 * 1000, quotes[i].open])
+			data.push([timestamp + 12 * 60 * 60 * 1000, quotes[i].high])
+			data.push([timestamp + 23 * 60 * 60 * 1000, quotes[i].close])
+		}
+
+		callback(null, data);
+
+	});
+}
+
+
 function getSegments(lowerBound, numberOfSegments){
 	var today = Math.floor(now().getTime());
 	var interval = Math.floor((today - lowerBound) / numberOfSegments);
@@ -286,6 +368,7 @@ var getGraphForCategory = function(category, dateLowerBound, callback) {
 	async.each(products, function(product, callback) {
 		var item = {};
 		item.product = product;
+		item.company = companyForProduct(product);
 		
 		var getDemand = function(callback) {
 			getDemandGraphForProduct(product, dateLowerBound, function(error, points) {
@@ -346,6 +429,42 @@ var getGraphForCategory = function(category, dateLowerBound, callback) {
 
 		callback(null, data);
 	});
+}
+
+// callback takes params (error, data) where data is an array of objects with fields company, stock
+var getStockForCategory = function(category, dateLowerBound, callback) {
+	var companies = getCompaniesForCategory(category);
+	var data = [];
+
+	async.eachSeries(companies, function(company, callback) {
+		var item = {};
+		item.company = company;
+
+		getStockData(company, dateLowerBound, new Date(), function(error, stock) {
+			if (error) {
+				if (error == "no stock symbol") {
+					// skip this one
+					callback();
+					return;
+				}
+				callback(error);
+				return;
+			}
+
+			item.stock = stock;
+			data.push(item);
+
+			callback();
+		});
+
+	}, function(error) {
+		if (error) {
+			callback(error);
+			return;
+		}
+
+		callback(null, data);
+	})
 }
 
 // callback takes params (error, locations) where locations is an array of objects with fields: tweetId, latitude, longitude
@@ -663,36 +782,6 @@ var getTweet = function(tweetId, callback) {
 	});
 }
 
-var getYahooStockData = function(startDay, endDay, security, callback){
-	var endDayIso = endDay.toISOString().substring(0, 10)
-	var startDayIso = startDay.toISOString.substring(0, 10)
-
-	yahooFinance.historical({
-		symbol: security,
-		from: startDayIso,
-		endDayIso: endDayIso,
-		period: 'd'
-	}, function(err, quotes){
-		if(!err){
-			var data = []
-
-			for(int i = 0; i < quotes.length; i++){
-				var today = []
-
-				var timestamp = quotes[i].date.getTime()
-
-				today.push([timestamp + 2 * 60 * 60 * 1000, quotes[i].open])
-				today.push([timestamp + 12 * 60 * 60 * 1000, quotes[i].high])
-				today.push([timestamp + 23 * 60 * 60 * 1000, quotes[i].close])
-
-				data.push(today)
-			}
-
-			callback(data)
-		}
-	});
-}
-
 module.exports.getGraphForCategory = getGraphForCategory;
 module.exports.getLocationsForCategory = getLocationsForCategory;
 module.exports.getCategories = getCategories;
@@ -701,4 +790,5 @@ module.exports.getTweet = getTweet;
 module.exports.getGeoChartForCategory = getGeoChartForCategory;
 module.exports.categories = categories;
 module.exports.products = products;
+module.exports.getStockForCategory = getStockForCategory;
 

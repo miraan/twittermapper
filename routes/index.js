@@ -31,6 +31,21 @@ router.get('/getGraph/:category/:days', function(req, res, next) {
 	});
 });
 
+router.get('/getStock/:category/:days', function(req, res, next) {
+	var category = req.params.category;
+	var days = req.params.days;
+	var dateLowerBound = helper.daysAgo(days);
+
+	analysis.getStockForCategory(category, dateLowerBound, function(error, data) {
+		if (error) {
+			res.error(error);
+			return;
+		}
+
+		res.json(data);
+	});
+});
+
 router.get('/getLocations/:category/:days', function(req, res, next) {
 	var category = req.params.category;
 	var days = req.params.days;
