@@ -1,11 +1,15 @@
 app.factory('cloudData', ['$http', function($http) {
-  var o = {
+  var o = {    
+    loading: {
+      loadingData: false
+    },
     cloudData: undefined
   };
 
   o.getAll = function(topic, day) {
     return $http.get('/getWordCloud/' + topic + '/' + day).success(function(data){
       o.cloudData= data;
+      o.loading.loadingData = false;
     });
   };
 
@@ -17,12 +21,27 @@ app.directive('wordcloud', function() {
   return {
     restrict: 'A',
     link: function($scope, elm, attrs) {
+      function getAngle() {
+        var s = Math.random() * 3;
+        if (s<1) {
+          return -60;
+        } else if (s<2) {
+          return 0;
+        } else return 60;
+      };
+
+      function getSize() {
+        var s = Math.random() * 3;
+        if (s<1) {
+          return -60;
+        } else if (s<2) {
+          return 0;
+        } else return 60;
+      };
 
       var drawCloud = function() {
         $(elm[0]).empty();
-        console.log($scope.cloudData.cloudData);
         if ($scope.cloudData.cloudData != undefined) {
-          console.log($scope.cloudData.cloudData[0].words);
 
           var product = $scope.products.currentTopicOptions[$scope.products.currentOptionIndex];
           var index = 0;
@@ -34,21 +53,27 @@ app.directive('wordcloud', function() {
 
           var words =[];
           angular.copy($scope.cloudData.cloudData[index].words, words);
-          console.log(words);
+
           for (var i = words.length-1; i >=0; i--) {
-            words[i].size = Math.round(Math.sqrt(words[i].size));
-            console.log("{ text: '"+words[i].text+"', size: "+words[i].size+" },");
+            words[i].size = Math.sqrt(words[i].size);
           };
+
+          var max = Math.max.apply(Math, words.map(function(o){return o.size;}));
+
+          for (var i = words.length-1; i >=0; i--) {
+            words[i].size = Math.round((words[i].size*165)/max);
+          };
+
           
-          var width = elm[0].clientWidth-100;
-          var height = elm[0].clientHeight-100;
+          var width = elm[0].clientWidth;
+          var height = elm[0].clientHeight;
 
           var fill = d3.scale.category20();
 
           d3.layout.cloud().size([width, height])
               .words(words)
               .padding(5)
-              .rotate(function() { return ~~(Math.random() * 2) * 90; })
+              .rotate(function() { return ~~(getAngle()); })
               .font("Impact")
               .fontSize(function(d) { return d.size; })
               .on("end", draw)
@@ -59,7 +84,7 @@ app.directive('wordcloud', function() {
                 .attr("width", width)
                 .attr("height", height)
               .append("g")
-                .attr("transform", "translate(150,150)")
+                .attr("transform", "translate("+width/2+","+height/2+")")
               .selectAll("text")
                 .data(words)
               .enter().append("text")
@@ -78,6 +103,8 @@ app.directive('wordcloud', function() {
       $scope.$watch('products.currentOptionIndex', drawCloud);
 
       var getData = function() {
+        $scope.cloudData.loading.loadingData = true;
+        $scope.products.loading = $scope.cloudData.loading;
         if ($scope.products.currentTopicClass!="" && $scope.products.isCurrentView('#/wordcloud')) {
           $scope.cloudData.getAll($scope.products.currentTopicClass, $scope.products.slider.value);
         };
