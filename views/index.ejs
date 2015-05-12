@@ -63,8 +63,22 @@
                     <div></div>
                     <div></div>
                 </div>
-
-                <div ng-repeat="_ in ((_ = []) && (_.length=4) && _) track by $index" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <div style="visibility: hidden;">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div ng-click="selecTopic(0); selectOption(1)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div style="visibility: hidden;">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div ng-click="selecTopic(0); selectOption(7)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
                     <span></span>
                     <div></div>
                     <div></div>
@@ -76,51 +90,43 @@
                     <div></div>
                     <div></div>
                 </div>
-                <div ng-repeat="_ in ((_ = []) && (_.length=2) && _) track by $index" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <div ng-click="selecTopic(1); selectOption(2)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div ng-click="selecTopic(1); selectOption(4)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
                     <span></span>
                     <div></div>
                     <div></div>
                 </div>
                 <!-- phones -->
+                <div ng-click="selecTopic(1); selectOption(1)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
                 <div ng-click="selecTopic(0)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
                     <span></span>
                     <div></div>
                     <div></div>
                 </div>
-                <div ng-repeat="_ in ((_ = []) && (_.length=4) && _) track by $index" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <div ng-click="selecTopic(0); selectOption(5)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
                     <span></span>
                     <div></div>
                     <div></div>
                 </div>
-                <div style="visibility: hidden;">
-                    <span></span>
-                    <div></div>
-                    <div></div>
-                </div>
-            </div>
-            <div class="hexrow">
-                <div style="visibility: hidden;">
-                    <span></span>
-                    <div></div>
-                    <div></div>
-                </div>
-                <div ng-repeat="_ in ((_ = []) && (_.length=4) && _) track by $index" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
-                    <span></span>
-                    <div></div>
-                    <div></div>
-                </div>
-                <!-- coffee -->
                 <div ng-click="selecTopic(2)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
                     <span></span>
                     <div></div>
                     <div></div>
                 </div>
-                <div ng-repeat="_ in ((_ = []) && (_.length=2) && _) track by $index" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <div ng-click="selecTopic(2); selectOption(1)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
                     <span></span>
                     <div></div>
                     <div></div>
                 </div>
-                <div style="visibility: hidden;" ng-repeat="_ in ((_ = []) && (_.length=1) && _) track by $index">
+                <div style="visibility: hidden;">
                     <span></span>
                     <div></div>
                     <div></div>
@@ -132,7 +138,54 @@
                     <div></div>
                     <div></div>
                 </div>
-                <div onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <div ng-click="selecTopic(1); selectOption(5)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div ng-click="selecTopic(1); selectOption(3)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div ng-click="selecTopic(0); selectOption(2)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div ng-click="selecTopic(0); selectOption(6)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div ng-click="selecTopic(0); selectOption(3)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div ng-click="selecTopic(2); selectOption(3)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div ng-click="selecTopic(2); selectOption(2)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div style="visibility: hidden;">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+            <div class="hexrow">
+                <div style="visibility: hidden;">
+                    <span></span>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div ng-click="selecTopic(0); selectOption(4)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
                     <span></span>
                     <div></div>
                     <div></div>
