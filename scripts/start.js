@@ -124,17 +124,19 @@ var outputSentimentGraph = function(product, dateLowerBound) {
 var setupDatabase = function() {
 	console.log("setting up database...");
 	
+	var dateLowerBound = new Date("2015-05-08T00:00:00");
+
 	var functions = [];
-	var mobileProductsLeft = ["iphone 5c", "galaxy s6", "galaxy s5", "htc one m8", "xperia z3"];
+	var mobileProductsLeft = ["galaxy s6", "galaxy s5", "htc one m8", "xperia z3"];
 	_.each(mobileProductsLeft, function(mobileProduct) {
 		var funcA = function(callback) {
 			console.log("downloading demand tweets for " + mobileProduct);
-			var options = { product: mobileProduct, demand: true, delayBetweenRequests: twitter.getSafeDelayBetweenRequests() };
+			var options = { product: mobileProduct, demand: true, delayBetweenRequests: twitter.getSafeDelayBetweenRequests(), dateLowerBound: dateLowerBound };
 			saveTweets(options, callback);
 		};
 		var funcB = function(callback) {
 			console.log("downloading general tweets for " + mobileProduct);
-			var options = { product: mobileProduct, demand: false, delayBetweenRequests: twitter.getSafeDelayBetweenRequests() };
+			var options = { product: mobileProduct, demand: false, delayBetweenRequests: twitter.getSafeDelayBetweenRequests(), dateLowerBound: dateLowerBound };
 			saveTweets(options, callback);
 		};
 
@@ -145,12 +147,12 @@ var setupDatabase = function() {
 	_.each(analysis.products()[1], function(foodProduct) {
 		var funcA = function(callback) {
 			console.log("downloading demand tweets for " + foodProduct);
-			var options = { product: foodProduct, demand: true, type: 'food', delayBetweenRequests: twitter.getSafeDelayBetweenRequests() };
+			var options = { product: foodProduct, demand: true, type: 'food', delayBetweenRequests: twitter.getSafeDelayBetweenRequests(), dateLowerBound: dateLowerBound };
 			saveTweets(options, callback);
 		};
 		var funcB = function(callback) {
 			console.log("downloading general tweets for " + foodProduct);
-			var options = { product: foodProduct, demand: false, type: 'food', delayBetweenRequests: twitter.getSafeDelayBetweenRequests() };
+			var options = { product: foodProduct, demand: false, type: 'food', delayBetweenRequests: twitter.getSafeDelayBetweenRequests(), dateLowerBound: dateLowerBound };
 			saveTweets(options, callback);
 		};
 
@@ -161,12 +163,12 @@ var setupDatabase = function() {
 	_.each(analysis.products()[2], function(coffeeProduct) {
 		var funcA = function(callback) {
 			console.log("downloading demand tweets for " + coffeeProduct);
-			var options = { product: coffeeProduct, demand: true, type: 'drink', delayBetweenRequests: twitter.getSafeDelayBetweenRequests() };
+			var options = { product: coffeeProduct, demand: true, type: 'drink', delayBetweenRequests: twitter.getSafeDelayBetweenRequests(), dateLowerBound: dateLowerBound };
 			saveTweets(options, callback);
 		};
 		var funcB = function(callback) {
 			console.log("downloading general tweets for " + coffeeProduct);
-			var options = { product: coffeeProduct, demand: false, type: 'drink', delayBetweenRequests: twitter.getSafeDelayBetweenRequests() };
+			var options = { product: coffeeProduct, demand: false, type: 'drink', delayBetweenRequests: twitter.getSafeDelayBetweenRequests(), dateLowerBound: dateLowerBound };
 			saveTweets(options, callback);
 		};
 

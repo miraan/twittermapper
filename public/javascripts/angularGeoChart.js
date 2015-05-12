@@ -1,12 +1,15 @@
 app.factory('geoData', ['$http', function($http) {
   var o = {
+    loading: {
+      loadingData: false
+    },
     graphData: []
   };
 
   o.getAll = function(topic, day) {
     return $http.get('/getGeoChart/' + topic + '/' + day).success(function(data){
-      o.graphData= data;
-      console.log(data);
+      o.graphData = data;
+      o.loading.loadingData = false;
     });
   };
 
@@ -51,6 +54,8 @@ app.directive('geochart', function() {
       };
 
       var getData = function() {
+        $scope.graphData.loading.loadingData = true;
+        $scope.products.loading = $scope.graphData.loading;
         if ($scope.products.currentTopicClass!="" && $scope.products.isCurrentView('#/geochart')) {
           $scope.graphData.getAll($scope.products.currentTopicClass, $scope.products.slider.value);
         }
