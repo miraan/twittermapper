@@ -1,6 +1,7 @@
 var _ = require('underscore')._;
 var sentiment = require('sentiment');
 var async = require('async');
+var yahooFinance = require('yahoo-finance')
 var database = require('../scripts/database');
 var helper = require('../scripts/helper');
 
@@ -488,8 +489,12 @@ var getWordCloudForProduct = function(product, dateLowerBound, callback) {
 			word.text = key;
 			word.size = index[key];
 			if (word.size >= minimumWordCount && word.text.length >= minimumWordLength) {
-				if(stopwords.indexOf(word.text.toLowerCase()) == -1 && word.text.substring(0,4)!="http")
+				if(stopwords.indexOf(word.text.toLowerCase()) == -1 
+					&& word.text.substring(0,4) != "http"
+					&& word.text.substring(0,1) != "&" /// remove weird html escape characters from tweets
+					&& word.text.indexOf('/') == -1){ /// remove links and other sweets
 					words.push(word);
+				}
 			}
 		});
 		words = _.sortBy(words, 'size');
@@ -655,6 +660,36 @@ var getTweet = function(tweetId, callback) {
 		result.created_at = tweet.created_at;
 
 		callback(null, result);
+	});
+}
+
+var getYahooStockData = function(startDay, endDay, security, callback){
+	var endDayIso = endDay.toISOString().substring(0, 10)
+	var startDayIso = startDay.toISOString.substring(0, 10)
+
+	yahooFinance.historical({
+		symbol: security,
+		from: startDayIso,
+		endDayIso: endDayIso,
+		period: 'd'
+	}, function(err, quotes){
+		if(!err){
+			var data = []
+
+			for(int i = 0; i < quotes.length; i++){
+				var today = []
+
+				var timestamp = quotes[i].date.getTime()
+
+				today.push([timestamp + 2 * 60 * 60 * 1000, quotes[i].open])
+				today.push([timestamp + 12 * 60 * 60 * 1000, quotes[i].high])
+				today.push([timestamp + 23 * 60 * 60 * 1000, quotes[i].close])
+
+				data.push(today)
+			}
+
+			callback(data)
+		}
 	});
 }
 
