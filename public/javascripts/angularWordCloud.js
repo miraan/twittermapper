@@ -1,11 +1,15 @@
 app.factory('cloudData', ['$http', function($http) {
-  var o = {
+  var o = {    
+    loading: {
+      loadingData: false
+    },
     cloudData: undefined
   };
 
   o.getAll = function(topic, day) {
     return $http.get('/getWordCloud/' + topic + '/' + day).success(function(data){
       o.cloudData= data;
+      o.loading.loadingData = false;
     });
   };
 
@@ -37,9 +41,7 @@ app.directive('wordcloud', function() {
 
       var drawCloud = function() {
         $(elm[0]).empty();
-        console.log($scope.cloudData.cloudData);
         if ($scope.cloudData.cloudData != undefined) {
-          console.log($scope.cloudData.cloudData[0].words);
 
           var product = $scope.products.currentTopicOptions[$scope.products.currentOptionIndex];
           var index = 0;
@@ -51,8 +53,6 @@ app.directive('wordcloud', function() {
 
           var words =[];
           angular.copy($scope.cloudData.cloudData[index].words, words);
-          console.log(words);
-          
 
           for (var i = words.length-1; i >=0; i--) {
             words[i].size = Math.sqrt(words[i].size);
@@ -103,6 +103,8 @@ app.directive('wordcloud', function() {
       $scope.$watch('products.currentOptionIndex', drawCloud);
 
       var getData = function() {
+        $scope.cloudData.loading.loadingData = true;
+        $scope.products.loading = $scope.cloudData.loading;
         if ($scope.products.currentTopicClass!="" && $scope.products.isCurrentView('#/wordcloud')) {
           $scope.cloudData.getAll($scope.products.currentTopicClass, $scope.products.slider.value);
         };

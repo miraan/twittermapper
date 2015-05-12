@@ -52,6 +52,11 @@
   </head>
   <body>
     <div ng-Controller="MenuCtrl">
+      <div class="darkness" ng-show="products.loading.loadingData">
+        <div class="spinner-div">
+          <img src="https://d13yacurqjgara.cloudfront.net/users/12755/screenshots/1037374/hex-loader2.gif">
+        </div>
+      </div>
       <div ng-hide="brighten">
         <div class="darkness">
         </div>
@@ -246,7 +251,7 @@
               <li><div class="slider"><input type="range" min="{{products.slider.min}}" max="{{products.slider.max}}" 
               step="{{products.slider.step}}" ng-model="products.slider.value" ng-change="evalSlide()" 
               ng-mouseup="products.slider.newValue = products.slider.value"></div></li>
-              <li><div class="sliderValue"> {{products.slider.text}} </div></li>
+              <li><div class="sliderValue"> {{products.slider.text | capitalize}} </div></li>
             </ul>
           </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
