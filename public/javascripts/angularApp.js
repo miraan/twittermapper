@@ -253,5 +253,9 @@ app.controller('MenuCtrl', [
       }
     };
 
+    $scope.showTiles = function() {
+      $scope.brighten = false;
+    }
+
   }
 ]);

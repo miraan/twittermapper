@@ -17,6 +17,23 @@ app.directive('wordcloud', function() {
   return {
     restrict: 'A',
     link: function($scope, elm, attrs) {
+      function getAngle() {
+        var s = Math.random() * 3;
+        if (s<1) {
+          return -60;
+        } else if (s<2) {
+          return 0;
+        } else return 60;
+      };
+
+      function getSize() {
+        var s = Math.random() * 3;
+        if (s<1) {
+          return -60;
+        } else if (s<2) {
+          return 0;
+        } else return 60;
+      };
 
       var drawCloud = function() {
         $(elm[0]).empty();
@@ -35,10 +52,18 @@ app.directive('wordcloud', function() {
           var words =[];
           angular.copy($scope.cloudData.cloudData[index].words, words);
           console.log(words);
+          
+
           for (var i = words.length-1; i >=0; i--) {
-            words[i].size = Math.round(Math.sqrt(words[i].size));
-            console.log("{ text: '"+words[i].text+"', size: "+words[i].size+" },");
+            words[i].size = Math.sqrt(words[i].size);
           };
+
+          var max = Math.max.apply(Math, words.map(function(o){return o.size;}));
+
+          for (var i = words.length-1; i >=0; i--) {
+            words[i].size = Math.round((words[i].size*165)/max);
+          };
+
           
           var width = elm[0].clientWidth;
           var height = elm[0].clientHeight;
@@ -48,7 +73,7 @@ app.directive('wordcloud', function() {
           d3.layout.cloud().size([width, height])
               .words(words)
               .padding(5)
-              .rotate(function() { return ~~(Math.random() * 2) * 90; })
+              .rotate(function() { return ~~(getAngle()); })
               .font("Impact")
               .fontSize(function(d) { return d.size; })
               .on("end", draw)
