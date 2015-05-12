@@ -126,7 +126,7 @@
 
 /* first row */
 .hexrow:nth-child(1) > div:nth-child(1) {
-    background-image: url(hexpics/fast-food-1.jpg);
+    background-image: url(hexpics/domino.jpg);
 }
 .hexrow:nth-child(1) > div:nth-child(3) {
     background-image: url(hexpics/ip6p.jpg);
@@ -140,7 +140,7 @@
     background-image: url(hexpics/kfc.jpg);
 }
 .hexrow:nth-child(2) > div:nth-child(3) {
-    background-image: url(hexpics/domino.jpg);
+    background-image: url(hexpics/fast-food-1.jpg);
 }
 .hexrow:nth-child(2) > div:nth-child(5) {
     background-image: url(hexpics/fon.jpg);
