@@ -126,143 +126,64 @@
 
 /* first row */
 .hexrow:nth-child(1) > div:nth-child(1) {
-    background-image: url(http://static.in.groupon-content.net/dealarc/img/slider/417/fast-food-1.jpg);
-}
-/*.hexrow:nth-child(2) > div:nth-child(1) > span {
-    /*change some other settings*//*
-    margin: 0 -20px;
-    color: black;
-    font-size: .8em;
-    font-weight: bold;
-}*/
-.hexrow:nth-child(1) > div:nth-child(2) {
-    background-image: url(hexpics/nubocosmetics.jpg);
+    background-image: url(hexpics/fast-food-1.jpg);
 }
 .hexrow:nth-child(1) > div:nth-child(3) {
-    background-image: url(hexpics/bmw.jpg);
-    /*you can shift a large background image, but it can get complicated
-    best to keep the image as the total width (200px) and height (174px)
-    that the hex would be.
-    */
-    background-position: -150px -120px;
-    /*opacity: .3;
-    color: black;*/
-}
-.hexrow:nth-child(1) > div:nth-child(3) > div:before {
-    /*you can shift a large background image, but it can get complicated
-    best to keep the image as the total width (200px) and height (174px)
-    that the hex would be.
-    */
-    background-position: -100px -120px; /* the left shift is always less in the pseudo elements by the amount of the base shift */
+    background-image: url(hexpics/ip6p.jpg);
 }
 .hexrow:nth-child(1) > div:nth-child(5) {
-    background-image: url(hexpics/bango.jpg);
-    background-position: -350px -120px;
-}
-.hexrow:nth-child(1) > div:nth-child(5) > div:before {
-    background-position: -300px -120px; 
-}
-.hexrow:nth-child(1) > div:nth-child(4) {
-    background-image: url(hexpics/maliny.jpg);
-    /*you can shift a large background image, but it can get complicated
-    best to keep the image as the total width (200px) and height (174px)
-    that the hex would be.
-    */
-    background-position: -150px -120px;
-    /*opacity: .3;
-    color: black;*/
-}
-.hexrow:nth-child(1) > div:nth-child(4) > div:before {
-    /*you can shift a large background image, but it can get complicated
-    best to keep the image as the total width (200px) and height (174px)
-    that the hex would be.
-    */
-    background-position: -100px -120px; /* the left shift is always less in the pseudo elements by the amount of the base shift */
+    background-image: url(hexpics/z3.jpg);
 }
 
 /* second row */
 .hexrow:nth-child(2) > div:nth-child(2) {
-    background-image: url(hexpics/kitten2.jpg);
+    background-image: url(hexpics/kfc.jpg);
 }
 .hexrow:nth-child(2) > div:nth-child(3) {
-    background-image: url(hexpics/chop.jpg);
-    /*you can shift a large background image, but it can get complicated
-    best to keep the image as the total width (200px) and height (174px)
-    that the hex would be.
-    */
-    background-position: -150px -120px;
-    /*opacity: .3;
-    color: black;*/
-}
-.hexrow:nth-child(2) > div:nth-child(3) > div:before {
-    /*you can shift a large background image, but it can get complicated
-    best to keep the image as the total width (200px) and height (174px)
-    that the hex would be.
-    */
-    background-position: -100px -120px; /* the left shift is always less in the pseudo elements by the amount of the base shift */
-}
-.hexrow:nth-child(2) > div:nth-child(4) {
-    background-image: url(hexpics/fon.jpg);
-    background-position: -150px -120px;
-}
-.hexrow:nth-child(2) > div:nth-child(4) > div:before {
-    background-position: -100px -120px;
+    background-image: url(hexpics/domino.jpg);
 }
 .hexrow:nth-child(2) > div:nth-child(5) {
-    background-image: url(hexpics/magold.jpg);
+    background-image: url(hexpics/fon.jpg);
     background-position: -150px -120px;
 }
 .hexrow:nth-child(2) > div:nth-child(5) > div:before {
     background-position: -100px -120px;
 }
-.hexrow:nth-child(2) > div:nth-child(7) {
-    background-image: url(hexpics/hell.jpg);
-    background-position: -350px -120px;
+.hexrow:nth-child(2) > div:nth-child(4) {
+    background-image: url(hexpics/mcd.jpg);
 }
-.hexrow:nth-child(2) > div:nth-child(7) > div:before {
-    background-position: -300px -120px; 
+.hexrow:nth-child(2) > div:nth-child(7) {
+    background-image: url(hexpics/coffee.jpg);
 }
 .hexrow:nth-child(2) > div:nth-child(6) {
-    background-image: url(hexpics/fendi.jpg);
-    background-position: -150px -120px;
+    background-image: url(hexpics/s5.jpg);
 }
-.hexrow:nth-child(2) > div:nth-child(6) > div:before {
-    background-position: -100px -120px;
-}
-
 
 /* third row */
 .hexrow:nth-child(3) > div:nth-child(2) {
-    background-image: url(hexpics/jsnw.jpg);
-    background-position: -150px -120px;
-}
-.hexrow:nth-child(3) > div:nth-child(2) > div:before {
-    background-position: -100px -120px;
+    background-image: url(hexpics/ph.jpg);
 }
 .hexrow:nth-child(3) > div:nth-child(4) {
-    background-image: url(hexpics/pepsi.jpg);
+    background-image: url(hexpics/ip6.jpg);
 }
 .hexrow:nth-child(3) > div:nth-child(6) {
-    background-image: url(hexpics/coffee.jpg);
+    background-image: url(hexpics/ip5c.jpg);
 }
 
 .hexrow:nth-child(2) > div:nth-child(8) {
-    background-image: url(hexpics/bb.jpg);
+    background-image: url(hexpics/sb.jpg);
 }
 .hexrow:nth-child(4) > div:nth-child(2) {
-    background-image: url(hexpics/miranda.jpg);
+    background-image: url(hexpics/s6.jpg);
 }
 
 /*.hexrow:nth-child(3) > div:nth-child(8) {
     background-image: url(hexpics/a.jpg);
 }*/
 .hexrow:nth-child(3) > div:nth-child(8) {
-    background-image: url(hexpics/guit.jpg);
-    background-position: -150px -120px;
+    background-image: url(hexpics/cc.jpg);
 }
-.hexrow:nth-child(3) > div:nth-child(8) > div:before {
-    background-position: -100px -120px;
-}
+
 /*.hexrow:nth-child(5) > div:nth-child(2) {
     background-image: url(hexpics/a.jpg);
     background-position: -350px -120px;
@@ -275,23 +196,11 @@
 
 
 .hexrow:nth-child(3) > div:nth-child(3) {
-    background-image: url(hexpics/purheel.jpg);
-    background-position: -150px -120px;
-}
-.hexrow:nth-child(3) > div:nth-child(3) > div:before {
-    background-position: -100px -120px;
+    background-image: url(hexpics/bk.jpg);
 }
 .hexrow:nth-child(3) > div:nth-child(5) {
-    background-image: url(hexpics/pp.jpg);
-    background-position: -150px -120px;
-}
-.hexrow:nth-child(3) > div:nth-child(5) > div:before {
-    background-position: -100px -120px;
+    background-image: url(hexpics/htc.jpg);
 }
 .hexrow:nth-child(3) > div:nth-child(7) {
-    background-image: url(hexpics/gillette.jpg);
-    background-position: -150px -120px;
-}
-.hexrow:nth-child(3) > div:nth-child(7) > div:before {
-    background-position: -100px -120px;
+    background-image: url(hexpics/c.jpg);
 }
