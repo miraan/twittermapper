@@ -335,8 +335,8 @@ var connectToLocal = function() {
 	});
 }
 
-// connect();
-connectToLocal();
+connect();
+// connectToLocal();
 
 module.exports.saveTweet = saveTweet;
 module.exports.getTweets = getTweets;
