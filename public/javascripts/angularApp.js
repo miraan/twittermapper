@@ -92,6 +92,7 @@ app.factory('globalSelection', ['$http', function($http) {
     },
 
     showDemand: true,
+    showStock: false,
     currentTopic: "",
     currentProducts: [],
     currentTopicOptions: [],
@@ -138,6 +139,14 @@ app.controller('MenuCtrl', [
 
     $scope.demandBtnClass = function (){
       if (products.showDemand){
+        return 'active';
+      } else {
+        return '';
+      }
+    };
+
+    $scope.stockBtnClass = function (){
+      if (products.showStock){
         return 'active';
       } else {
         return '';
@@ -198,7 +207,6 @@ app.controller('MenuCtrl', [
       for (var i=1; i<$scope.products.currentTopicOptions.length; i++){
         $scope.products.currentProducts.push(false);
       };
-      console.log($scope.products.currentProducts);
       $scope.products.currentTopicClass = $scope.products.topics[topicI];
       $scope.showCategories = false;
     };
@@ -219,12 +227,28 @@ app.controller('MenuCtrl', [
         else { $scope.products.currentTopic = $scope.products.currentTopicOptions[optionI]; }
       }
     };
+
+    $scope.selectFirstOption = function(optionI){
+      if ($scope.products.isCurrentView('#/map')||$scope.products.isCurrentView('#/timeline')) {
+        $scope.products.currentProducts[0] = false;
+        $scope.products.currentProducts[optionI] = !($scope.products.currentProducts[optionI]);
+
+      } else {
+        $scope.products.currentOptionIndex = optionI;
+        if (optionI == 0) { $scope.products.currentTopic = $scope.products.currentTopicClass; }
+        else { $scope.products.currentTopic = $scope.products.currentTopicOptions[optionI]; }
+      }
+    };
     
     $scope.makeDemand = function(){
       $scope.products.showDemand = true;
     };
     $scope.makeSentiment = function(){
       $scope.products.showDemand = false;
+    };
+
+    $scope.showStock = function(){
+      $scope.products.showStock = !($scope.products.showStock);
     };
 
     $scope.evalSlide = function() {

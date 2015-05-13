@@ -52,7 +52,7 @@
   </head>
   <body>
     <div ng-Controller="MenuCtrl">
-      <div class="darkness" ng-show="products.loading.loadingData">
+      <div class="loading" ng-show="products.loading.loadingData">
         <div class="spinner-div">
           <img src="https://d13yacurqjgara.cloudfront.net/users/12755/screenshots/1037374/hex-loader2.gif">
         </div>
@@ -63,7 +63,7 @@
         <div class="selection">
             <div class="hexrow">
                 <!-- burger -->
-                <div ng-click="selecTopic(1); selectOption(4)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <div ng-click="selecTopic(1); selectFirstOption(4)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
                     <span></span>
                     <div></div>
                     <div></div>
@@ -73,7 +73,7 @@
                     <div></div>
                     <div></div>
                 </div>
-                <div ng-click="selecTopic(0); selectOption(1)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <div ng-click="selecTopic(0); selectFirstOption(1)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
                     <span></span>
                     <div></div>
                     <div></div>
@@ -83,7 +83,7 @@
                     <div></div>
                     <div></div>
                 </div>
-                <div ng-click="selecTopic(0); selectOption(7)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <div ng-click="selecTopic(0); selectFirstOption(7)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
                     <span></span>
                     <div></div>
                     <div></div>
@@ -95,7 +95,7 @@
                     <div></div>
                     <div></div>
                 </div>
-                <div ng-click="selecTopic(1); selectOption(2)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <div ng-click="selecTopic(1); selectFirstOption(2)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
                     <span></span>
                     <div></div>
                     <div></div>
@@ -106,7 +106,7 @@
                     <div></div>
                 </div>
                 <!-- phones -->
-                <div ng-click="selecTopic(1); selectOption(1)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <div ng-click="selecTopic(1); selectFirstOption(1)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
                     <span></span>
                     <div></div>
                     <div></div>
@@ -116,7 +116,7 @@
                     <div></div>
                     <div></div>
                 </div>
-                <div ng-click="selecTopic(0); selectOption(5)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <div ng-click="selecTopic(0); selectFirstOption(5)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
                     <span></span>
                     <div></div>
                     <div></div>
@@ -126,7 +126,7 @@
                     <div></div>
                     <div></div>
                 </div>
-                <div ng-click="selecTopic(2); selectOption(1)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <div ng-click="selecTopic(2); selectFirstOption(1)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
                     <span></span>
                     <div></div>
                     <div></div>
@@ -143,37 +143,37 @@
                     <div></div>
                     <div></div>
                 </div>
-                <div ng-click="selecTopic(1); selectOption(5)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <div ng-click="selecTopic(1); selectFirstOption(5)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
                     <span></span>
                     <div></div>
                     <div></div>
                 </div>
-                <div ng-click="selecTopic(1); selectOption(3)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <div ng-click="selecTopic(1); selectFirstOption(3)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
                     <span></span>
                     <div></div>
                     <div></div>
                 </div>
-                <div ng-click="selecTopic(0); selectOption(2)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <div ng-click="selecTopic(0); selectFirstOption(2)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
                     <span></span>
                     <div></div>
                     <div></div>
                 </div>
-                <div ng-click="selecTopic(0); selectOption(6)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <div ng-click="selecTopic(0); selectFirstOption(6)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
                     <span></span>
                     <div></div>
                     <div></div>
                 </div>
-                <div ng-click="selecTopic(0); selectOption(3)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <div ng-click="selecTopic(0); selectFirstOption(3)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
                     <span></span>
                     <div></div>
                     <div></div>
                 </div>
-                <div ng-click="selecTopic(2); selectOption(3)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <div ng-click="selecTopic(2); selectFirstOption(3)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
                     <span></span>
                     <div></div>
                     <div></div>
                 </div>
-                <div ng-click="selecTopic(2); selectOption(2)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <div ng-click="selecTopic(2); selectFirstOption(2)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
                     <span></span>
                     <div></div>
                     <div></div>
@@ -190,7 +190,7 @@
                     <div></div>
                     <div></div>
                 </div>
-                <div ng-click="selecTopic(0); selectOption(4)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
+                <div ng-click="selecTopic(0); selectFirstOption(4)" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
                     <span></span>
                     <div></div>
                     <div></div>
@@ -246,12 +246,13 @@
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
-              <li class="{{demandBtnClass()}}" ng-if="!products.isCurrentView('#/wordcloud')"><a href="{{getLink()}}" ng-click="makeDemand()">Demand</a></li>
-              <li class="{{sentimentBtnClass()}}" ng-if="!products.isCurrentView('#/wordcloud')"><a href="{{getLink()}}" ng-click="makeSentiment()">Sentiment</a></li>
-              <li><div class="slider"><input type="range" min="{{products.slider.min}}" max="{{products.slider.max}}" 
-              step="{{products.slider.step}}" ng-model="products.slider.value" ng-change="evalSlide()" 
-              ng-mouseup="products.slider.newValue = products.slider.value"></div></li>
-              <li><div class="sliderValue"> {{products.slider.text | capitalize}} </div></li>
+                <li class="{{stockBtnClass()}}" ng-if="products.isCurrentView('#/timeline')"><a href="{{getLink()}}" ng-click="showStock()">Stock</a></li>
+                <li class="{{demandBtnClass()}}" ng-if="!products.isCurrentView('#/wordcloud')"><a href="{{getLink()}}" ng-click="makeDemand()">Demand</a></li>
+                <li class="{{sentimentBtnClass()}}" ng-if="!products.isCurrentView('#/wordcloud')"><a href="{{getLink()}}" ng-click="makeSentiment()">Sentiment</a></li>
+                <li><div class="slider"><input type="range" min="{{products.slider.min}}" max="{{products.slider.max}}" 
+                step="{{products.slider.step}}" ng-model="products.slider.value" ng-change="evalSlide()" 
+                ng-mouseup="products.slider.newValue = products.slider.value"></div></li>
+                <li><div class="sliderValue"> {{products.slider.text | capitalize}} </div></li>
             </ul>
           </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
