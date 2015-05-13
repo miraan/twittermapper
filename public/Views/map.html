@@ -9,4 +9,9 @@
     {{infoText}}
   </div>
 </div>
-<div class="description"></div>
+<div class="description" style="vertical-align: middle;">
+	<div class="legend" ng-repeat= "cn in products.legend.colorNames">
+		<div class="square" style = "background: {{cn.color}};"></div>
+		<div class = "legend-text" >{{cn.name}}</div>
+	</div>
+</div>

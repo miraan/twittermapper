@@ -86,9 +86,16 @@ app.factory('globalSelection', ['$http', function($http) {
       value: 7,
       newValue: 7,
       min: 1,
-      max: 7,
+      max: 10,
       step: 1,
       text: 'past week'
+    },
+
+    legend: {
+      colorNames: [{
+        color: 'white',
+        name: "iPhone"
+      }]
     },
 
     showDemand: true,
@@ -273,6 +280,15 @@ app.controller('MenuCtrl', [
           break;
         case '7':
           $scope.products.slider.text = 'Past Week';
+          break;
+        case '8':
+          $scope.products.slider.text = 'Past 8 Days';
+          break;
+        case '9':
+          $scope.products.slider.text = 'Past 9 Days';
+          break;
+        case '10':
+          $scope.products.slider.text = 'Past 10 Days';
           break;
         default:
           console.log('default');

@@ -44,7 +44,7 @@ app.directive('timeline', function() {
     link: function($scope, elm, attrs) {
       var timeline = new google.visualization.LineChart(elm[0]);
       var drawChart = function() {
-        if($scope.dataCreated && ($scope.timelineData.getNumberOfColumns())>1) {
+        if($scope.dataCreated && (typeof ($scope.timelineData))!= undefined) {
           timeline.draw($scope.timelineData, $scope.timelineOptions);
         }  
       };
@@ -188,7 +188,7 @@ app.controller('TimelineCtrl', [
     };
 
     $scope.initialise = function () {
-      if ($scope.dataCreated) {
+      if ($scope.dataCreated && !($scope.products.loading.loadingData)) {
         $scope.timelineData = {};
 
         var columnsIndexes = [];
@@ -201,7 +201,7 @@ app.controller('TimelineCtrl', [
           if ($scope.products.currentProducts[i]) {
             data.addColumn('number', $scope.sortedData[i].product);
             columnsIndexes.push(i);
-            if ($scope.sortedData[i].company!= undefined) companyNames.push($scope.sortedData[i].company);
+            if (typeof ($scope.sortedData[i]) != undefined) companyNames.push($scope.sortedData[i].company);
           };
         };
 
