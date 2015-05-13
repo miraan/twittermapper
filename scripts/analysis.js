@@ -255,12 +255,33 @@ var getStockData = function(company, startDay, endDay, callback){
 		}
 		var data = []
 
-		for(var i = 0; i < quotes.length; i++){
-			var timestamp = quotes[i].date.getTime()
-			data.push([timestamp + 2 * 60 * 60 * 1000, quotes[i].open])
-			data.push([timestamp + 12 * 60 * 60 * 1000, quotes[i].high])
-			data.push([timestamp + 23 * 60 * 60 * 1000, quotes[i].close])
+		var maxHigh = _.max(quotes, function(quote) { return quote.high; }).high;
+		var maxOpen = _.max(quotes, function(quote) { return quote.open; }).open;
+		var maxClose = _.max(quotes, function(quote) { return quote.close; }).close;
+		var maxValue = _.max([maxHigh, maxOpen, maxClose]);
+
+		var minHigh = _.min(quotes, function(quote) { return quote.high; }).high;
+		var minOpen = _.min(quotes, function(quote) { return quote.open; }).open;
+		var minClose = _.min(quotes, function(quote) { return quote.close; }).close;
+		var minValue = _.min([minHigh, minOpen, minClose]);
+
+		console.log(maxValue);
+		console.log(minValue);
+
+		var scaleQuote = function(quote) {
+			quote.open = Math.round(((quote.open - minValue) / (maxValue - minValue)) * 1000) / 1000;
+			quote.high = Math.round(((quote.high - minValue) / (maxValue - minValue)) * 1000) / 1000;
+			quote.close = Math.round(((quote.close - minValue) / (maxValue - minValue)) * 1000) / 1000;
 		}
+
+		_.each(quotes, scaleQuote);
+
+		_.each(quotes, function(quote) {
+			var timestamp = quote.date.getTime()
+			data.push([timestamp + 2 * 60 * 60 * 1000, quote.open])
+			data.push([timestamp + 12 * 60 * 60 * 1000, quote.high])
+			data.push([timestamp + 23 * 60 * 60 * 1000, quote.close])
+		});
 
 		callback(null, data);
 
