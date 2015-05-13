@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var async = require('async');
+var apicache = require('apicache').options({ debug: true }).middleware;
 var analysis = require('../scripts/analysis');
 var helper = require('../scripts/helper');
 var start = require('../scripts/start');
@@ -16,7 +17,8 @@ router.get('/getCategories', function(req, res, next) {
 	res.json(analysis.getCategories());
 });
 
-router.get('/getGraph/:category/:days', function(req, res, next) {
+router.get('/getGraph/:category/:days', apicache('1 day'),  function(req, res, next) {
+	req.apicacheGroup = "cache";
 	var category = req.params.category;
 	var days = req.params.days;
 	var dateLowerBound = helper.daysAgo(days);
@@ -31,7 +33,8 @@ router.get('/getGraph/:category/:days', function(req, res, next) {
 	});
 });
 
-router.get('/getStock/:category/:days', function(req, res, next) {
+router.get('/getStock/:category/:days', apicache('1 day'), function(req, res, next) {
+	req.apicacheGroup = "cache";
 	var category = req.params.category;
 	var days = req.params.days;
 	var dateLowerBound = helper.daysAgo(days);
@@ -46,7 +49,8 @@ router.get('/getStock/:category/:days', function(req, res, next) {
 	});
 });
 
-router.get('/getLocations/:category/:days', function(req, res, next) {
+router.get('/getLocations/:category/:days', apicache('1 day'), function(req, res, next) {
+	req.apicacheGroup = "cache";
 	var category = req.params.category;
 	var days = req.params.days;
 	var dateLowerBound = helper.daysAgo(days);
@@ -61,7 +65,8 @@ router.get('/getLocations/:category/:days', function(req, res, next) {
 	});
 });
 
-router.get('/getWordCloud/:category/:days', function(req, res, next) {
+router.get('/getWordCloud/:category/:days', apicache('1 day'), function(req, res, next) {
+	req.apicacheGroup = "cache";
 	var category = req.params.category;
 	var days = req.params.days;
 	var dateLowerBound = helper.daysAgo(days);
@@ -76,7 +81,8 @@ router.get('/getWordCloud/:category/:days', function(req, res, next) {
 	});
 });
 
-router.get('/getGeoChart/:category/:days', function(req, res, next) {
+router.get('/getGeoChart/:category/:days', apicache('1 day'), function(req, res, next) {
+	req.apicacheGroup = "cache";
 	var category = req.params.category;
 	var days = req.params.days;
 	var dateLowerBound = helper.daysAgo(days);
