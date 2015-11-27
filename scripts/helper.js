@@ -18,7 +18,8 @@ var getRandomSample = function(sampleSize, array) {
 var today = function() { return new Date(); }
 
 var daysAgo = function(days) {
-	var day = new Date();
+	// var day = new Date();
+	var day = new Date("2015-05-12T01:29:05.000Z"); // we are using this instead of the above line since we've stopped downloading tweet data
 	day.setDate(day.getDate() - days);
 	return day;
 }

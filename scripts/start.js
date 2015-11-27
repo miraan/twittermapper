@@ -124,11 +124,8 @@ var outputSentimentGraph = function(product, dateLowerBound) {
 var setupDatabase = function() {
 	console.log("setting up database...");
 	
-	var dateLowerBound = new Date("2015-05-08T00:00:00");
-
 	var functions = [];
-	var mobileProductsLeft = ["galaxy s6", "galaxy s5", "htc one m8", "xperia z3"];
-	_.each(mobileProductsLeft, function(mobileProduct) {
+	_.each(analysis.products()[0], function(mobileProduct) {
 		var funcA = function(callback) {
 			console.log("downloading demand tweets for " + mobileProduct);
 			var options = { product: mobileProduct, demand: true, delayBetweenRequests: twitter.getSafeDelayBetweenRequests(), dateLowerBound: dateLowerBound };

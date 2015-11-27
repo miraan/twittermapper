@@ -134,13 +134,14 @@ router.get('/setup/saveTweets/:product/:type/:demand/:delay', function(req, res,
 	res.json({message: "started save"});
 });
 
-router.get('/setup/outputSavedTweets/:product/:demand/:select/:limit', function(req, res, next) {
+router.get('/setup/outputSavedTweets/:product/:demand/:select/:limit/:sort', function(req, res, next) {
 	var product = req.params.product;
 	var demand = req.params.demand;
 	var select = req.params.select;
 	var limit = req.params.limit;
+	var sort = req.params.sort;
 
-	var options = { product: product, select: select, demand: demand };
+	var options = { product: product, select: select, demand: demand, sort: sort };
 	if (limit) {
 		options.limit = limit;
 	}
