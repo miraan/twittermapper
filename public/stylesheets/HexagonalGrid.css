@@ -1,33 +1,36 @@
 .hexrow {
     white-space: nowrap;
     /*right/left margin set at (( width of child div x sin(30) ) / 2) makes a fairly tight fit; a 3px bottom seems to match*/
-    margin: 0 25px 3px; 
+    margin: 18.8px 3px; 
 }
 
 .hexrow > div {
-    width: 100px;
-    height: 173.2px; /* ( width x cos(30) ) x 2 */
+    width: 75px;
+    height: 130px; /* ( width x cos(30) ) x 2 */
     /* For margin:
     right/left = ( width x sin(30) ) makes no overlap 
     right/left = (( width x sin(30) ) / 2) leaves a narrow separation
     */
-    margin: 0 25px; 
+    margin: 0px 30px; 
     position: relative;
     /*background-image: url(http://i.imgur.com/w5tV4.jpg);*/
-    background-position: -50px 0; /* -left position -1 x width x sin(30) */
+    background-position: 0 -37.5px; /* -left position -1 x width x sin(30) */
     background-repeat: no-repeat;
-    color: #ffffff;
+    color: #115BA6;
+    font-size: 14px;
+    font-weight: 900;
+    text-shadow: 0 0 0.2em #fff, 0 0 0.2em #fff, 0 0 0.2em #fff, 0 0 0.2em #fff, 0 0 0.2em #fff, 0 0 0.2em #fff, 0 0 0.2em #fff;
     text-align: center;
-    line-height: 173.2px; /*equals height*/
+    line-height: 130px; /*equals height*/
     display: inline-block;
 }
 
 .hexrow > div:nth-child(odd) {
-    top: 43.3px; /* ( width x cos(30) / 2 ) */
+    top: 32.5px; /* ( width x cos(30) / 2 ) */
 }
 
 .hexrow > div:nth-child(even) {
-    top: -44.8px; /* -1 x( ( width x cos(30) / 2) + (hexrow bottom margin / 2)) */ 
+    top: -40px; /* -1 x( ( width x cos(30) / 2) + (hexrow bottom margin / 2)) */ 
 }
 
 .hexrow > div > div:first-of-type {
@@ -50,10 +53,10 @@
 .hexrow > div > div:first-of-type:before {
     content: '';
     position: absolute;
-    width: 200px; /* width of main + margin sizing */
+    width: 105px; /* width of main + margin sizing */
     height: 100%;
     background-image: inherit;
-    background-position: top left;
+    background-position: left top;
     background-repeat: no-repeat;
     bottom: 0;
     left: 0;
@@ -93,7 +96,7 @@
 .hexrow > div > div:last-of-type:before {
     content: '';
     position: absolute;
-    width: 200px; /* starting width + margin sizing */
+    width: 105px; /* starting width + margin sizing */
     height: 100%;
     background-image: inherit;
     background-position: top left;
@@ -102,12 +105,12 @@
     left: 0;
     z-index: 1;
     
-    /*translate properties are initial width (100px) and half height (173.2 / 2 = 86.6) */
-    -ms-transform:rotate(60deg) translate(100px, 86.6px); /* IE 9 */
-    -moz-transform:rotate(60deg) translate(100px, 86.6px); /* Firefox */
-    -webkit-transform:rotate(60deg) translate(100px, 86.6px); /* Safari and Chrome */
-    -o-transform:rotate(60deg) translate(100px, 86.6px); /* Opera */
-    transform:rotate(60deg) translate(100px, 86.6px);
+    /*translate properties are initial width (75px) and half height (130 / 2 = 65) */
+    -ms-transform:rotate(60deg) translate(75px, 65px); /* IE 9 */
+    -moz-transform:rotate(60deg) translate(75px, 65px); /* Firefox */
+    -webkit-transform:rotate(60deg) translate(75px, 65px); /* Safari and Chrome */
+    -o-transform:rotate(60deg) translate(75px, 65px); /* Opera */
+    transform:rotate(60deg) translate(75px, 65px);
     
     -ms-transform-origin: 100% 0; /* IE 9 */
     -webkit-transform-origin: 100% 0; /* Safari and Chrome */
