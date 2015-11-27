@@ -143,7 +143,9 @@ var getCategories = function() {
 	return result;
 }
 
-var now = function() { return new Date(); }
+var now = function() {
+	return helper.daysAgo(0);
+}
 
 // returns a 2d array [lowerBound, upperBound]
 var getDateRange = function(daysInPast) {
