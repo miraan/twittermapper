@@ -70,9 +70,9 @@ app.controller('MapCtrl', [
     };
 
     $scope.map = {
-      latitude: 51.752285,
-      longitude: -1.247093,
-      zoom: 5,
+      latitude: 46.7641588,
+      longitude: -47.0000449,
+      zoom: 4,
       bounds: {}
     };
 
