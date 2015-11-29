@@ -17,7 +17,7 @@ router.get('/getCategories', function(req, res, next) {
 	res.json(analysis.getCategories());
 });
 
-router.get('/getGraph/:category/:days', apicache('100 days'),  function(req, res, next) {
+router.get('/getGraph/:category/:days', apicache('1 day'),  function(req, res, next) {
 	req.apicacheGroup = "cache";
 	var category = req.params.category;
 	var days = req.params.days;
@@ -33,7 +33,7 @@ router.get('/getGraph/:category/:days', apicache('100 days'),  function(req, res
 	});
 });
 
-router.get('/getStock/:category/:days', apicache('100 days'), function(req, res, next) {
+router.get('/getStock/:category/:days', apicache('1 day'), function(req, res, next) {
 	req.apicacheGroup = "cache";
 	var category = req.params.category;
 	var days = req.params.days;
@@ -49,7 +49,7 @@ router.get('/getStock/:category/:days', apicache('100 days'), function(req, res,
 	});
 });
 
-router.get('/getLocations/:category/:days', apicache('100 days'), function(req, res, next) {
+router.get('/getLocations/:category/:days', apicache('1 day'), function(req, res, next) {
 	req.apicacheGroup = "cache";
 	var category = req.params.category;
 	var days = req.params.days;
@@ -65,7 +65,7 @@ router.get('/getLocations/:category/:days', apicache('100 days'), function(req, 
 	});
 });
 
-router.get('/getWordCloud/:category/:days', apicache('100 days'), function(req, res, next) {
+router.get('/getWordCloud/:category/:days', apicache('1 day'), function(req, res, next) {
 	req.apicacheGroup = "cache";
 	var category = req.params.category;
 	var days = req.params.days;
@@ -81,7 +81,7 @@ router.get('/getWordCloud/:category/:days', apicache('100 days'), function(req, 
 	});
 });
 
-router.get('/getGeoChart/:category/:days', apicache('100 days'), function(req, res, next) {
+router.get('/getGeoChart/:category/:days', apicache('1 day'), function(req, res, next) {
 	req.apicacheGroup = "cache";
 	var category = req.params.category;
 	var days = req.params.days;
